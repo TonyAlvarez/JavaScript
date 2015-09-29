@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <script>
+
+            function comprobar() {
+                var email = document.getElementById('email').value;
+
+                var usuario = email.split('@',1);
+
+                var dominio = email.split('@');
+
+                document.getElementById('resultado').innerHTML = "El usuario es " + usuario + "<br/>Y el dominio es " + dominio;
+            }
+        </script>
+
+    </head>
+    <body>
+
+        <h1>JavaScript - Ejercicio 6</h1>
+
+        <p>Introduce un email:</p>
+
+        <input id="email"/> <button onclick="comprobar()">Enviar</button>
+
+        <p id="resultado">Clic en enviar para ver el resultado</p>
+
+    </body>
+</html> 

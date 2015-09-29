@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <script>
+
+            function changeImage () {
+                if (document.getElementById('face').src.match('happy.png')) {
+                    document.getElementById('face').src = 'sad.png';
+                } else {
+                    document.getElementById('face').src = 'happy.png';
+                }
+            }
+        </script>
+
+    </head>
+    <body>
+
+        <h1>JavaScript - Ejercicio 1</h1>
+
+        <h3>Clica en la imagen para cambiarla</h3>
+
+        <img id="face" src="happy.png" onclick="changeImage()"/>
+
+    </body>
+</html> 

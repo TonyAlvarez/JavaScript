@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <script>
+
+            function comprobar () {
+                var num = document.getElementById('numero').value;
+
+                if (num >= -1 && num <= 1) {
+                    document.getElementById('resultado').innerHTML = "Valor correcto";
+                } else {
+                    document.getElementById('resultado').innerHTML = "Valor incorrecto";
+                }
+            }
+        </script>+
+
+    </head>
+    <body>
+
+        <h1>JavaScript - Ejercicio 2</h1>
+
+        <p>Introduce un número entre -1 y 1:</p>
+
+        <input id="numero"/> <button onclick="comprobar()">Enviar</button>
+
+        <p id="resultado">Clic en enviar para ver el resultado</p>
+
+    </body>
+</html> 

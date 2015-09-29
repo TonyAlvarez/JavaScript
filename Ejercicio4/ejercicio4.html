@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <script>
+
+            function comprobar () {
+                var radio = document.getElementById('radio').value;
+                
+                var area = Math.PI * radio * radio;
+                
+                var perimetro = 2 * Math.PI * radio;
+
+                    document.getElementById('resultado').innerHTML = "El area es " + area + " y el perímetro es " + perimetro;
+            }
+        </script>+
+
+    </head>
+    <body>
+
+        <h1>JavaScript - Ejercicio 4</h1>
+
+        <p>Introduce el radio de un círculo:</p>
+
+        <input id="radio"/> <button onclick="comprobar()">Enviar</button>
+
+        <p id="resultado">Clic en enviar para ver el resultado</p>
+
+    </body>
+</html> 
