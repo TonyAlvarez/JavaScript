@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+
+        function comprobar() {
+            var texto = document.getElementById("text").innerHTML;
+            var primeraMitad = texto.slice(0, texto.length / 2);
+            var segundaMitad = texto.slice(texto.length / 2, texto.length);
+
+            document.getElementById('resultado').innerHTML = primeraMitad + "<br/>" + segundaMitad;
+        }
+    </script>
+
+</head>
+<body>
+
+<h1>JavaScript - Ejercicio 8</h1>
+
+<p id="text">The reference contains descriptions and examples of all string properties and methods.</p>
+
+<button onclick="comprobar()">Dividir texto</button>
+
+<p id="resultado">Clic para ver el resultado</p>
+
+</body>
+</html> 

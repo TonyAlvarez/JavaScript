@@ -5,17 +5,18 @@
 
             function comprobar() {
                 var email = document.getElementById('email').value;
+                var pos = email.indexOf("@");
+                var usuario = email.slice(0, pos);
+                var dominio = email.slice(pos + 1, email.length);
 
-                var separar = email.split('@');
-
-                document.getElementById('resultado').innerHTML = "El usuario es " + separar[0] + "<br/>Y el dominio es " + separar[1];
+                document.getElementById('resultado').innerHTML = "El usuario es " + usuario + "<br/>Y el dominio es " + dominio;
             }
         </script>
 
     </head>
     <body>
 
-        <h1>JavaScript - Ejercicio 6</h1>
+        <h1>JavaScript - Ejercicio 7</h1>
 
         <p>Introduce un email:</p>
 
