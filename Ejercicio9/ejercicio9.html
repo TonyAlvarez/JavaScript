@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="utf-8">
         <script>
 
-            function toOctal(int num) {
-
+            function toOctal(num) {
+                var number = parseInt(num);
+                return number.toString(8);
             }
 
 
             function convertir() {
 
+                decimal =  document.getElementById('numero').value;
 
-                document.getElementById('resultado').innerHTML = "El numero" + decimal + " en base octal es: " + ;
+                document.getElementById('resultado').innerHTML = "El número " + decimal + " en base octal es: " + toOctal(decimal);
             }
         </script>
 
@@ -21,7 +24,6 @@
         <h1>JavaScript - Ejercicio 9</h1>
 
         <p id="text">Introduce un número en decimal.</p>
-
 
         <input type="number" id="numero"/> <button onclick="convertir()">Convertir</button>
 

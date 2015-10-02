@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <script>
+
+            function tirar() {
+                var desplegable = document.getElementById("desplegable");
+                var numeroMax = desplegable.options[desplegable.selectedIndex].value;
+
+
+                document.getElementById('resultado').innerHTML = Math.floor(Math.random() * numeroMax) + 1;
+            }
+        </script>
+
+    </head>
+    <body>
+
+        <h1>JavaScript - Ejercicio 10</h1>
+
+        <p id="text">Elige el número de caras del dado.</p>
+
+        <select id="desplegable">
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+        </select>
+
+
+        <button onclick="tirar()">Tirar el dado</button>
+
+        <p id="resultado">Pulsa el botón para ver el resultado</p>
+
+    </body>
+</html> 
