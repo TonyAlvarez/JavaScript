@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>3 en raya</title>
+    <style>
+        td {
+            border: 1px solid red;
+            width: 100px;
+            height: 100px;
+            text-align: center;
+        }
+
+    </style>
+    <script>
+        var tablero = [["","",""],["","",""],["","",""]];
+        var turno = true;
+
+        function reiniciar() {
+            tablero = [["","",""],["","",""],["","",""]];
+            pintarTablero();
+        }
+
+        function pintar(id) {
+
+            var cell = document.getElementById(id);
+            if (cell.innerHTML != "")
+                return;
+
+            if (turno) {
+                cell.innerHTML = "X";
+                turno = false;
+            } else {
+                cell.innerHTML = "O";
+                turno = true;
+            }
+
+            comprobarGanador();
+        }
+
+        function comprobarGanador() {
+
+        }
+
+        function pintarTablero() {
+
+            var table = document.getElementById("tablero");
+            var count = 1;
+
+            for (i = 0; i < tablero.length; i++) {
+                var row = table.insertRow();
+
+                for (x = 0; x < tablero[i].length; x++) {
+                    var cell = row.insertCell();
+                    cell.innerHTML = tablero[i][x];
+                    cell.id = count;
+                    cell.addEventListener("click", function() { pintar(this.id) }, false);
+                    count ++;
+                }
+
+
+            }
+        }
+
+    </script>
+</head>
+<body onload="pintarTablero()">
+
+<table id="tablero"></table>
+
+<button onclick="reiniciar()">Reniciar</button>
+
+</body>
+</html>
