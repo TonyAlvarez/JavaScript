@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 15</title>
+    <script>
+
+        function ejecuta() {
+            var fecha1 = new Date();
+            var fecha2 = new Date();
+
+            fecha1.setDate(01);
+            fecha1.setMonth(0);
+            fecha1.setFullYear(2015);
+            fecha1.setHours(01);
+            fecha1.setMinutes(00);
+            fecha1.setSeconds(01);
+
+            fecha2.setDate(14);
+            fecha2.setMonth(1);
+            fecha2.setFullYear(2015);
+            fecha2.setHours(02);
+            fecha2.setMinutes(05);
+            fecha2.setSeconds(23);
+
+            document.getElementById('enunciado').innerHTML =
+                    "Tiempo transcurrido entre la fecha " + fecha1.toLocaleString() +
+                    " y la fecha " + fecha2.toLocaleString();
+
+            var diferenciaMilisegundos = fecha2.getTime() - fecha1.getTime();
+
+            document.getElementById('resultado').innerHTML =
+                    "La diferencia es de " + Math.round(diferenciaMilisegundos / 60000);
+
+        }
+
+    </script>
+</head>
+<body onload="ejecuta()">
+<div>
+    <p id="enunciado">Enunciado</p>
+
+    <p id="resultado"></p>
+</div>
+</body>
+</html>

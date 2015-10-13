@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script>
+
+  function calcularEdad(fechaNacimiento, fechaComprobacion) {
+      var edad = fechaComprobacion.getFullYear() - fechaNacimiento.getFullYear();
+      var m = fechaComprobacion.getMonth() - fechaNacimiento.getMonth();
+      if (m < 0 || (m === 0 && fechaComprobacion.getDate() < fechaNacimiento.getDate())) {
+          edad--;
+      }
+      return edad;
+  }
+
+  function ponerFecha() {
+
+    var fechaComprobacion = new Date();
+    var fechaNacimiento = new Date();
+
+    fechaComprobacion.setDate(7);
+    fechaComprobacion.setMonth(0);
+    fechaComprobacion.setFullYear(2015);
+
+    fechaNacimiento.setDate(7);
+    fechaNacimiento.setMonth(0);
+    fechaNacimiento.setFullYear(1984);
+
+
+    document.getElementById("resultado").innerHTML = "Edad: " + calcularEdad(fechaNacimiento, fechaComprobacion);
+  }
+
+  </script>
+
+</head>
+<body onload="ponerFecha()">
+
+  <h1>JavaScript - Ejercicio 16</h1>
+
+  <p id="text">Calculadora de edad.</p>
+
+  <p id="resultado"></p>
+
+</body>
+</html>

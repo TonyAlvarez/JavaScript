@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script>
+
+        function comprobar() {
+
+            var lletres = ['T', 'R', 'W', 'A', 'G', 'M', 'I', 'F', 'P', 'D', 'X', 'B ',' N ',' J ',' Z ',' S ',' Q ',' V ',' H ',' L ','C', 'K', 'E', 'T'];
+
+            var numeroDNI = document.getElementById("numero").value;
+
+            if (numeroDNI < 0 || numeroDNI > 99999999) {
+                document.getElementById("resultado").innerHTML = "Error, el número de DNI es incorrecto";
+                document.getElementById('numero').focus();
+            } else {
+                document.getElementById("resultado").innerHTML = "La letra del DNI es: " + lletres[numeroDNI%23];
+            }
+
+
+        }
+
+    </script>
+
+</head>
+<body>
+
+<h1>JavaScript - Ejercicio 21</h1>
+
+<input type="number" id="numero"/> <button id="boton" onclick="comprobar()">Comprobar</button>
+
+<p id="resultado">Pulsa en comprobar para saber la letra del DNI.</p>
+
+</body>
+</html>

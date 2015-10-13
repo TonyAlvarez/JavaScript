@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script>
+
+        function ejecutar() {
+
+            var valors = [true, 5, false, "hola", "Adios", 2];
+            var palabra1;
+            var palabra2;
+            var palabraLarga;
+            var suma = 0;
+
+            for (i in valors) {
+
+                if (typeof valors[i] == 'number') {
+                    suma += valors[i];
+                } else if (typeof valors[i] == 'string') {
+                    if (palabra1 === undefined) {
+                        palabra1 = valors[i];
+                    } else {
+                        palabra2 = valors[i];
+                    }
+                }
+            }
+
+            if (palabra1.length > palabra2.length) {
+                palabraLarga = palabra1;
+            } else {
+                palabraLarga = palabra2;
+            }
+
+            document.getElementById("resultado").innerHTML =
+                    "La suma de los numeros es " + suma +
+                    " y la palabra más larga es " + palabraLarga;
+
+        }
+
+    </script>
+
+</head>
+<body onload="ejecutar()">
+
+<h1>JavaScript - Ejercicio 21</h1>
+
+<p id="text">Recorrer un array con distintos tipos de datos.</p>
+
+<p id="resultado"></p>
+
+</body>
+</html>

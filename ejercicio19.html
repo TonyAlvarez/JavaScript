@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--
+    Crea un reloj que se muestre por pantalla la hora y la fecha y se vaya actualizando.
+    -->
+    <meta charset="UTF-8">
+    <title>Ejercicio 19</title>
+    <style>
+        html, body {
+            background-color: #6699CC;
+        }
+
+        .container {
+            text-align: center;
+            font-family: arial, sans-serif;
+            margin: 0 auto;
+        }
+
+        #hora {
+            font-size: 75px;
+            margin-top: 25px;
+            background-color: #fff;
+            display: inline-block;
+            padding: 15px;
+            border-radius: 15px;
+        }
+
+        #fecha {
+            background-color: #000;
+            color: #ffffff;
+            border-radius: 0 0 15px 15px;
+            padding: 15px;
+            position: relative;
+            top: 14px;
+        }
+    </style>
+    <script>
+        function getReloj() {
+            var fecha = new Date();
+
+            var hora = fecha.getHours();
+            var min = fecha.getMinutes();
+            min = min.toString();
+            var sec = fecha.getSeconds();
+            sec = sec.toString();
+
+            var diaSem = fecha.getDay();
+            var diaMes = fecha.getDate();
+            var mes = fecha.getMonth();
+            var anyo = fecha.getFullYear();
+
+            document.getElementById('hora').innerHTML = hora + ":" + comprobarDigitos(min) + ":" + comprobarDigitos(sec);
+            document.getElementById('fecha').innerHTML = getDiaSemana(diaSem) + " " + diaMes + " " + getMonthYear(mes) + " " + anyo;
+
+            <!-- Llama reiteradamente a la funcion getReloj(). -->
+            setTimeout("getReloj()", 1000);
+        }
+
+        function comprobarDigitos(num) {
+            if (num.length == 1) return "0" + num;
+            else return num;
+        }
+
+        function getDiaSemana(num) {
+            var dias = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+            return dias[num];
+        }
+
+        function getMonthYear(num) {
+            var meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+            return meses[num];
+        }
+    </script>
+</head>
+<body onload="getReloj()">
+<div class="container">
+    <div class="reloj">
+        <span id="hora"></span><br/>
+        <span id="fecha"></span>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--
+    Repeteix l’exercici 17 amb el format de data dd/mm/aaaa.
+    -->
+    <meta charset="UTF-8">
+    <title>ejercicio 18</title>
+    <script>
+        function comprobarFecha() {
+            var fecha1 = document.getElementById('fecha1').value;
+            var fecha2 = document.getElementById('fecha2').value;
+
+            var split = fecha1.split("/");
+            var dia = split[0];
+            var mes = split[1];
+            var anyo = split[2];
+            var d1 = new Date(anyo, mes, dia);
+
+            split = fecha2.split("/");
+            dia = split[0];
+            mes = split[1];
+            anyo = split[2];
+            var d2 = new Date(anyo, mes, dia);
+
+            if (d1 > d2) document.getElementById('resultado').innerHTML = fecha1;
+            else document.getElementById('resultado').innerHTML = fecha2;
+        }
+    </script>
+</head>
+<body>
+<div>
+    <p>Introduce la primera fecha (formato dd/mm/aaaa):</p>
+    <input type="date" id="fecha1">
+
+    <p>Introduce la segunda fecha (formato dd/mm/aaaa):</p>
+    <input type="date" id="fecha2">
+    <button onclick="comprobarFecha()">Submit</button>
+    <p>La fecha más grande es: <span id="resultado"></span></p>
+</div>
+</body>
+</html>

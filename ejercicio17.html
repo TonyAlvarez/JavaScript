@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script>
+
+
+  function comprobarFechas() {
+
+    var fecha1 = document.getElementById("fecha1").value;
+    var fecha2 = document.getElementById("fecha2").value;
+
+
+    if (fecha1 > fecha2) {
+      document.getElementById("resultado").innerHTML = fecha1;
+    } else {
+      document.getElementById("resultado").innerHTML = fecha2;
+    }
+  }
+
+  </script>
+
+</head>
+<body>
+
+  <h1>JavaScript - Ejercicio 17</h1>
+
+  <p id="text">Comprueba entre 2 fechas cual es la mayor.</p>
+
+  <p>Introduce una fecha.</p>
+  <input type="date" id="fecha1">
+
+  <p>Introduce otra fecha.</p>
+  <input type="date" id="fecha2">
+
+  <button onclick="comprobarFechas()">Comprobar</button>
+
+
+  <p id="resultado">Clic en comprobar para ver el resultado.</p>
+
+</body>
+</html>

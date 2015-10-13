@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script>
+
+  function ponerFecha() {
+
+    var date = new Date();
+
+    date.setDate(21);
+    date.setMonth(2);
+    date.setFullYear(2009);
+    date.setHours(12);
+    date.setMinutes(15);
+    date.setSeconds(00);
+
+    document.getElementById("resultadoDate").innerHTML = date;
+
+    date.setDate(date.getDate() + 3);
+
+    document.getElementById("resultadoDias").innerHTML = date;
+
+    date.setMonth(date.getMonth() + 5);
+
+    document.getElementById("resultadoMeses").innerHTML = date;
+
+    date.setFullYear(date.getFullYear() - 10);
+
+    document.getElementById("resultadoAnyos").innerHTML = date;
+  }
+  
+  </script>
+
+</head>
+<body onload="ponerFecha()">
+
+  <h1>JavaScript - Ejercicio 13</h1>
+
+  <p id="text">Objeto con fecha “21/03/2009 12:15”</p>
+
+  <p id="resultadoDate"></p>
+
+  <p id="text">Fecha sumando 3 dias:</p>
+
+  <p id="resultadoDias"></p>
+
+  <p id="text">Fecha sumando 5 meses:</p>
+
+  <p id="resultadoMeses"></p>
+
+  <p id="text">Fecha restando 10 años:</p>
+
+  <p id="resultadoAnyos"></p>
+
+</body>
+</html>
