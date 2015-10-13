@@ -4,8 +4,13 @@
     <meta charset="UTF-8">
     <title>3 en raya</title>
     <style>
+        table {
+            margin: 0 auto;
+            border-collapse: collapse;
+        }
+
         td {
-            border: 1px solid red;
+            border: 1px solid black;
             width: 100px;
             height: 100px;
             text-align: center;
@@ -13,58 +18,152 @@
 
     </style>
     <script>
-        var tablero = [["","",""],["","",""],["","",""]];
+
+        var tablero = [["", "", ""], ["", "", ""], ["", "", ""]];
         var turno = true;
+        var juegoFinalizado = false;
 
         function reiniciar() {
-            tablero = [["","",""],["","",""],["","",""]];
+            tablero = [["", "", ""], ["", "", ""], ["", "", ""]];
             pintarTablero();
+            juegoFinalizado = false;
         }
 
         function pintar(id) {
 
             var cell = document.getElementById(id);
+
             if (cell.innerHTML != "")
                 return;
 
-            if (turno) {
-                cell.innerHTML = "X";
-                turno = false;
-            } else {
-                cell.innerHTML = "O";
-                turno = true;
-            }
+            var count = 1;
+
+            buscar_id:
+                    for (var i = 0; i < tablero.length; i++) {
+                        for (var x = 0; x < tablero[i].length; x++) {
+                            if (id == count) {
+
+                                if (turno) {
+                                    tablero[i][x] = "X";
+                                    turno = false;
+                                } else {
+                                    tablero[i][x] = "O";
+                                    turno = true;
+                                }
+
+                                break buscar_id;
+                            }
+                            count++;
+                        }
+                    }
+
+            pintarTablero();
 
             comprobarGanador();
         }
 
         function comprobarGanador() {
 
+            if (tablero[0][0] != "" && tablero[0][0] == tablero[0][1] && tablero[0][1] == tablero[0][2]) {
+                document.getElementById("1").style.backgroundColor = "green";
+                document.getElementById("2").style.backgroundColor = "green";
+                document.getElementById("3").style.backgroundColor = "green";
+                alert("Ha ganado " + tablero[0][0]);
+                return;
+            } else if (tablero[1][0] != "" && tablero[1][0] == tablero[1][1] && tablero[1][1] == tablero[1][2]) {
+                document.getElementById("4").style.backgroundColor = "green";
+                document.getElementById("5").style.backgroundColor = "green";
+                document.getElementById("6").style.backgroundColor = "green";
+                alert("Ha ganado " + tablero[1][0]);
+                return;
+            } else if (tablero[2][0] != "" && tablero[2][0] == tablero[2][1] && tablero[2][1] == tablero[2][2]) {
+                document.getElementById("7").style.backgroundColor = "green";
+                document.getElementById("8").style.backgroundColor = "green";
+                document.getElementById("9").style.backgroundColor = "green";
+                alert("Ha ganado " + tablero[2][0]);
+                return;
+            } else if (tablero[0][0] != "" && tablero[0][0] == tablero[1][0] && tablero[0][0] == tablero[2][0]) {
+                document.getElementById("1").style.backgroundColor = "green";
+                document.getElementById("4").style.backgroundColor = "green";
+                document.getElementById("7").style.backgroundColor = "green";
+                alert("Ha ganado " + tablero[2][0]);
+                return;
+            } else if (tablero[0][1] != "" && tablero[0][1] == tablero[1][1] && tablero[0][1] == tablero[2][1]) {
+                document.getElementById("2").style.backgroundColor = "green";
+                document.getElementById("5").style.backgroundColor = "green";
+                document.getElementById("8").style.backgroundColor = "green";
+                alert("Ha ganado " + tablero[2][0]);
+                return;
+            } else if (tablero[0][2] != "" && tablero[0][2] == tablero[1][2] && tablero[0][2] == tablero[2][2]) {
+                document.getElementById("3").style.backgroundColor = "green";
+                document.getElementById("6").style.backgroundColor = "green";
+                document.getElementById("9").style.backgroundColor = "green";
+                alert("Ha ganado " + tablero[2][0]);
+                return;
+            } else if (tablero[0][0] != "" && tablero[0][0] == tablero[1][1] && tablero[0][0] == tablero[2][2]) {
+                document.getElementById("1").style.backgroundColor = "green";
+                document.getElementById("5").style.backgroundColor = "green";
+                document.getElementById("9").style.backgroundColor = "green";
+                alert("Ha ganado " + tablero[0][0]);
+                return;
+            } else if (tablero[0][2] != "" && tablero[0][2] == tablero[1][1] && tablero[0][2] == tablero[2][0]) {
+                document.getElementById("3").style.backgroundColor = "green";
+                document.getElementById("5").style.backgroundColor = "green";
+                document.getElementById("7").style.backgroundColor = "green";
+                alert("Ha ganado " + tablero[0][2]);
+                return;
+            }
+
+            for (var i = 0; i < tablero.length; i++) {
+                for (var x = 0; x < tablero[i].length; x++) {
+                    if (tablero[i][x] == "") {
+                        return;
+                    }
+                }
+            }
+
+            juegoFinalizado = true;
+            alert("No hay más movimientos");
+        }
+
+        function iniciar() {
+
+            var table = document.getElementById("tablero");
+            var count = 1;
+
+            for (var i = 0; i < tablero.length; i++) {
+                var row = table.insertRow();
+
+                for (var x = 0; x < tablero[i].length; x++) {
+                    var cell = row.insertCell(-1);
+                    cell.id = count;
+                    cell.addEventListener("click", function () {
+                        pintar(this.id)
+                    }, false);
+                    count++;
+                }
+            }
+
+            pintarTablero();
         }
 
         function pintarTablero() {
 
             var table = document.getElementById("tablero");
-            var count = 1;
 
-            for (i = 0; i < tablero.length; i++) {
-                var row = table.insertRow();
+            for (var i = 0; i < tablero.length; i++) {
+                var row = table.getElementsByTagName("tr")[i];
 
-                for (x = 0; x < tablero[i].length; x++) {
-                    var cell = row.insertCell();
-                    cell.innerHTML = tablero[i][x];
-                    cell.id = count;
-                    cell.addEventListener("click", function() { pintar(this.id) }, false);
-                    count ++;
+                for (var x = 0; x < tablero[i].length; x++) {
+                    row.getElementsByTagName("td")[x].innerHTML = tablero[i][x];
+                    row.getElementsByTagName("td")[x].style.backgroundColor = "white";
                 }
-
-
             }
         }
 
     </script>
 </head>
-<body onload="pintarTablero()">
+<body onload="iniciar()">
 
 <table id="tablero"></table>
 
