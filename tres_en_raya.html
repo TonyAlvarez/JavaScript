@@ -18,7 +18,6 @@
 
     </style>
     <script>
-
         var tablero = [["", "", ""], ["", "", ""], ["", "", ""]];
         var turno = true;
         var juegoFinalizado = false;
@@ -65,52 +64,36 @@
         function comprobarGanador() {
 
             if (tablero[0][0] != "" && tablero[0][0] == tablero[0][1] && tablero[0][1] == tablero[0][2]) {
-                document.getElementById("1").style.backgroundColor = "green";
-                document.getElementById("2").style.backgroundColor = "green";
-                document.getElementById("3").style.backgroundColor = "green";
-                alert("Ha ganado " + tablero[0][0]);
+                colorearGanador("1", "2", "3");
+                mostrarMensajeGanador();
                 return;
             } else if (tablero[1][0] != "" && tablero[1][0] == tablero[1][1] && tablero[1][1] == tablero[1][2]) {
-                document.getElementById("4").style.backgroundColor = "green";
-                document.getElementById("5").style.backgroundColor = "green";
-                document.getElementById("6").style.backgroundColor = "green";
-                alert("Ha ganado " + tablero[1][0]);
+                colorearGanador("4", "5", "6");
+                mostrarMensajeGanador();
                 return;
             } else if (tablero[2][0] != "" && tablero[2][0] == tablero[2][1] && tablero[2][1] == tablero[2][2]) {
-                document.getElementById("7").style.backgroundColor = "green";
-                document.getElementById("8").style.backgroundColor = "green";
-                document.getElementById("9").style.backgroundColor = "green";
-                alert("Ha ganado " + tablero[2][0]);
+                colorearGanador("7", "8", "9");
+                mostrarMensajeGanador();
                 return;
             } else if (tablero[0][0] != "" && tablero[0][0] == tablero[1][0] && tablero[0][0] == tablero[2][0]) {
-                document.getElementById("1").style.backgroundColor = "green";
-                document.getElementById("4").style.backgroundColor = "green";
-                document.getElementById("7").style.backgroundColor = "green";
-                alert("Ha ganado " + tablero[2][0]);
+                colorearGanador("1", "4", "7");
+                mostrarMensajeGanador();
                 return;
             } else if (tablero[0][1] != "" && tablero[0][1] == tablero[1][1] && tablero[0][1] == tablero[2][1]) {
-                document.getElementById("2").style.backgroundColor = "green";
-                document.getElementById("5").style.backgroundColor = "green";
-                document.getElementById("8").style.backgroundColor = "green";
-                alert("Ha ganado " + tablero[2][0]);
+                colorearGanador("2", "5", "8");
+                mostrarMensajeGanador();
                 return;
             } else if (tablero[0][2] != "" && tablero[0][2] == tablero[1][2] && tablero[0][2] == tablero[2][2]) {
-                document.getElementById("3").style.backgroundColor = "green";
-                document.getElementById("6").style.backgroundColor = "green";
-                document.getElementById("9").style.backgroundColor = "green";
-                alert("Ha ganado " + tablero[2][0]);
+                colorearGanador("3", "6", "9");
+                mostrarMensajeGanador();
                 return;
             } else if (tablero[0][0] != "" && tablero[0][0] == tablero[1][1] && tablero[0][0] == tablero[2][2]) {
-                document.getElementById("1").style.backgroundColor = "green";
-                document.getElementById("5").style.backgroundColor = "green";
-                document.getElementById("9").style.backgroundColor = "green";
-                alert("Ha ganado " + tablero[0][0]);
+                colorearGanador("1", "5", "9");
+                mostrarMensajeGanador();
                 return;
             } else if (tablero[0][2] != "" && tablero[0][2] == tablero[1][1] && tablero[0][2] == tablero[2][0]) {
-                document.getElementById("3").style.backgroundColor = "green";
-                document.getElementById("5").style.backgroundColor = "green";
-                document.getElementById("7").style.backgroundColor = "green";
-                alert("Ha ganado " + tablero[0][2]);
+                colorearGanador("3", "5", "7");
+                mostrarMensajeGanador();
                 return;
             }
 
@@ -123,7 +106,25 @@
             }
 
             juegoFinalizado = true;
-            alert("No hay más movimientos");
+
+            if (confirm("No hay mas movimientos.\n¿Reiniciar partida?"))
+                reiniciar();
+        }
+
+        function mostrarMensajeGanador() {
+            var ganador = "X";
+
+            if (turno)
+                ganador = "O"
+
+            if (confirm("Ha ganado " + ganador + ".\n¿Reiniciar partida?"))
+                reiniciar();
+        }
+
+        function colorearGanador(cell1, cell2, cell3) {
+            document.getElementById(cell1).style.backgroundColor = "green";
+            document.getElementById(cell2).style.backgroundColor = "green";
+            document.getElementById(cell3).style.backgroundColor = "green";
         }
 
         function iniciar() {
@@ -160,14 +161,11 @@
                 }
             }
         }
-
     </script>
 </head>
 <body onload="iniciar()">
 
 <table id="tablero"></table>
-
-<button onclick="reiniciar()">Reniciar</button>
 
 </body>
 </html>
