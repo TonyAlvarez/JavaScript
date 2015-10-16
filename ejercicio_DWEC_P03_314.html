@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>Exercici 3.1.3. - DOM b&agrave;sic</title>
+
+<script type="text/javascript">
+function afegeix() {
+    var node = document.createElement("li");
+    node.innerHTML = document.getElementById("data1").value;
+
+    document.getElementById("lista").appendChild(node);
+}
+</script>
+</head>
+
+<body>
+
+<ol id="lista">
+	<li>Lorem ipsum dolor sit amet</li>
+	<li>Consectetuer adipiscing elit</li>
+	<li>Sed mattis enim vitae orci</li>
+	<li>Phasellus libero</li>
+	<li>Maecenas nisl arcu</li>
+</ol>
+<input id="data1" type="text">
+<input type="button" value="Afegeix element" onclick="afegeix();">
+
+</body>
+</html>

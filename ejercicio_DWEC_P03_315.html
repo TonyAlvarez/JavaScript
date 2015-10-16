@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8"/>
+
+    <title>Exercici 3.1.5. - DOM b&agrave;sic</title>
+    <style type="text/css">
+
+    </style>
+    <script type="text/javascript">
+        function myFunction() {
+
+            var hijosDeBody = document.body.children;
+
+            //OL raiz
+            var olRaiz = document.createElement("ol");
+
+            //Último OL insertado en cada nivel
+            var ol2 = null;
+            var ol3 = null;
+            var ol4 = null;
+
+            document.getElementById("continguts").appendChild(olRaiz);
+
+            //Ultima cabecera leída, para comparar y meter un nuevo OL si es necesario
+            var cabeceraAnterior = null;
+
+            //Ultimo LI insertado, para meterle el OL si tiene hijos
+            var liSuperior = null;
+
+            //Bucle que recorre todos los hijos del body
+            for (var i = 0; i < hijosDeBody.length; i++) {
+
+                //Si el elemento no es una cabecera, lo ignoramos
+                if (hijosDeBody[i].tagName != "H1" &&
+                        hijosDeBody[i].tagName != "H2" &&
+                        hijosDeBody[i].tagName != "H3" &&
+                        hijosDeBody[i].tagName != "H4")
+                    continue;
+
+                //Creamos un nuevo LI para la cabecera
+                var li = document.createElement("li");
+
+                //Si la cabecera anterior está en un nivel inmediatamente superior,
+                // hay que añadirle un OL al último LI insertado
+                if (hijosDeBody[i].tagName == "H2" && cabeceraAnterior.tagName == "H1") {
+                    ol2 = document.createElement("ol");
+                    liSuperior.appendChild(ol2);
+                } else if (hijosDeBody[i].tagName == "H3" && cabeceraAnterior.tagName == "H2") {
+                    ol3 = document.createElement("ol");
+                    liSuperior.appendChild(ol3);
+                } else if (hijosDeBody[i].tagName == "H4" && cabeceraAnterior.tagName == "H3") {
+                    ol4 = document.createElement("ol");
+                    liSuperior.appendChild(ol4);
+                }
+
+                //Añadimos el LI al OL corresponiente en función de su nivel.
+                if (hijosDeBody[i].tagName == "H1") {
+                    li.innerHTML = hijosDeBody[i].innerHTML;
+                    olRaiz.appendChild(li);
+                } else if (hijosDeBody[i].tagName == "H2") {
+                    li.innerHTML = hijosDeBody[i].innerHTML;
+                    ol2.appendChild(li);
+                } else if (hijosDeBody[i].tagName == "H3") {
+                    li.innerHTML = hijosDeBody[i].innerHTML;
+                    ol3.appendChild(li);
+                } else if (hijosDeBody[i].tagName == "H4") {
+                    li.innerHTML = hijosDeBody[i].innerHTML;
+                    ol4.appendChild(li);
+                }
+
+                //Actualizamos la cabecera y el LI anterior para la próxima iteración del bucle.
+                liSuperior = li;
+                cabeceraAnterior = hijosDeBody[i];
+            }
+        }
+    </script>
+</head>
+<body onload="myFunction()">
+<p id="continguts"></p>
+
+<h1>Apartat 1.</h1>
+
+<p>
+    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Suspendisse interdum lobortis diam. Fusce a nisi. Vivamus
+    feugiat. Aliquam volutpat leo et urna. Proin lobortis ullamcorper tellus. Vestibulum quis tortor. Proin semper.
+    Vestibulum tellus quam, iaculis in, mollis at, tincidunt vitae, magna.</p>
+
+<h2>Apartat 1.2.</h2>
+
+<p>
+    Nunc blandit, nulla id dictum mollis, lectus nibh ullamcorper elit, sit amet euismod purus dolor quis nibh. Aliquam
+    ultrices libero. In neque mi, vulputate et, lobortis nec, tempor ac, urna. Etiam malesuada tempus orci. Class aptent
+    taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Donec pede odio, viverra vitae,
+    rhoncus vitae, sagittis a, lectus. Aenean lectus turpis, porta nec, laoreet venenatis, bibendum quis, magna.
+    Vestibulum gravida, enim ac pellentesque vestibulum, quam odio aliquet velit, vel rutrum purus nunc eu nisi.</p>
+
+<p>
+    Proin posuere est vitae est. Aenean ultrices velit at libero. Aliquam at tellus quis odio volutpat ultrices.
+    Phasellus commodo est ac urna. Integer odio augue, vulputate in, adipiscing in, eleifend vel, massa. Donec aliquet
+    nisi eu dui. Quisque vitae purus. Donec tincidunt neque in diam. Aliquam facilisis rhoncus quam. Etiam massa dolor,
+    suscipit et, pretium nec, rutrum nec, nisi. Morbi ut mi id erat interdum feugiat. In hac habitasse platea dictumst.
+    In dui dolor, rhoncus sed, placerat sit amet, condimentum interdum, est.</p>
+
+<h3>Apartat 1.2.1.</h3>
+
+<p>
+    Etiam justo lectus, viverra ac, eleifend vel, rhoncus eget, metus. Sed augue. Nam ipsum. Donec nibh ante,
+    pellentesque at, condimentum eget, cursus vel, purus. Curabitur urna metus, pharetra a, vulputate vel, pulvinar in,
+    nibh. Curabitur molestie hendrerit tellus. In hac habitasse platea dictumst. Donec fermentum, augue et laoreet
+    tincidunt, ante libero consequat orci, sed aliquet dui leo ut ligula. Donec placerat erat vestibulum nisi. Praesent
+    non quam id felis luctus sodales.</p>
+
+<p>
+    Mauris viverra varius diam. Suspendisse laoreet lobortis nisi. In vel mi. Vivamus rhoncus, tortor mattis interdum
+    facilisis, elit libero suscipit risus, et hendrerit mi mauris ac elit. Nulla massa orci, facilisis id, facilisis ut,
+    pulvinar a, nisl. Nam condimentum, pede vitae viverra aliquet, nisi purus tincidunt erat, sed malesuada ipsum ligula
+    nec turpis.</p>
+
+<h2>Apartat 1.3.</h2>
+
+<p>
+    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Suspendisse interdum lobortis diam. Fusce a nisi. Vivamus
+    feugiat. Aliquam volutpat leo et urna. Proin lobortis ullamcorper tellus. Vestibulum quis tortor. Proin semper.
+    Vestibulum tellus quam, iaculis in, mollis at, tincidunt vitae, magna.</p>
+
+<p>
+    Nunc blandit, nulla id dictum mollis, lectus nibh ullamcorper elit, sit amet euismod purus dolor quis nibh. Aliquam
+    ultrices libero. In neque mi, vulputate et, lobortis nec, tempor ac, urna. Etiam malesuada tempus orci. Class aptent
+    taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Donec pede odio, viverra vitae,
+    rhoncus vitae, sagittis a, lectus. Aenean lectus turpis, porta nec, laoreet venenatis, bibendum quis, magna.
+    Vestibulum gravida, enim ac pellentesque vestibulum, quam odio aliquet velit, vel rutrum purus nunc eu nisi.</p>
+
+<h3>Apartat 1.3.1.</h3>
+
+<p>
+    Proin posuere est vitae est. Aenean ultrices velit at libero. Aliquam at tellus quis odio volutpat ultrices.
+    Phasellus commodo est ac urna. Integer odio augue, vulputate in, adipiscing in, eleifend vel, massa. Donec aliquet
+    nisi eu dui. Quisque vitae purus. Donec tincidunt neque in diam. Aliquam facilisis rhoncus quam. Etiam massa dolor,
+    suscipit et, pretium nec, rutrum nec, nisi. Morbi ut mi id erat interdum feugiat. In hac habitasse platea dictumst.
+    In dui dolor, rhoncus sed, placerat sit amet, condimentum interdum, est.</p>
+
+<h3>Apartat 1.3.2.</h3>
+
+<p>
+    Proin posuere est vitae est. Aenean ultrices velit at libero. Aliquam at tellus quis odio volutpat ultrices.
+    Phasellus commodo est ac urna. Integer odio augue, vulputate in, adipiscing in, eleifend vel, massa. Donec aliquet
+    nisi eu dui. Quisque vitae purus. Donec tincidunt neque in diam. Aliquam facilisis rhoncus quam. Etiam massa dolor,
+    suscipit et, pretium nec, rutrum nec, nisi. Morbi ut mi id erat interdum feugiat. In hac habitasse platea dictumst.
+    In dui dolor, rhoncus sed, placerat sit amet, condimentum interdum, est.</p>
+
+<h4>Apartat 1.3.1.1.</h4>
+
+<p>
+    Etiam justo lectus, viverra ac, eleifend vel, rhoncus eget, metus. Sed augue. Nam ipsum. Donec nibh ante,
+    pellentesque at, condimentum eget, cursus vel, purus. Curabitur urna metus, pharetra a, vulputate vel, pulvinar in,
+    nibh. Curabitur molestie hendrerit tellus. In hac habitasse platea dictumst. Donec fermentum, augue et laoreet
+    tincidunt, ante libero consequat orci, sed aliquet dui leo ut ligula. Donec placerat erat vestibulum nisi. Praesent
+    non quam id felis luctus sodales.</p>
+<h4>Apartat 1.3.1.2.</h4>
+
+<p>
+    Mauris viverra varius diam. Suspendisse laoreet lobortis nisi. In vel mi. Vivamus rhoncus, tortor mattis interdum
+    facilisis, elit libero suscipit risus, et hendrerit mi mauris ac elit. Nulla massa orci, facilisis id, facilisis ut,
+    pulvinar a, nisl. Nam condimentum, pede vitae viverra aliquet, nisi purus tincidunt erat, sed malesuada ipsum ligula
+    nec turpis.</p>
+<h4>Apartat 1.3.1.3.</h4>
+
+<p>
+    Etiam justo lectus, viverra ac, eleifend vel, rhoncus eget, metus. Sed augue. Nam ipsum. Donec nibh ante,
+    pellentesque at, condimentum eget, cursus vel, purus. Curabitur urna metus, pharetra a, vulputate vel, pulvinar in,
+    nibh. Curabitur molestie hendrerit tellus. In hac habitasse platea dictumst. Donec fermentum, augue et laoreet
+    tincidunt, ante libero consequat orci, sed aliquet dui leo ut ligula. Donec placerat erat vestibulum nisi. Praesent
+    non quam id felis luctus sodales.</p>
+<h4>Apartat 1.3.1.4.</h4>
+
+<p>
+    Mauris viverra varius diam. Suspendisse laoreet lobortis nisi. In vel mi. Vivamus rhoncus, tortor mattis interdum
+    facilisis, elit libero suscipit risus, et hendrerit mi mauris ac elit. Nulla massa orci, facilisis id, facilisis ut,
+    pulvinar a, nisl. Nam condimentum, pede vitae viverra aliquet, nisi purus tincidunt erat, sed malesuada ipsum ligula
+    nec turpis.</p>
+
+<h1>Apartat 2.</h1>
+
+<p>
+    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Suspendisse interdum lobortis diam. Fusce a nisi. Vivamus
+    feugiat. Aliquam volutpat leo et urna. Proin lobortis ullamcorper tellus. Vestibulum quis tortor. Proin semper.
+    Vestibulum tellus quam, iaculis in, mollis at, tincidunt vitae, magna.</p>
+
+<h2>Apartat 2.1.</h2>
+
+<p>
+    Nunc blandit, nulla id dictum mollis, lectus nibh ullamcorper elit, sit amet euismod purus dolor quis nibh. Aliquam
+    ultrices libero. In neque mi, vulputate et, lobortis nec, tempor ac, urna. Etiam malesuada tempus orci. Class aptent
+    taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Donec pede odio, viverra vitae,
+    rhoncus vitae, sagittis a, lectus. Aenean lectus turpis, porta nec, laoreet venenatis, bibendum quis, magna.
+    Vestibulum gravida, enim ac pellentesque vestibulum, quam odio aliquet velit, vel rutrum purus nunc eu nisi.</p>
+
+<h2>Apartat 2.2.</h2>
+
+<p>
+    Nunc blandit, nulla id dictum mollis, lectus nibh ullamcorper elit, sit amet euismod purus dolor quis nibh. Aliquam
+    ultrices libero. In neque mi, vulputate et, lobortis nec, tempor ac, urna. Etiam malesuada tempus orci. Class aptent
+    taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Donec pede odio, viverra vitae,
+    rhoncus vitae, sagittis a, lectus. Aenean lectus turpis, porta nec, laoreet venenatis, bibendum quis, magna.
+    Vestibulum gravida, enim ac pellentesque vestibulum, quam odio aliquet velit, vel rutrum purus nunc eu nisi.</p>
+
+<h2>Apartat 2.3.</h2>
+
+<p>
+    Proin posuere est vitae est. Aenean ultrices velit at libero. Aliquam at tellus quis odio volutpat ultrices.
+    Phasellus commodo est ac urna. Integer odio augue, vulputate in, adipiscing in, eleifend vel, massa. Donec aliquet
+    nisi eu dui. Quisque vitae purus. Donec tincidunt neque in diam. Aliquam facilisis rhoncus quam. Etiam massa dolor,
+    suscipit et, pretium nec, rutrum nec, nisi. Morbi ut mi id erat interdum feugiat. In hac habitasse platea dictumst.
+    In dui dolor, rhoncus sed, placerat sit amet, condimentum interdum, est.</p>
+
+<h3>Apartat 2.3.1.</h3>
+
+<p>
+    Etiam justo lectus, viverra ac, eleifend vel, rhoncus eget, metus. Sed augue. Nam ipsum. Donec nibh ante,
+    pellentesque at, condimentum eget, cursus vel, purus. Curabitur urna metus, pharetra a, vulputate vel, pulvinar in,
+    nibh. Curabitur molestie hendrerit tellus. In hac habitasse platea dictumst. Donec fermentum, augue et laoreet
+    tincidunt, ante libero consequat orci, sed aliquet dui leo ut ligula. Donec placerat erat vestibulum nisi. Praesent
+    non quam id felis luctus sodales.</p>
+
+<h3>Apartat 2.3.2.</h3>
+
+<p>
+    Mauris viverra varius diam. Suspendisse laoreet lobortis nisi. In vel mi. Vivamus rhoncus, tortor mattis interdum
+    facilisis, elit libero suscipit risus, et hendrerit mi mauris ac elit. Nulla massa orci, facilisis id, facilisis ut,
+    pulvinar a, nisl. Nam condimentum, pede vitae viverra aliquet, nisi purus tincidunt erat, sed malesuada ipsum ligula
+    nec turpis.</p>
+
+<h2>Apartat 2.4.</h2>
+
+<p>
+    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Suspendisse interdum lobortis diam. Fusce a nisi. Vivamus
+    feugiat. Aliquam volutpat leo et urna. Proin lobortis ullamcorper tellus. Vestibulum quis tortor. Proin semper.
+    Vestibulum tellus quam, iaculis in, mollis at, tincidunt vitae, magna.</p>
+
+<p>
+    Nunc blandit, nulla id dictum mollis, lectus nibh ullamcorper elit, sit amet euismod purus dolor quis nibh. Aliquam
+    ultrices libero. In neque mi, vulputate et, lobortis nec, tempor ac, urna. Etiam malesuada tempus orci. Class aptent
+    taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Donec pede odio, viverra vitae,
+    rhoncus vitae, sagittis a, lectus. Aenean lectus turpis, porta nec, laoreet venenatis, bibendum quis, magna.
+    Vestibulum gravida, enim ac pellentesque vestibulum, quam odio aliquet velit, vel rutrum purus nunc eu nisi.</p>
+
+<h3>Apartat 2.4.1.</h3>
+
+<p>
+    Proin posuere est vitae est. Aenean ultrices velit at libero. Aliquam at tellus quis odio volutpat ultrices.
+    Phasellus commodo est ac urna. Integer odio augue, vulputate in, adipiscing in, eleifend vel, massa. Donec aliquet
+    nisi eu dui. Quisque vitae purus. Donec tincidunt neque in diam. Aliquam facilisis rhoncus quam. Etiam massa dolor,
+    suscipit et, pretium nec, rutrum nec, nisi. Morbi ut mi id erat interdum feugiat. In hac habitasse platea dictumst.
+    In dui dolor, rhoncus sed, placerat sit amet, condimentum interdum, est.</p>
+
+<h3>Apartat 2.4.2.</h3>
+
+<p>
+    Proin posuere est vitae est. Aenean ultrices velit at libero. Aliquam at tellus quis odio volutpat ultrices.
+    Phasellus commodo est ac urna. Integer odio augue, vulputate in, adipiscing in, eleifend vel, massa. Donec aliquet
+    nisi eu dui. Quisque vitae purus. Donec tincidunt neque in diam. Aliquam facilisis rhoncus quam. Etiam massa dolor,
+    suscipit et, pretium nec, rutrum nec, nisi. Morbi ut mi id erat interdum feugiat. In hac habitasse platea dictumst.
+    In dui dolor, rhoncus sed, placerat sit amet, condimentum interdum, est.</p>
+
+<h4>Apartat 2.4.2.1.</h4>
+
+<p>
+    Etiam justo lectus, viverra ac, eleifend vel, rhoncus eget, metus. Sed augue. Nam ipsum. Donec nibh ante,
+    pellentesque at, condimentum eget, cursus vel, purus. Curabitur urna metus, pharetra a, vulputate vel, pulvinar in,
+    nibh. Curabitur molestie hendrerit tellus. In hac habitasse platea dictumst. Donec fermentum, augue et laoreet
+    tincidunt, ante libero consequat orci, sed aliquet dui leo ut ligula. Donec placerat erat vestibulum nisi. Praesent
+    non quam id felis luctus sodales.</p>
+<h4>Apartat 2.4.2.2.</h4>
+
+<p>
+    Mauris viverra varius diam. Suspendisse laoreet lobortis nisi. In vel mi. Vivamus rhoncus, tortor mattis interdum
+    facilisis, elit libero suscipit risus, et hendrerit mi mauris ac elit. Nulla massa orci, facilisis id, facilisis ut,
+    pulvinar a, nisl. Nam condimentum, pede vitae viverra aliquet, nisi purus tincidunt erat, sed malesuada ipsum ligula
+    nec turpis.</p>
+
+<h3>Apartat 2.4.3.</h3>
+
+<p>
+    Etiam justo lectus, viverra ac, eleifend vel, rhoncus eget, metus. Sed augue. Nam ipsum. Donec nibh ante,
+    pellentesque at, condimentum eget, cursus vel, purus. Curabitur urna metus, pharetra a, vulputate vel, pulvinar in,
+    nibh. Curabitur molestie hendrerit tellus. In hac habitasse platea dictumst. Donec fermentum, augue et laoreet
+    tincidunt, ante libero consequat orci, sed aliquet dui leo ut ligula. Donec placerat erat vestibulum nisi. Praesent
+    non quam id felis luctus sodales.</p>
+<h4>Apartat 2.4.3.1.</h4>
+
+<p>
+    Mauris viverra varius diam. Suspendisse laoreet lobortis nisi. In vel mi. Vivamus rhoncus, tortor mattis interdum
+    facilisis, elit libero suscipit risus, et hendrerit mi mauris ac elit. Nulla massa orci, facilisis id, facilisis ut,
+    pulvinar a, nisl. Nam condimentum, pede vitae viverra aliquet, nisi purus tincidunt erat, sed malesuada ipsum ligula
+    nec turpis.</p>
+<h4>Apartat 2.4.3.2.</h4>
+
+<p>
+    Mauris viverra varius diam. Suspendisse laoreet lobortis nisi. In vel mi. Vivamus rhoncus, tortor mattis interdum
+    facilisis, elit libero suscipit risus, et hendrerit mi mauris ac elit. Nulla massa orci, facilisis id, facilisis ut,
+    pulvinar a, nisl. Nam condimentum, pede vitae viverra aliquet, nisi purus tincidunt erat, sed malesuada ipsum ligula
+    nec turpis.</p>
+
+<h1>Apartat 3.</h1>
+
+<p>
+    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Suspendisse interdum lobortis diam. Fusce a nisi. Vivamus
+    feugiat. Aliquam volutpat leo et urna. Proin lobortis ullamcorper tellus. Vestibulum quis tortor. Proin semper.
+    Vestibulum tellus quam, iaculis in, mollis at, tincidunt vitae, magna.</p>
+
+<h2>Apartat 3.1.</h2>
+
+<p>
+    Proin posuere est vitae est. Aenean ultrices velit at libero. Aliquam at tellus quis odio volutpat ultrices.
+    Phasellus commodo est ac urna. Integer odio augue, vulputate in, adipiscing in, eleifend vel, massa. Donec aliquet
+    nisi eu dui. Quisque vitae purus. Donec tincidunt neque in diam. Aliquam facilisis rhoncus quam. Etiam massa dolor,
+    suscipit et, pretium nec, rutrum nec, nisi. Morbi ut mi id erat interdum feugiat. In hac habitasse platea dictumst.
+    In dui dolor, rhoncus sed, placerat sit amet, condimentum interdum, est.</p>
+
+<h3>Apartat 3.1.1.</h3>
+
+<p>
+    Etiam justo lectus, viverra ac, eleifend vel, rhoncus eget, metus. Sed augue. Nam ipsum. Donec nibh ante,
+    pellentesque at, condimentum eget, cursus vel, purus. Curabitur urna metus, pharetra a, vulputate vel, pulvinar in,
+    nibh. Curabitur molestie hendrerit tellus. In hac habitasse platea dictumst. Donec fermentum, augue et laoreet
+    tincidunt, ante libero consequat orci, sed aliquet dui leo ut ligula. Donec placerat erat vestibulum nisi. Praesent
+    non quam id felis luctus sodales.</p>
+
+<h3>Apartat 3.1.2.</h3>
+
+<p>
+    Mauris viverra varius diam. Suspendisse laoreet lobortis nisi. In vel mi. Vivamus rhoncus, tortor mattis interdum
+    facilisis, elit libero suscipit risus, et hendrerit mi mauris ac elit. Nulla massa orci, facilisis id, facilisis ut,
+    pulvinar a, nisl. Nam condimentum, pede vitae viverra aliquet, nisi purus tincidunt erat, sed malesuada ipsum ligula
+    nec turpis.</p>
+
+<h2>Apartat 3.2.</h2>
+
+<p>
+    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Suspendisse interdum lobortis diam. Fusce a nisi. Vivamus
+    feugiat. Aliquam volutpat leo et urna. Proin lobortis ullamcorper tellus. Vestibulum quis tortor. Proin semper.
+    Vestibulum tellus quam, iaculis in, mollis at, tincidunt vitae, magna.</p>
+
+<p>
+    Nunc blandit, nulla id dictum mollis, lectus nibh ullamcorper elit, sit amet euismod purus dolor quis nibh. Aliquam
+    ultrices libero. In neque mi, vulputate et, lobortis nec, tempor ac, urna. Etiam malesuada tempus orci. Class aptent
+    taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Donec pede odio, viverra vitae,
+    rhoncus vitae, sagittis a, lectus. Aenean lectus turpis, porta nec, laoreet venenatis, bibendum quis, magna.
+    Vestibulum gravida, enim ac pellentesque vestibulum, quam odio aliquet velit, vel rutrum purus nunc eu nisi.</p>
+
+<h3>Apartat 3.2.1.</h3>
+
+<p>
+    Proin posuere est vitae est. Aenean ultrices velit at libero. Aliquam at tellus quis odio volutpat ultrices.
+    Phasellus commodo est ac urna. Integer odio augue, vulputate in, adipiscing in, eleifend vel, massa. Donec aliquet
+    nisi eu dui. Quisque vitae purus. Donec tincidunt neque in diam. Aliquam facilisis rhoncus quam. Etiam massa dolor,
+    suscipit et, pretium nec, rutrum nec, nisi. Morbi ut mi id erat interdum feugiat. In hac habitasse platea dictumst.
+    In dui dolor, rhoncus sed, placerat sit amet, condimentum interdum, est.</p>
+
+<h3>Apartat 3.2.2.</h3>
+
+<p>
+    Proin posuere est vitae est. Aenean ultrices velit at libero. Aliquam at tellus quis odio volutpat ultrices.
+    Phasellus commodo est ac urna. Integer odio augue, vulputate in, adipiscing in, eleifend vel, massa. Donec aliquet
+    nisi eu dui. Quisque vitae purus. Donec tincidunt neque in diam. Aliquam facilisis rhoncus quam. Etiam massa dolor,
+    suscipit et, pretium nec, rutrum nec, nisi. Morbi ut mi id erat interdum feugiat. In hac habitasse platea dictumst.
+    In dui dolor, rhoncus sed, placerat sit amet, condimentum interdum, est.</p>
+
+<h4>Apartat 3.2.2.1.</h4>
+
+<p>
+    Etiam justo lectus, viverra ac, eleifend vel, rhoncus eget, metus. Sed augue. Nam ipsum. Donec nibh ante,
+    pellentesque at, condimentum eget, cursus vel, purus. Curabitur urna metus, pharetra a, vulputate vel, pulvinar in,
+    nibh. Curabitur molestie hendrerit tellus. In hac habitasse platea dictumst. Donec fermentum, augue et laoreet
+    tincidunt, ante libero consequat orci, sed aliquet dui leo ut ligula. Donec placerat erat vestibulum nisi. Praesent
+    non quam id felis luctus sodales.</p>
+<h4>Apartat 3.2.2.2.</h4>
+
+<p>
+    Mauris viverra varius diam. Suspendisse laoreet lobortis nisi. In vel mi. Vivamus rhoncus, tortor mattis interdum
+    facilisis, elit libero suscipit risus, et hendrerit mi mauris ac elit. Nulla massa orci, facilisis id, facilisis ut,
+    pulvinar a, nisl. Nam condimentum, pede vitae viverra aliquet, nisi purus tincidunt erat, sed malesuada ipsum ligula
+    nec turpis.</p>
+
+
+</body>
+
+</html>

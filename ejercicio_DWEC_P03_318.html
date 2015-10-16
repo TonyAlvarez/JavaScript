@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Exercici 3.1.8. - DOM b&agrave;sic</title>
+    <link rel="stylesheet" href="ejercicio_DWEC_P03_318.css">
+    <script type="text/javascript">
+
+        var tabla;
+
+        function configurar() {
+            tabla = document.getElementById("miTabla");
+        }
+
+        function addColumna() {
+            for (var i = 0; i < tabla.getElementsByTagName("tr").length; i++) {
+                var cell = tabla.insertCell(-1);
+                cell.innerHTML = document.getElementById("texte").value;
+            }
+        }
+    </script>
+</head>
+<body onload="configurar()">
+<table id="miTabla" summary="Taula de proves per a l'exercici 3.16">
+    <caption>Taula Ex. 3.16</caption>
+    <tbody>
+    <tr>
+        <td>Celda 1 - 1</td>
+        <td>Celda 1 - 2</td>
+    </tr>
+    <tr>
+        <td>Celda 2 - 1</td>
+        <td>Celda 2 - 2</td>
+    </tr>
+    </tbody>
+</table>
+Text: <input id="texte" type="text"><br>
+Nóm. Fila: <input id="numFila" type="number" min="0"><br>
+Nóm. Columna: <input id="numColumna" type="number" min="0"><br>
+<input type="button" value="Añade columna" onclick="addColumna();">
+<input type="button" value="Añade fila" onclick="addFila();">
+<input type="button" value="Cambia valor celda" onclick="cambiaValor();"><br>
+<input type="button" value="Borra columna" onclick="borraColumna();">
+<input type="button" value="Borra fila" onclick="borraFila();">
+<input type="button" value="Cambia celdas tabla" onclick="cambiaCeldasTabla();">
+</body>
+</html>
