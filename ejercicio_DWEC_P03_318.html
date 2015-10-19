@@ -7,14 +7,48 @@
     <script type="text/javascript">
 
         var tabla;
+        var columnasExistentes;
+        var filasExistentes;
 
         function configurar() {
             tabla = document.getElementById("miTabla");
+            filasExistentes = tabla.rows.length;
+            columnasExistentes = tabla.rows[0].cells.length;
         }
 
         function addColumna() {
-            for (var i = 0; i < tabla.getElementsByTagName("tr").length; i++) {
-                var cell = tabla.insertCell(-1);
+
+            var numColumna = document.getElementById("numColumna").value;
+
+            if (numColumna > columnasExistentes) {
+                alert("Error: Número de columna incorrecto");
+                return;
+            }
+
+            columnasExistentes ++;
+
+            for (var i = 0; i < filasExistentes; i++) {
+                    var cell = tabla.rows[i].insertCell(numColumna);
+                    cell.innerHTML = document.getElementById("texte").value;
+            }
+        }
+
+
+        function addFila() {
+
+            var numFila = document.getElementById("numFila").value;
+
+            if (numFila > filasExistentes) {
+                alert("Error: Número de fila incorrecto");
+                return;
+            }
+
+            filasExistentes ++;
+
+            var fila = tabla.insertRow(numFila);
+
+            for (var i = 0; i < columnasExistentes; i++) {
+                var cell = fila.insertCell(i);
                 cell.innerHTML = document.getElementById("texte").value;
             }
         }
