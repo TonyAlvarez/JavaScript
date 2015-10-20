@@ -2,22 +2,55 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
+    <!--
+    23. Demana una frase des de teclat (amb prompt), emmagatzema les paraules en un array (una paraula per posició de l’array) i mostrar les següents dades:
+            La primera paraula de la frase.
+            La última paraula de la frase.
+            El nombre de paraules de la frase.
+            Totes les paraules ordenades alfabèticament.
+
+        -->
+
+
     <script>
 
         function pedirFrase() {
             var frase = prompt("Dime una frase");
 
-            document.getElementById("frase").innerHTML = frase;
+            var array = frase.split(" ");
 
-            var array =
+            var resultadoFrase = document.createElement("p");
+            resultadoFrase.innerHTML = "Frase introducida: " + frase;
+
+
+            var resultadoPrimera = document.createElement("p");
+            resultadoPrimera.innerHTML = "La primera palabra es " + array[0];
+
+            var resultadoUltima = document.createElement("p");
+            resultadoUltima.innerHTML = "La última palabra es " + array[array.length - 1];
+
+            var resultadoTotal = document.createElement("p");
+            resultadoTotal.innerHTML = "La frase tiene " + array.length + " palabras.";
+
+            array.sort();
+
+            var resultadoOrdenado = document.createElement("p");
+            resultadoOrdenado.innerHTML = "Las palabras de la frase ordenadas alfabéticamente: " + array;
+
+            document.body.appendChild(resultadoFrase);
+            document.body.appendChild(resultadoPrimera);
+            document.body.appendChild(resultadoUltima);
+            document.body.appendChild(resultadoTotal);
+            document.body.appendChild(resultadoOrdenado);
+
+
 
         }
 
     </script>
 </head>
 <body onload="pedirFrase()">
-
-    <p id="frase"></p>
 
 </body>
 </html>
