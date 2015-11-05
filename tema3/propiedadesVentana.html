@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+
+    <script>
+
+
+        function actualizar() {
+            document.getElementById("posX").innerHTML = window.screenLeft;
+            document.getElementById("posY").innerHTML = window.screenTop;
+            document.getElementById("height").innerHTML = window.innerHeight;
+            document.getElementById("width").innerHTML = window.innerWidth;
+            document.getElementById("outerheight").innerHTML = window.outerHeight;
+            document.getElementById("outerwidth").innerHTML = window.outerWidth;
+        }
+
+        setInterval(actualizar, 5);
+
+    </script>
+
+
+</head>
+<body>
+
+<p id="posX"></p>
+<p id="posY"></p>
+<p id="height"></p>
+<p id="width"></p>
+<p id="outerheight"></p>
+<p id="outerwidth"></p>
+
+</body>
+</html>

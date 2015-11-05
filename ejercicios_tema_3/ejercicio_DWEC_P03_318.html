@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Exercici 3.1.8. - DOM básic</title>
+    <link rel="stylesheet" href="ejercicio_DWEC_P03_318.css">
+    <script type="text/javascript">
+
+        //Variable para guardar la tabla y no estar accediendo a Document constantemente.
+        //Se define ahora y se configurar en el onLoad para que no devuelva Null
+        var tabla;
+
+        //Variables para llevar la cuenta de las columnas y las filas
+        //Son necesarias porque la propiedad rows.length de tabla no se actualiza
+        var columnasExistentes;
+        var filasExistentes;
+
+        //Metodo para configurar las variables anteriores en el onLoad y así no devuelvan nulo
+        function configurar() {
+            tabla = document.getElementById("miTabla");
+            filasExistentes = tabla.rows.length;
+            columnasExistentes = tabla.rows[0].cells.length;
+        }
+
+        //Funcion para añadir columna
+        function addColumna() {
+
+            //Recogemos los valor de los input
+            var numColumna = document.getElementById("numColumna").value;
+            var texto = document.getElementById("texte").value;
+
+            //Si el número es menor que 0 o mayor que las columnas existentes devolvemos un error
+            if (numColumna > columnasExistentes + 1 || numColumna < 0) {
+                alert("Error: Número de columna incorrecto");
+                return;
+            }
+
+            columnasExistentes++;
+
+            for (var i = 0; i < filasExistentes; i++) {
+                var cell = tabla.rows[i].insertCell(numColumna);
+                cell.innerHTML = texto;
+            }
+        }
+
+        function addFila() {
+
+            //Recogemos los valor de los input
+            var numFila = document.getElementById("numFila").value;
+            var texto = document.getElementById("texte").value;
+
+            //Si el número es menor que 0 o mayor que las filas existentes devolvemos un error
+            if (numFila > filasExistentes || numFila < 0) {
+                alert("Error: Número de fila incorrecto");
+                return;
+            }
+
+            filasExistentes++;
+
+            var fila = tabla.insertRow(numFila);
+
+            for (var i = 0; i < columnasExistentes; i++) {
+                var cell = fila.insertCell(i);
+                cell.innerHTML = texto;
+            }
+        }
+
+        function borrarColumna() {
+
+            //Recogemos el valor de lo input
+            var numColumna = document.getElementById("numColumna").value;
+
+            // Con -1 borra la última fila, pero lo elimino para seguir el enunciado
+            // if (numColumna < -1) {
+
+            if (numColumna > columnasExistentes - 1) {
+                alert("Error: La columna " + numColumna + " no existe");
+                return;
+            } else if (columnasExistentes == 1) {
+                alert("Error: La última columna no se puede borrar");
+                return;
+            }
+
+            columnasExistentes--;
+
+            for (var i = 0; i < filasExistentes; i++) {
+                tabla.rows[i].deleteCell(numColumna);
+            }
+        }
+
+        function borrarFila() {
+
+            //Recogemos el valor de lo input
+            var numFila = document.getElementById("numFila").value;
+
+            // Con -1 borra la última fila, pero lo elimino para seguir el enunciado
+            // if (numFila < -1) {
+
+            if (numFila > filasExistentes - 1) {
+                alert("Error: La fila " + numFila + " no existe");
+                return;
+            } else if (filasExistentes == 1) {
+                alert("Error: La última fila no se puede borrar");
+                return;
+            }
+
+            filasExistentes--;
+
+            tabla.deleteRow(numFila);
+        }
+
+        function cambiarCelda() {
+
+            var numFila = document.getElementById("numFila").value;
+            var numColumna = document.getElementById("numColumna").value;
+
+            if (numFila > filasExistentes - 1 || numFila < 0) {
+                alert("Error: La fila " + numFila + " no existe");
+                return;
+            } else if (numColumna > columnasExistentes - 1 || numColumna < 0) {
+                alert("Error: La columna " + numColumna + " no existe");
+                return;
+            }
+
+            tabla.rows[numFila].cells[numColumna].innerHTML = document.getElementById("texte").value;
+        }
+
+        function cambiarTabla() {
+
+            var texto = document.getElementById("texte").value;
+
+            //Recorremos todas las filas y sus celdas para cambiarles el texto.
+            for (var fila = 0; fila < filasExistentes; fila++)
+                for (var celda = 0; celda < columnasExistentes; celda++)
+                    tabla.rows[fila].cells[celda].innerHTML = texto;
+        }
+    </script>
+</head>
+<body onload="configurar()">
+<table id="miTabla" summary="Taula de proves per a l'exercici 3.16">
+    <caption>Taula Ex. 3.16</caption>
+    <tbody>
+    <tr>
+        <td>Celda 1 - 1</td>
+        <td>Celda 1 - 2</td>
+    </tr>
+    <tr>
+        <td>Celda 2 - 1</td>
+        <td>Celda 2 - 2</td>
+    </tr>
+    </tbody>
+</table>
+Text: <input id="texte" type="text"><br>
+Nóm. Fila: <input id="numFila" type="number" min="0"><br>
+Nóm. Columna: <input id="numColumna" type="number" min="0"><br>
+<input type="button" value="Añade columna" onclick="addColumna();">
+<input type="button" value="Añade fila" onclick="addFila();">
+<input type="button" value="Cambia valor celda" onclick="cambiarCelda();"><br>
+<input type="button" value="Borra columna" onclick="borrarColumna();">
+<input type="button" value="Borra fila" onclick="borrarFila();">
+<input type="button" value="Cambia celdas tabla" onclick="cambiarTabla();">
+</body>
+</html>

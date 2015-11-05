@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Ejercicio 9 - Crear, eliminar y modidicar nodos DOM</title>
+    <script type="text/javascript">
+
+        var NUM_MAXIMO = 10;
+        var NUM_CIFRAS = NUM_MAXIMO.toString().length;
+
+        //Funció que genera un número aleatorio entre inferior y superior, inclusivos
+        function aleatorio(inferior, superior) {
+            return Math.floor((Math.random() * (superior - inferior + 1)) + inferior);
+        }
+
+        function formatNumber(number, zeros) {
+            for (var i = 0; i < zeros; i++)
+                number = "0" + number;
+
+            return number.toString().substring(number.length - zeros, number.length);
+        }
+
+        function reiniciar() {
+            //Vaciamos los DIVs por si no es la primera tirada
+            document.getElementById("primero").innerHTML = "";
+            document.getElementById("segundo").innerHTML = "";
+            document.getElementById("tercero").innerHTML = "";
+            document.getElementById("resultado").innerHTML = "";
+        }
+
+        function genera() {
+            //Reiniciamos el tablero
+            reiniciar();
+
+            //Generamos tres números aleatorios del 1 al 10 y los formateamos al mismo tiempo
+            var primerNumero = formatNumber(aleatorio(1, NUM_MAXIMO), NUM_CIFRAS);
+            var segundoNumero = formatNumber(aleatorio(1, NUM_MAXIMO), NUM_CIFRAS);
+            var tercerNumero = formatNumber(aleatorio(1, NUM_MAXIMO), NUM_CIFRAS);
+
+            //Comprobamos que los números no se repitan y si se repiten los volvemos a generar y formatear
+            while (segundoNumero == primerNumero)
+                segundoNumero = formatNumber(aleatorio(1, NUM_MAXIMO), NUM_CIFRAS);
+
+            while (tercerNumero == primerNumero || tercerNumero == segundoNumero)
+                tercerNumero = formatNumber(aleatorio(1, NUM_MAXIMO), NUM_CIFRAS);
+
+            //Creamos un párrafo para cada número
+            var primerParrafo = document.createElement("p");
+            var segundoParrafo = document.createElement("p");
+            var tercerParrafo = document.createElement("p");
+
+            //Metemos los números aleatorios en el párrafo correspondiente
+            primerParrafo.innerHTML = primerNumero;
+            segundoParrafo.innerHTML = segundoNumero;
+            tercerParrafo.innerHTML = tercerNumero;
+
+            //Metemos los párrafos en el DIV correspondiente
+            document.getElementById("primero").appendChild(primerParrafo);
+            document.getElementById("segundo").appendChild(segundoParrafo);
+            document.getElementById("tercero").appendChild(tercerParrafo);
+
+            //Desactivamos el botón de Generar y activamos y le damos el foco al boton Comparar
+            document.getElementById("genera").setAttribute("disabled", "");
+            document.getElementById("compara").removeAttribute("disabled");
+            document.getElementById("compara").focus();
+        }
+
+        function compara() {
+
+            //Generamos el número aleatorio con el que jugaremos y lo formateamos
+            numeroJuego = formatNumber(aleatorio(1, NUM_MAXIMO), NUM_CIFRAS);
+
+            //Creamos un párrafo para cada número
+            var parrafoJuego = document.createElement("p");
+
+            //Metemos el número aleatorio en el párrafo
+            parrafoJuego.innerHTML = numeroJuego;
+
+            //Metemos el párrafo en el DIV correspondiente
+            document.getElementById("resultado").appendChild(parrafoJuego);
+
+
+            //Leemos los números ganadores
+            var primerGanador = document.getElementById("primero").getElementsByTagName("p")[0];
+            var segundoGanador = document.getElementById("segundo").getElementsByTagName("p")[0];
+            var tercerGanador = document.getElementById("tercero").getElementsByTagName("p")[0];
+
+            //Si el numero que jugamos es ganador, pintamos el ganador de verde, sino de rojo.
+            if (numeroJuego == primerGanador.innerHTML)
+                primerGanador.style.color = "green";
+            else
+                primerGanador.style.color = "red";
+
+            if (numeroJuego == segundoGanador.innerHTML)
+                segundoGanador.style.color = "green";
+            else
+                segundoGanador.style.color = "red";
+
+            if (numeroJuego == tercerGanador.innerHTML)
+                tercerGanador.style.color = "green";
+            else
+                tercerGanador.style.color = "red";
+
+
+            //Desactivamos el botón de Comparar y activamos Generar y le damos el foco para volver a empezar
+            document.getElementById("compara").setAttribute("disabled", "");
+            document.getElementById("genera").removeAttribute("disabled");
+            document.getElementById("genera").focus();
+
+        }
+
+    </script>
+    <link rel="stylesheet" href="ejercicio_DWEC_P03_3110.css">
+</head>
+
+<body>
+
+<div id="primero"></div>
+
+<div id="segundo"></div>
+
+<div id="tercero"></div>
+
+<div class="clear"></div>
+
+<input id="genera" type="button" autofocus value="Genera dècims" onclick="genera()"/>
+
+<input id="compara" type="button" value="Realitza sorteig" onclick="compara()" disabled/>
+
+<div id="resultado"></div>
+
+</body>
+</html>

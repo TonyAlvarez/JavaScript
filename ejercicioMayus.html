@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+
+        function comprobar() {
+            var frase = document.getElementById('frase').value;
+            var fraseMayus = frase.toUpperCase();
+            var fraseMinus = frase.toLowerCase();
+
+            if (frase == fraseMayus)
+                alert("Frase en mayusculas");
+            else if (frase == fraseMinus)
+                alert("Frase en minusculas");
+            else
+                alert("Frase con ambas");
+        }
+    </script>
+</head>
+<body>
+
+<h1>JavaScript - Ejercicio MayusMinus</h1>
+
+<p>Introduce una frase:</p>
+
+<input id="frase"/> <button onclick="comprobar()">Enviar</button>
+
+<p id="resultado">Clic en enviar para ver el resultado</p>
+
+</body>
+</html>

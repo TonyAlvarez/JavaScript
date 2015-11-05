@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="estilos.css">
+
+    <script>
+
+        function compararFechas() {
+
+            //Cogemos el string introducido en los Input
+            var data1 = document.getElementById("data1").value;
+            var data2 = document.getElementById("data2").value;
+
+            //Creamos las dos fechas a partir de los strings, separando los 3 valores con spli
+            //En el mes le restamos 1 porque Enero es el mes 0
+            var fecha1 = new Date();
+            fecha1.setDate(data1.split("/")[0]);
+            fecha1.setMonth(data1.split("/")[1] - 1);
+            fecha1.setFullYear(data1.split("/")[2]);
+
+            var fecha2 = new Date();
+            fecha2.setDate(data2.split("/")[0]);
+            fecha2.setMonth(data2.split("/")[1] - 1);
+            fecha2.setFullYear(data2.split("/")[2]);
+
+            //Calculamos la diferencia en ms entre las dos fechas
+            var diferenciaMilisegundos = fecha1.getTime() - fecha2.getTime();
+
+            //Si la diferencia es negativa la pasamos a positiva
+            if (diferenciaMilisegundos < 0)
+                diferenciaMilisegundos -= diferenciaMilisegundos * 2;
+
+            //Calculamos la diferencia en días a partir de la diferencia en ms
+            var dias = Math.round(diferenciaMilisegundos / (1000 * 60 * 60 * 24));
+
+            //Mostramos el resultado
+            document.getElementById("resultadoDiferencia").innerHTML = "Entre las dos fechas hay una diferencia de " + dias + " dias.";
+        }
+
+        function comprobarPalindromo() {
+
+            //Obtenemos el texto y generamos las fechas
+            var data1 = document.getElementById("data1").value;
+            var data2 = document.getElementById("data2").value;
+
+            var fecha1 = new Date();
+            fecha1.setDate(data1.split("/")[0]);
+            fecha1.setMonth(data1.split("/")[1] - 1);
+            fecha1.setFullYear(data1.split("/")[2]);
+
+            var fecha2 = new Date();
+            fecha2.setDate(data2.split("/")[0]);
+            fecha2.setMonth(data2.split("/")[1] - 1);
+            fecha2.setFullYear(data2.split("/")[2]);
+
+            //Comprobamos si son palíndromas
+            if (isPalindromo(fecha1))
+                document.getElementById("resultadoFecha1").innerHTML = "La fecha \"" + data1 + "\" es palíndroma";
+            else
+                document.getElementById("resultadoFecha1").innerHTML = "La fecha \"" + data1 + "\" no es palíndroma";
+
+            if (isPalindromo(fecha2))
+                document.getElementById("resultadoFecha2").innerHTML = "La fecha \"" + data2 + "\" es palíndroma";
+            else
+                document.getElementById("resultadoFecha2").innerHTML = "La fecha \"" + data2 + "\" no es palíndroma";
+
+
+        }
+
+        function isPalindromo(fecha) {
+
+            //Pasamos la fecha a string para quitar las barras ( / ) y añadimos 0 si es necesario en el día y en el mes
+            //En el mes hay que sumarle uno porque enero es el mes 0
+            var fechaString = "" + addZeros(fecha.getDate(), 2) + addZeros((fecha.getMonth() + 1), 2) + fecha.getFullYear();
+
+
+            //Recorremos los caracteres de la fecha
+            for (var i = 0; i < fechaString.length; i++) {
+
+                //Si un caracter no es igual que el del lado opuesto, contando desde el final, no es palindromo
+                //Entonces devolvemos falso porque no es palíndromo
+                if (fechaString.charAt(i) != fechaString.charAt(fechaString.length - (i + 1)))
+                    return false;
+            }
+
+            //Si ha terminado el bucle sin devolver false es porque es palíndromo y devolvemos true
+            return true;
+        }
+
+
+        //Función que añade 0 a la fecha
+        function addZeros(number, zeros) {
+            for (var i = 0; i < zeros; i++) {
+                number = "0" + number;
+            }
+
+            return number.substring(number.length - zeros, number.length);
+        }
+
+
+        function formatearFecha() {
+
+            //Obtenemos el texto y generamos las fechas
+            var data1 = document.getElementById("data1").value;
+            var data2 = document.getElementById("data2").value;
+
+            var fecha1 = new Date();
+            fecha1.setDate(data1.split("/")[0]);
+            fecha1.setMonth(data1.split("/")[1] - 1);
+            fecha1.setFullYear(data1.split("/")[2]);
+
+            var fecha2 = new Date();
+            fecha2.setDate(data2.split("/")[0]);
+            fecha2.setMonth(data2.split("/")[1] - 1);
+            fecha2.setFullYear(data2.split("/")[2]);
+
+            //Obtenemos los separadores
+            var separadorFecha = document.getElementById("separadorFecha").value;
+            var separadorHora = document.getElementById("separadorHora").value;
+
+            //Formateamos las fechas con los separadores
+            document.getElementById("resultadoFormato1").innerHTML = "Fecha 1 formateada: " + formatData(fecha1, separadorFecha, separadorHora);
+            document.getElementById("resultadoFormato2").innerHTML = "Fecha 2 formateada: " + formatData(fecha2, separadorFecha, separadorHora);
+        }
+
+        function formatData(fecha ,separadorFecha, separadorHora) {
+            return "" + fecha.getDate() + separadorFecha + (fecha.getMonth() + 1) + separadorFecha + fecha.getFullYear()
+                    + " " + fecha.getHours() + separadorHora + fecha.getMinutes();
+        }
+
+    </script>
+
+</head>
+<body>
+
+<h4>Introduce dos fechas con el formato 'dd/mm/yyyy' para obtener la diferencia en días</h4>
+
+<label>Fecha 1:
+    <input type="text" id="data1">
+</label>
+<br/>
+<label>Fecha 2:
+    <input type="text" id="data2">
+</label>
+
+<br/><br/>
+
+<p id="resultadoDiferencia"></p>
+
+<button onclick="compararFechas()">Obtener diferencia en dias</button>
+
+<br/>
+
+<h4>Comprobar si las fechas anteriores son palíndromas</h4>
+
+<p id="resultadoFecha1"></p>
+
+<p id="resultadoFecha2"></p>
+
+<button onclick="comprobarPalindromo()">Averiguar si las fechas son palíndromas</button>
+
+<br/>
+
+<h4>Devolver la primera fecha con un formato determinado</h4>
+
+<label>Separador fecha:
+    <input type="text" id="separadorFecha" value="-">
+</label>
+<br/>
+<label>Separador hora:
+    <input type="text" id="separadorHora" value=".">
+</label>
+
+<br/>
+<br/>
+
+<p id="resultadoFormato1"></p>
+<p id="resultadoFormato2"></p>
+
+<button onclick="formatearFecha()">Formatear fechas</button>
+
+
+</body>
+</html>

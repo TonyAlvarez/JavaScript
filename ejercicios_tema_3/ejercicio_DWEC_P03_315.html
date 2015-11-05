@@ -19,6 +19,7 @@
             var ol3 = null;
             var ol4 = null;
 
+            //Añadimos el OL raiz al P donde tiene que ir el indice
             document.getElementById("continguts").appendChild(olRaiz);
 
             //Ultima cabecera leída, para comparar y meter un nuevo OL si es necesario
@@ -37,10 +38,7 @@
                         hijosDeBody[i].tagName != "H4")
                     continue;
 
-                //Creamos un nuevo LI para la cabecera
-                var li = document.createElement("li");
-
-                //Si la cabecera anterior está en un nivel inmediatamente superior,
+                // Si la cabecera anterior está en un nivel inmediatamente superior,
                 // hay que añadirle un OL al último LI insertado
                 if (hijosDeBody[i].tagName == "H2" && cabeceraAnterior.tagName == "H1") {
                     ol2 = document.createElement("ol");
@@ -52,6 +50,9 @@
                     ol4 = document.createElement("ol");
                     liSuperior.appendChild(ol4);
                 }
+
+                //Creamos un nuevo LI para la cabecera
+                var li = document.createElement("li");
 
                 //Añadimos el LI al OL corresponiente en función de su nivel.
                 if (hijosDeBody[i].tagName == "H1") {

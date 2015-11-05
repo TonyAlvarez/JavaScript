@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+
+    <script>
+        var reloj = document.createElement("p");
+
+        function iniciar() {
+
+            document.body.appendChild(reloj);
+
+            mostrarHora();
+
+            //También se puede hacer con setInterval sin necesidad de llamar a la función
+            //setInterval(mostrarHora, 1000);
+        }
+
+        function mostrarHora() {
+
+            var hora = new Date();
+
+            reloj.innerHTML = addZeros(hora.getHours(), 2) + " : "
+                    + addZeros(hora.getMinutes(), 2) + " : "
+                    + addZeros(hora.getSeconds(), 2);
+
+            //Timeout solo funciona si llama a la misma función en la que está
+            setTimeout(mostrarHora, 1000);
+        }
+
+        function addZeros(number, zeros) {
+            number = number.toString();
+
+            for (var i = 0; i < zeros; i++) {
+                number = "0" + number;
+            }
+            return number.substring(number.length - zeros, number.length);
+        }
+    </script>
+
+</head>
+<body onload="iniciar()">
+
+</body>
+</html>

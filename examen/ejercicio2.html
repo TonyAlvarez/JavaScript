@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Piedra, papel o tijera</title>
+    <link rel="stylesheet" href="estilos.css">
+
+    <script>
+
+        var arrayJugador = [];
+        var arrayMaquina = [];
+
+        var numTirada = 0;
+
+        function tiradaMaquina() {
+            //Generamos la tirada aleatoria de la máquina
+            var tirada = aleatorio(1, 3);
+
+            if (tirada == 1)
+                arrayMaquina.push("Piedra");
+            else if (tirada == 2)
+                arrayMaquina.push("Papel");
+            else
+                arrayMaquina.push("Tijera");
+
+            addJugada();
+        }
+
+        function piedra() {
+            arrayJugador.push("Piedra");
+            tiradaMaquina();
+        }
+
+        function papel() {
+            arrayJugador.push("Papel");
+            tiradaMaquina();
+        }
+
+        function tijera() {
+            arrayJugador.push("Tijera");
+            tiradaMaquina();
+        }
+
+        function addJugada() {
+
+            var ganador;
+
+            //Hacemos las comprobaciones para ver si se ha empatado o quien ha ganado
+            if (arrayJugador[numTirada] == arrayMaquina[numTirada]) {
+                ganador = 0;
+                document.getElementById("resultadoTirada").innerHTML = "La máquina ha elegido <b>" + arrayMaquina[numTirada] + "</b>. Habeis empatado.";
+            } else if (arrayJugador[numTirada] == "Piedra" && arrayMaquina[numTirada] == "Tijera"
+                    || arrayJugador[numTirada] == "Papel" && arrayMaquina[numTirada] == "Piedra"
+                    || arrayJugador[numTirada] == "Tijera" && arrayMaquina[numTirada] == "Papel") {
+                ganador = 1;
+                document.getElementById("resultadoTirada").innerHTML = "La máquina ha elegido <b>" + arrayMaquina[numTirada] + "</b>. Has ganado!";
+            } else {
+                document.getElementById("resultadoTirada").innerHTML = "La máquina ha elegido <b>" + arrayMaquina[numTirada] + "</b>. Has perdido!";
+                ganador = 2;
+            }
+
+            //Creamos una nueva fila y dos celdas y metemos las tiradas en ellas
+            var fila = tabla.insertRow(numTirada + 1);
+            var celdaJugador = fila.insertCell(0);
+            var celdaMaquina = fila.insertCell(1);
+
+            celdaJugador.innerHTML = arrayJugador[numTirada];
+            celdaMaquina.innerHTML = arrayMaquina[numTirada];
+
+            //Ponemos el color de fondo en función del ganador
+            if (ganador == 0) {
+                celdaJugador.style.backgroundColor = "blue";
+                celdaMaquina.style.backgroundColor = "blue";
+            } else if (ganador == 1) {
+                celdaJugador.style.backgroundColor = "green";
+                celdaMaquina.style.backgroundColor = "red";
+            } else {
+                celdaJugador.style.backgroundColor = "red";
+                celdaMaquina.style.backgroundColor = "green";
+            }
+
+            //Aumentamos el numero de tirada
+            numTirada++;
+        }
+
+        //Función que genera un número aleatorio entre inferior y superior
+        function aleatorio(inferior, superior) {
+            return Math.floor((Math.random() * (superior - inferior + 1)) + inferior);
+        }
+
+    </script>
+</head>
+<body>
+
+<p>Elige tu tirada:</p>
+
+<button onclick="piedra()">Piedra</button>
+<button onclick="papel()">Papel</button>
+<button onclick="tijera()">Tijera</button>
+
+<p id="resultadoTirada"></p>
+
+<br/>
+<table id="tabla">
+    <caption>Historial de jugadas</caption>
+    <tbody>
+    <tr>
+        <td>Jugador</td>
+        <td>Máquina</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

@@ -1,6 +1,0 @@
-#primero, #segundo, #tercero, #resultado {width: 150px; height: 150px; border: thin solid silver; background: #F5F5F5; float: left; margin:20px; font-size: 6em; color: blue; text-align: center; padding: 5px; font-family:Arial, Helvetica, sans-serif;}
-#primero p, #segundo p, #tercero p, #resultado p {margin:.2em;}
-#resultado {margin-left:1.3em; border-color: black; color: black;}
-.clear {clear:both;}
-#compara {font-size:1.2em;}
-#genera {font-size:1.2em;}

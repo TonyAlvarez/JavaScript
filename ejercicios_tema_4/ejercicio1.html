@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script>
+
+        function ejecutar() {
+
+            //Pedir el nombre
+            var nombre = prompt("¿Como te llamas?");
+
+            //Mostrarlo en un párrafo
+            var p = document.createElement("p");
+            p.innerHTML = nombre;
+            document.body.appendChild(p);
+
+            //Mostrarlo en mayúsculas en la barra de estado
+            //No funciona porque está obsoleto
+            window.status = nombre.toUpperCase();
+
+            //Mostrarlo en un alert
+            alert("Tu nombre es: " + nombre);
+
+            //Mostrarlo en mayúsculas en el título de la página prinipal
+            document.title = nombre.toUpperCase();
+        }
+
+
+    </script>
+</head>
+<body onload="ejecutar()">
+
+</body>
+</html>
