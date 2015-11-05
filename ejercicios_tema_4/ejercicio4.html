@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script>
+        function mostrarInformacion() {
+
+            document.write("<b>Altura ventana:</b> " + screen.availHeight);
+            document.write("<br /><b>Anchura ventana:</b> " + screen.availWidth);
+            document.write("<br /><b>Profundidad color:</b> " + screen.colorDepth);
+            document.write("<br /><b>Resolución altura:</b> " + screen.height);
+            document.write("<br /><b>Resolución anchura:</b> " + screen.width);
+            document.write("<br /><b>Navegador:</b> " + navigator.appCodeName);
+            document.write("<br /><b>Navegador2:</b> " + navigator.appName);
+            document.write("<br /><b>Versión:</b> " + navigator.appVersion);
+            document.write("<br /><b>Cookies:</b> " + navigator.cookieEnabled);
+            document.write("<br /><b>Java:</b> " + navigator.javaEnabled());
+            document.write("<br /><b>User Agent:</b> " + navigator.userAgent);
+            document.write("<br /><b>Idioma navegador:</b> " + navigator.language);
+            document.write("<br /><b>Idioma navegador:</b> " + navigator.language);
+            document.write("<br /><b>Idioma SO:</b> " + navigator.systemLanguage);
+            document.write("<br /><b>Idioma usuario:</b> " + navigator.userLanguage);
+            document.write("<br /><b>Sistema operativo:</b> " + navigator.platform);
+
+            var mimes = navigator.mimeTypes;
+            for (var i = 0; i < mimes.length; i++)
+                document.write("<br /><b>Mime Type " + i + ":</b> " + mimes[i].enabledPlugin.description);
+
+            var plugins = navigator.plugins;
+            for (var i = 0; i < plugins.length; i++)
+                document.write("<br /><b>Plugins " + i + ":</b> " + plugins[i].name + ", " + plugins[i].filename + ", " + plugins[i].description + ", " + plugins[i].version);
+
+
+
+        }
+
+    </script>
+</head>
+<body onload="mostrarInformacion()">
+
+</body>
+</html>
