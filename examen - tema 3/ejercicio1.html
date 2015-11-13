@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="estilos.css">
+
+    <title>Ejercicio 1 - Crear lista</title>
+
+    <script>
+
+        function generarLista() {
+
+            var tabla = document.getElementById("tabla");
+            var lista = document.getElementById("lista");
+            var ul = document.createElement("ul");
+            lista.appendChild(ul);
+
+            //Recorremos todas las filas y sus celdas para cambiarles el texto.
+            for (var fila = 0; fila < tabla.rows.length; fila++) {
+                for (var celda = 0; celda < tabla.rows[0].cells.length; celda++) {
+
+                    //Creamos un elemento LI y otro elemento de tipo texto que será su contenido
+                    var li = document.createElement("li");
+                    var texto = document.createTextNode(tabla.rows[fila].cells[celda].textContent);
+
+                    //Los añadimos al UL
+                    li.appendChild(texto);
+                    ul.appendChild(li);
+                }
+            }
+        }
+
+    </script>
+</head>
+<body>
+
+
+<table id="tabla">
+    <caption>Tabla de pruebas</caption>
+    <tbody>
+    <tr>
+        <td>e1.1</td>
+        <td>e1.2</td>
+        <td>e1.3</td>
+        <td>e1.4</td>
+    </tr>
+    <tr>
+        <td>e1.5</td>
+        <td>e1.6</td>
+        <td>e1.7</td>
+        <td>e1.8</td>
+    </tr>
+    <tr>
+        <td>e1.9</td>
+        <td>e1.10</td>
+        <td>e1.11</td>
+        <td>e1.12</td>
+    </tr>
+    <tr>
+        <td>e1.13</td>
+        <td>e1.14</td>
+        <td>e1.15</td>
+        <td>e1.16</td>
+    </tr>
+    </tbody>
+</table>
+
+<input type="button" value="Generar lista" onclick="generarLista();">
+
+<div id="lista"></div>
+
+</body>
+</html>
