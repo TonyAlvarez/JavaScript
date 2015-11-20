@@ -25,7 +25,7 @@
                     + addZeros(hora.getMinutes(), 2) + " : "
                     + addZeros(hora.getSeconds(), 2);
 
-            //Timeout solo funciona si llama a la misma función en la que está
+            //Llamar recursivamente a mostrarHora transcurrido 1 segundo.
             setTimeout(mostrarHora, 1000);
         }
 

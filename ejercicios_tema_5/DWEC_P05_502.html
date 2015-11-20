@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script>
+
+        function iniciar() {
+            document.onmousemove = movimientoRaton;
+            document.onmousedown = clickRaton;
+            document.onmouseup = limpiarRaton;
+        }
+
+        function movimientoRaton(event) {
+            document.getElementById("navegador").innerHTML = "Navegador: " + event.clientX + " - " + event.clientY;
+            document.getElementById("pagina").innerHTML = "Página: " + event.screenX + " - " + event.screenY;
+        }
+
+        function clickRaton(event) {
+            document.getElementById("izquierda").innerHTML = "Clic izquierdo: " + (event.button == 0);
+            document.getElementById("derecha").innerHTML = "Clic derecho: " +  (event.button == 2);
+        }
+
+        function limpiarRaton() {
+            document.getElementById("izquierda").innerHTML = "Clic izquierdo: false";
+            document.getElementById("derecha").innerHTML = "Clic derecho: false";
+        }
+
+    </script>
+</head>
+
+<body onload="iniciar()">
+
+<ul>
+    <li></li>
+</ul>
+<a href="DWEC_P05_502.html"></a>
+
+<p id="navegador"></p>
+<p id="pagina"></p>
+<p id="izquierda"></p>
+<p id="derecha"></p>
+
+</body>
+</html>
