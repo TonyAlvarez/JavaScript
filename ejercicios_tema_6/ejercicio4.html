@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 1 - Examen Tema 6</title>
+    <link rel="stylesheet" href="estilos.css">
+    <script type="text/javascript">
+
+        var numero1;
+        var numero2;
+
+        function inicializar() {
+            numero1 = numRandom(1, 10);
+            numero2 = numRandom(1, 10);
+
+            document.getElementById("operacion").innerHTML = numero1 + " + " + numero2 + " = ";
+        }
+
+        function recorrerElementos() {
+
+            limpiarError();
+
+            var elementos = document.forms[0];
+
+            //Bucle que recorre los elementos del formulario y los comprueba.
+            for (var i = 0; i < elementos.length; i++) {
+                //Comprobamos el elemento, y si la funcion devuelve false, devolvemos false al formulario.
+                if (!comprobar(elementos[i]))
+                    return false;
+            }
+
+            alert("Todos los campos han sido validados correctamente");
+
+            //Si ningún elemento ha devuelto false, devolvemos true.
+            return true;
+        }
+
+        function comprobar(elemento) {
+
+            if (elemento.id == "nombre") {
+                return comprobarNombre(elemento);
+            } else if (elemento.id == "email") {
+                return comprobarMail(elemento);
+            } else if (elemento.id == "contraseña1") {
+                return comprobarContrasena1(elemento);
+            } else if (elemento.id == "contraseña2") {
+                return comprobarContrasena2(elemento);
+            } else if (elemento.id == "suma") {
+                return comprobarSuma(elemento);
+            }
+
+            //Si el ID no coincide con ninguno de los elementos que queremos comprobar, devolvemos true.
+            return true;
+        }
+
+        function comprobarNombre(nombre) {
+
+            //Variable para no acceder constantemente al document
+            var valor = nombre.value;
+            //Semaforo para saber si los datos se validan
+            var correcto = true;
+            //Mansaje de error
+            var mensaje_error;
+
+            //Campo vacio
+            if (valor == "") {
+                mensaje_error = "El nombre no puede estar vacio";
+                correcto = false;
+            }
+
+            var sinEspacios = valor.split(" ").join("");
+
+            if (sinEspacios.length == 0) {
+                mensaje_error = "El nombre no puede estar vacio";
+                correcto = false;
+            }
+
+            //Si hay algun error devolvemos false y lo mostramos
+            if (!correcto) {
+                nombre.focus();
+                document.getElementById("nombre_error").innerHTML = mensaje_error;
+            }
+
+            return correcto;
+        }
+
+        function comprobarMail(email) {
+
+            //Variable para no acceder constantemente al document
+            var valor = email.value;
+            //Semaforo para saber si los datos se validan
+            var correcto = true;
+            //Mansaje de error
+            var mensaje_error;
+
+            //Campo vacio
+            if (valor == "") {
+                mensaje_error = "El email no puede estar vacio";
+                correcto = false;
+            }
+
+            //Separamos el email por la arroba
+            var email_separado = valor.split("@");
+
+            if (!email_separado[0] || !email_separado[1] || email_separado[0] == "" || email_separado[1] == "") {
+                mensaje_error = "El email no es valido";
+                correcto = false;
+            } else {
+                //Separamos el dominio por el punto
+                var dominio_separado = email_separado[1].split(".");
+                if (!dominio_separado[0] || !dominio_separado[1] || dominio_separado[0] == "" || dominio_separado[1] == "") {
+                    mensaje_error = "El dominio del email no es valido";
+                    correcto = false;
+                }
+            }
+
+            //Si hay algun error devolvemos false y lo mostramos
+            if (!correcto) {
+                email.focus();
+                document.getElementById("email_error").innerHTML = mensaje_error;
+            }
+
+            return correcto;
+        }
+
+        function comprobarContrasena1(contrasena) {
+
+            //Variable para no acceder constantemente al document
+            var valor = contrasena.value;
+            //Semaforo para saber si los datos se validan
+            var correcto = true;
+            //Mansaje de error
+            var mensaje_error;
+
+            //Campo vacio
+            if (valor == "") {
+                mensaje_error = "La contraseña no puede estar vacia";
+                correcto = false;
+            }
+
+            if (valor.length < 8) {
+                mensaje_error = "La contraseña tiene que tener al menos 8 caracteres";
+                correcto = false;
+            }
+
+            //Lista de caracteres numéricos y de mayusculas para luego comparar.
+            var numeros = "0123456789";
+            var mayusculas = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+
+            var tieneNumeros = 0;
+            var tieneMayus = 0;
+
+            //Recorremos todos los caracteres para mirar si tiene números y mayusculas
+            for (var i = 0; i < valor.length; i++) {
+                if (numeros.indexOf(valor.charAt(i)) > -1)
+                    tieneNumeros++;
+                if (mayusculas.indexOf(valor.charAt(i)) > -1)
+                    tieneMayus++;
+            }
+
+            //Comprobar si tiene números
+            if (tieneNumeros == 0) {
+                mensaje_error = "La contraseña tiene que tener al menos 1 caracter numérico";
+                correcto = false;
+            }
+
+            //Comprobar si tiene mayúsculas
+            if (tieneMayus == 0) {
+                mensaje_error = "La contraseña tiene que tener al menos 1 letra en mayúsculas";
+                correcto = false;
+            }
+
+            //Si hay algun error devolvemos false y lo mostramos
+            if (!correcto) {
+                contrasena.focus();
+                document.getElementById("contraseña1_error").innerHTML = mensaje_error;
+            }
+
+            return correcto;
+        }
+
+        function comprobarContrasena2(contrasena) {
+
+            //Variable para no acceder constantemente al document
+            var valor = contrasena.value;
+            //Semaforo para saber si los datos se validan
+            var correcto = true;
+            //Mensaje de error
+            var mensaje_error;
+
+            //Comprobar que las constraseñas coinciden
+            if (valor != document.getElementById("contraseña1").value) {
+                mensaje_error = "Las contraseñas no coinciden";
+                correcto = false;
+            }
+
+            //Si hay algun error devolvemos false y lo mostramos
+            if (!correcto) {
+                contrasena.focus();
+                document.getElementById("contraseña2_error").innerHTML = mensaje_error;
+            }
+
+            return correcto;
+        }
+
+        function comprobarSuma(resultado) {
+
+            //Variable para no acceder constantemente al document
+            var valor = resultado.value;
+            //Semaforo para saber si los datos se validan
+            var correcto = true;
+            //Mensaje de error
+            var mensaje_error;
+
+            //Si la operacion no está bien resuelta
+            if (valor != (numero1 + numero2)) {
+                mensaje_error = "No has resulto bien la suma. ¿Eres un robot?";
+                correcto = false;
+            }
+
+            //Si está vacio
+            if (valor.length == 0) {
+                mensaje_error = "No has resulto la suma";
+                correcto = false;
+            }
+
+            //Si hay algun error devolvemos false y lo mostramos
+            if (!correcto) {
+                resultado.focus();
+                document.getElementById("suma_error").innerHTML = mensaje_error;
+            }
+
+            return correcto;
+        }
+
+        function aceptarCondiciones() {
+            if (document.getElementById("condiciones").checked)
+                document.getElementById("enviar").removeAttribute("disabled");
+            else
+                document.getElementById("enviar").setAttribute("disabled", "");
+        }
+
+        function limpiarError() {
+            document.getElementById("nombre_error").innerHTML = "";
+            document.getElementById("email_error").innerHTML = "";
+            document.getElementById("contraseña1_error").innerHTML = "";
+            document.getElementById("contraseña2_error").innerHTML = "";
+            document.getElementById("suma_error").innerHTML = "";
+        }
+
+        // Saca un número aleatorio entre los números indicados.
+        function numRandom(inferior, superior) {
+            return Math.floor((Math.random() * (superior - inferior + 1)) + inferior);
+        }
+
+    </script>
+</head>
+<body onload="inicializar()">
+
+<form method="post" onsubmit="return false">
+
+    <label>Nombre:<br/>
+        <input type="text" id="nombre">
+    </label><br/>
+    <span id="nombre_error"></span>
+
+    <label>E-mail:<br/>
+        <input type="text" id="email">
+    </label><br/>
+    <span id="email_error"></span>
+
+    <label>Contraseña:<br/>
+        <input type="text" id="contraseña1">
+    </label><br/>
+    <span id="contraseña1_error"></span>
+
+    <label>Repite la contraseña:<br/>
+        <input type="text" id="contraseña2">
+    </label><br/>
+    <span id="contraseña2_error"></span>
+
+    <label for="suma" id="operacion"></label>
+    <input type="text" id="suma"><br/>
+    <span id="suma_error"></span>
+
+    <label>
+        <input type="checkbox" id="condiciones" onclick="aceptarCondiciones()"> Acepto las condiciones
+    </label><br/><br/>
+
+    <button type="submit" disabled id="enviar" onclick="recorrerElementos()">Enviar</button>
+
+</form>
+
+</body>
+</html>

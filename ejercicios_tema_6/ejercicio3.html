@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+
+    <script>
+
+        window.onload = function () {
+
+            //Al pulsar una tecla se mira si se tiene que escribir o no
+            // dependiendo de la tecla que se pulse
+            document.getElementById("datos").onkeypress = teclaPulsada;
+        };
+
+        function teclaPulsada(evento) {
+
+            //Si se pulsa la tecla Delete se devuelve true, porque sino no se podría borrar
+            if (evento.which == 8 || evento.keyCode == 8)
+                return true;
+
+            var teclaPulsada = String.fromCharCode((evento.which || evento.keyCode));
+            var teclasAceptadas;
+
+            switch (document.getElementById("seleccion").selectedIndex) {
+                case 0:
+                    teclasAceptadas = "01";
+                    break;
+                case 1:
+                    teclasAceptadas = "01234567";
+                    break;
+                case 2:
+                    teclasAceptadas = "0123456789";
+                    break;
+                case 3:
+                    teclasAceptadas = "0123456789ABCDEFabcdef";
+                    break;
+                default:
+                    return false;
+            }
+
+            //Verdadero si la tecla pulsada está entre las permitidas, sino false.
+            return teclasAceptadas.indexOf(teclaPulsada) > -1;
+        }
+
+        //Borrar los datos al cambiar el sistema numérico
+        function borrarDatos() {
+            document.getElementById("datos").value = "";
+        }
+
+    </script>
+</head>
+<body>
+
+
+<label>
+    <input id="datos" type="text">
+</label>
+
+<label>
+    <select id="seleccion" onchange="borrarDatos()">
+        <option value="binario">Binario</option>
+        <option value="octal">Octal</option>
+        <option value="decimal">Decimal</option>
+        <option value="hexadecimal">Hexadecimal</option>
+    </select>
+</label>
+
+
+</body>
+</html>

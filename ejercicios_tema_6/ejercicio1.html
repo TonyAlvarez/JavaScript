@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script>
+
+        function devolverValor(elemento) {
+
+            //Dependiendo del tipo de elemento, devolvemos una cosa u otra.
+            if (elemento.tagName == "INPUT" && elemento.type == "text") {
+                return elemento.value;
+            } else if (elemento.tagName == "INPUT" && elemento.type == "radio") {
+                if (elemento.checked)
+                    return elemento.value;
+            } else if (elemento.tagName == "INPUT" && elemento.type == "checkbox") {
+                if (elemento.checked)
+                    return elemento.value;
+            } else if (elemento.tagName == "TEXTAREA") {
+                return elemento.value;
+            } else if (elemento.tagName == "SELECT") {
+                return elemento[elemento.selectedIndex].value;
+            }
+        }
+
+        function recorrerElementos() {
+
+            //Párrafo donde meteremos el resultado
+            var pResultado = document.getElementById("valores");
+            pResultado.innerHTML = "Contenido de los campos: ";
+
+            var elementos = document.forms[0];
+
+            //Bucle que recorre loe elementos del formulario.
+            for (var i = 0; i < elementos.length; i++)
+                if (elementos[i].tagName == "INPUT" || elementos[i].tagName == "TEXTAREA" || elementos[i].tagName == "SELECT") {
+
+                    var valor = devolverValor(elementos[i]);
+
+                    //Si devuelve undefined, lo ignoramos
+                    if (valor != undefined) {
+                        pResultado.innerHTML += devolverValor(elementos[i]);
+
+                        //Si es el último elemento ponemos un punto, sino una coma y un espacio.
+                        if (i == elementos.length - 2)
+                            pResultado.innerHTML += ".";
+                        else
+                            pResultado.innerHTML += ", ";
+                    }
+                }
+
+            return false;
+        }
+
+    </script>
+</head>
+<body>
+
+<form method="post" onsubmit="return recorrerElementos()">
+
+    <label>Nombre:<br/>
+        <input type="text" name="nombre">
+    </label><br/><br/>
+
+    <label>Comentario:<br/>
+        <textarea name="comentario"></textarea>
+    </label><br/><br/>
+
+    <label>
+        <input type="radio" name="radio" value="Mujer"> Mujer
+    </label><br/>
+
+    <label>
+        <input type="radio" name="radio" value="Hombre"> Hombre
+    </label><br/><br/>
+
+    <label>
+        <input type="checkbox" name="checkbox[]" value="Coche"> Coche
+    </label><br/>
+
+    <label>
+        <input type="checkbox" name="checkbox[]" value="Bici"> Bici
+    </label><br/><br/>
+
+    <label>
+        Color:
+        <select name="color">
+            <option value="Rojo">Rojo</option>
+            <option value="Verde">Verde</option>
+            <option value="Azul">Azul</option>
+        </select>
+    </label>
+    <br/><br/>
+
+
+    <button type="submit" name="enviar">Enviar</button>
+
+</form>
+
+
+<p id="valores"></p>
+
+
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+
+    <script>
+        //Num máximo de caracteres
+        var MAX_CHARS = 150;
+
+        //Variable para no estar accediendo al document constantemente.
+        var area;
+
+        window.onload = function () {
+
+            //Inicializamos el textarea
+            area = document.getElementById("area");
+
+            //Al pulsar una tecla se mira si se tiene que escribir o no
+            // dependiendo de si ya se ha llegado al límite de caracteres
+            area.onkeypress = teclaPulsada;
+
+            //Al soltar la tecla se actualiza el contador de caracteres restantes.
+            area.onkeyup = actualizarContador;
+        };
+
+        function teclaPulsada(evento) {
+
+            //Si se pulsa la tecla Delete se devuelve true, porque sino no se podría borrar una vez superado el limite
+            if (evento.which == 8 || evento.keyCode == 8)
+                return true;
+
+            //Si la longitud del texto es menor que el máximo de caracteres devuelve true, sino false.
+            //Si devuelve false el evento se cancela, y por lo tanto no se escribe la letra.
+            return area.value.length < MAX_CHARS;
+
+        }
+
+        function actualizarContador() {
+            //Si se ha superado el numero máximo de caracteres, por ejemplo al hacer ctrl + v
+            //Se eliminan los caracteres que sobran
+            if (area.value.length > MAX_CHARS)
+                area.value = area.value.substr(0, 150);
+
+            //El P donde se indica los caracteres restantes
+            var parrafo = document.getElementById("caracteres");
+
+            //Si se ha llegado al limite
+            if ((MAX_CHARS - area.value.length) == 0)
+                parrafo.innerHTML = "Has llegado al límite de caracteres.";
+            //Caculamos los caracteres restantes y los imprimimos. Si solo queda uno lo ponemos en singular
+            else if ((MAX_CHARS - area.value.length) == 1)
+                parrafo.innerHTML = (MAX_CHARS - area.value.length) + " caracter restante.";
+            else
+                parrafo.innerHTML = (MAX_CHARS - area.value.length) + " caracteres restantes.";
+        }
+
+    </script>
+</head>
+<body>
+
+
+<label for="area">Comentario:</label>
+<br/>
+<textarea id="area"></textarea>
+
+<p id="caracteres">150 caracteres restantes.</p>
+
+</body>
+</html>

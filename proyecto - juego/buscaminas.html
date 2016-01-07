@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Buscaminas</title>
+    <!--<link rel="stylesheet" href="estilos.css">-->
+    <style>
+
+        body {
+            font-family: Helvetica, Arial, serif;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        #tablero {
+            margin: 0 auto;
+            display: inline-block;
+            padding: 13px;
+            background: #b9b9b9;
+        }
+
+        #informacion {
+            padding: 10px;
+            margin-bottom: 10px;
+            height: 50px;
+            border: 4px solid #9b9b9b;
+            border-right: 4px solid #d7d7d7;
+            border-bottom: 4px solid #d7d7d7;
+        }
+
+        #minas-restantes {
+            float: left;
+            width: 100px;
+            height: 44px;
+            background: black;
+            border: 3px solid #9b9b9b;
+            border-right: 3px solid #d7d7d7;
+            border-bottom: 3px solid #d7d7d7;
+        }
+
+        #tiempo {
+            float: right;
+            width: 100px;
+            height: 44px;
+            background: black;
+            border: 3px solid #9b9b9b;
+            border-right: 3px solid #d7d7d7;
+            border-bottom: 3px solid #d7d7d7;
+        }
+
+        #cara-estado {
+            background-size: 35px;
+            margin: 0 auto;
+            width: 44px;
+            height: 44px;
+        }
+
+        table {
+            table-layout: fixed;
+            border-spacing: 0;
+            border: 4px solid #9b9b9b;
+            border-right: 4px solid #d7d7d7;
+            border-bottom: 4px solid #d7d7d7;
+        }
+
+        table td {
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            border: 3px solid #d7d7d7;
+            border-right-color: #9b9b9b;
+            border-bottom-color: #9b9b9b;
+        }
+
+        table td.pressed {
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            text-align: center;
+            border: 1px solid #9b9b9b;
+        }
+
+        table td.flag {
+            background: url("img/bandera.png") no-repeat center;
+            background-size: 24px;
+        }
+
+        table td.mine {
+            background: red url("img/mina.png") no-repeat center;
+            background-size: 18px;
+            border: 1px solid black;
+        }
+
+        table td.mines1 {
+            background: url("img/1.png") no-repeat center;
+            background-size: 16px;
+        }
+
+        table td.mines2 {
+            background: url("img/2.png") no-repeat center;
+            background-size: 16px;
+        }
+
+        table td.mines3 {
+            background: url("img/3.png") no-repeat center;
+            background-size: 16px;
+        }
+
+        table td.mines4 {
+            background: url("img/4.png") no-repeat center;
+            background-size: 16px;
+        }
+
+        table td.mines5 {
+            background: url("img/5.png") no-repeat center;
+            background-size: 16px;
+        }
+
+        table td.mines6 {
+            background: url("img/6.png") no-repeat center;
+            background-size: 16px;
+        }
+
+        table td.mines7 {
+            background: url("img/7.png") no-repeat center;
+            background-size: 16px;
+        }
+
+        table td.mines8 {
+            background: url("img/8.png") no-repeat center;
+            background-size: 16px;
+        }
+
+        .cara-normal {
+            background: url("img/cara-sonriente.png") no-repeat center;
+            border: 3px solid #d7d7d7;
+            border-right-color: #9b9b9b;
+            border-bottom-color: #9b9b9b;
+        }
+
+        .cara-pressed {
+            border: 3px solid #9b9b9b;
+            border-right-color: #d7d7d7;
+            border-bottom-color: #d7d7d7;
+        }
+
+        .cara-gameover {
+            background: url("img/cara-gameover.png") no-repeat center;
+        }
+
+        .cara-gamewin {
+            background: url("img/cara-gafas.png") no-repeat center;
+        }
+
+        .cara-sonriente {
+            background: url("img/cara-sonriente.png") no-repeat center;
+        }
+
+        .cara-sorpresa {
+            background: url("img/cara-sorpresa.png") no-repeat center;
+        }
+    </style>
+    <script>
+        var NUM_COLUMNAS = 30;
+        var NUM_FILAS = 16;
+        var NUM_MINAS = 100;
+
+        var ESTADO_NORMAL = 0;
+        var ESTADO_GAMEOVER = 1;
+        var ESTADO_GAMEWIN = 2;
+
+        var CASILLA_OCULTA = 0;
+        var CASILLA_MINA = 1;
+        var CASILLA_REVELADA = 2;
+        var CASILLA_BANDERA_CORRECTA = 3;
+        var CASILLA_BANDERA_EQUIVOCADA = 4;
+
+        var tablero;
+        var estado = ESTADO_NORMAL;
+        var minasRestantes = NUM_MINAS;
+
+        //Variable donde se guardará el Timeout para el doble click
+        var espera;
+        //Tiempo de espera entre single click y doble click
+        var TIEMPO_ESPERA = 250;
+
+        window.onload = function () {
+            var carita = document.getElementById("cara-estado");
+            carita.onmousedown = function () {
+                switch (estado) {
+                    case ESTADO_NORMAL:
+                        document.getElementById("cara-estado").className = "cara-sorpresa cara-pressed";
+                        break;
+                    case ESTADO_GAMEOVER:
+                        document.getElementById("cara-estado").className = "cara-gameover cara-pressed";
+                        break;
+                    case ESTADO_GAMEWIN:
+                        document.getElementById("cara-estado").className = "cara-gamewin cara-pressed";
+                        break;
+                }
+            };
+            carita.onmouseup = function () {
+                reiniciarJuego();
+                document.getElementById("cara-estado").className = "cara-normal normal";
+            };
+            carita.onmousemove = function () {
+                switch (estado) {
+                    case ESTADO_NORMAL:
+                        document.getElementById("cara-estado").className = "cara-sonriente cara-normal";
+                        break;
+                    case ESTADO_GAMEOVER:
+                        document.getElementById("cara-estado").className = "cara-gameover cara-normal";
+                        break;
+                    case ESTADO_GAMEWIN:
+                        document.getElementById("cara-estado").className = "cara-gamewin cara-normal";
+                        break;
+                }
+            };
+
+            iniciarJuego();
+        };
+
+        function iniciarJuego() {
+            inicializarArray();
+            colocarMinas();
+            crearTablero();
+        }
+
+        function reiniciarJuego() {
+            estado = ESTADO_NORMAL;
+            minasRestantes = NUM_MINAS;
+            inicializarArray();
+            colocarMinas();
+            reiniciarTablero();
+        }
+
+        function inicializarArray() {
+
+            tablero = [];
+
+            for (var x = 0; x < NUM_COLUMNAS; x++) {
+                tablero.push([]);
+                for (var y = 0; y < NUM_FILAS; y++) {
+                    tablero[x].push(0);
+                }
+            }
+        }
+
+        function colocarMinas() {
+
+            //Esta función coloca las minas aleatoriamente en el tablero
+            var posX, posY;
+
+            for (var i = 0; i < NUM_MINAS; i++) {
+
+                posX = Math.floor(Math.random() * NUM_COLUMNAS);
+                posY = Math.floor(Math.random() * NUM_FILAS);
+
+                //Comprobar que no haya una mina ya colocada en esta posicion
+                while (tablero[posX][posY] != 0) {
+                    posX = Math.floor(Math.random() * NUM_COLUMNAS);
+                    posY = Math.floor(Math.random() * NUM_FILAS);
+                }
+
+                tablero[posX][posY] = CASILLA_MINA;
+            }
+        }
+
+        function crearTablero() {
+            var tabla = document.getElementById("tabla");
+
+            for (var y = 0; y < NUM_FILAS; y++) {
+
+                var fila = tabla.insertRow(y);
+
+                for (var x = 0; x < NUM_COLUMNAS; x++) {
+                    var celda = fila.insertCell(x);
+                    celda.id = "celda" + y + "-" + x;
+                    celda.setAttribute("oncontextmenu", "return false;");
+                    celda.onmouseup = clickCasilla;
+                    celda.ondblclick = dobleClickCasilla;
+                }
+            }
+        }
+
+        function reiniciarTablero() {
+            //Recorremos todas las celdas para eliminar las clases
+            for (var columna = 0; columna < NUM_COLUMNAS; columna++) {
+                for (var fila = 0; fila < NUM_FILAS; fila++) {
+                    tabla.rows[fila].cells[columna].className = "";
+                }
+            }
+        }
+
+        function clickCasilla(evento) {
+
+            //Si se ha finalizado el juego, se ignora el click
+            if (estado == ESTADO_NORMAL) {
+
+                if (espera)
+                    clearTimeout(espera);
+
+                //Cogemos la posición del puntero, y el elemento que hay en esa posición
+                var x = evento.clientX, y = evento.clientY;
+                var elementClicked = document.elementFromPoint(x, y);
+
+                //Recorremos todas las celdas para comparar el ID con el de la celda clicada
+                for (var columna = 0; columna < NUM_COLUMNAS; columna++) {
+                    for (var fila = 0; fila < NUM_FILAS; fila++) {
+
+                        //Si la celda actual tiene el mismo ID que la celda clicada, mostramos su posicion
+                        if (elementClicked.id == tabla.rows[fila].cells[columna].id) {
+
+                            //Comprobar que la casilla aún no ha sido revelada
+                            if (tablero[columna][fila] != CASILLA_REVELADA) {
+
+                                //Click derecho, poner o quitar bandera
+                                if (evento.button == 2 && evento.which == 3) {
+
+                                    //Si ya hay bandera, se quita
+                                    if (tablero[columna][fila] >= CASILLA_BANDERA_CORRECTA) {
+                                        tablero[columna][fila] = CASILLA_OCULTA;
+                                        tabla.rows[fila].cells[columna].className = "";
+                                        //Si hay mina, se marca como bandera correcta
+                                    } else if (tablero[columna][fila] == CASILLA_MINA) {
+                                        tablero[columna][fila] = CASILLA_BANDERA_CORRECTA;
+                                        tabla.rows[fila].cells[columna].className = "flag";
+                                        //Si no hay mina, bandera equivocada
+                                    } else {
+                                        tablero[columna][fila] = CASILLA_BANDERA_EQUIVOCADA;
+                                        tabla.rows[fila].cells[columna].className = "flag";
+                                    }
+                                } else if (tablero[columna][fila] < CASILLA_REVELADA) {
+
+                                    //Click izquierdo, si no hay bandera se revela la casilla
+
+                                    //Se configura un Timeout, para esperar a un posible doble click
+
+                                    //El closure es necesario porque el bucle continua,
+                                    //y el valor de las variables columna y fila sigue aumentando en cada iteración,
+                                    //y en el momento de ejecucion del timeout tendrá valores distintos.
+                                    //Al hacer el closure las variables internas tienen su propio valor, independiente al de los indicies.
+
+                                    (function (x, y) {
+                                        espera = setTimeout(function () {
+                                            console.log("Click en: " + x + " - " + y);
+                                            revelarCelda(x, y, true);
+                                        }, TIEMPO_ESPERA);
+                                    })(columna, fila);
+
+                                    //Código sin closure, da error porque se cambian el calor de los indices.
+                                    //Para reproducirlo cambiar el closure anterior por el código siguiente:
+
+                                    /*
+                                         espera = setTimeout(function() {
+                                         console.log("Click en: " + columna + " - " + fila);
+                                         revelarCelda(columna, fila, true);
+                                         }, TIEMPO_ESPERA);
+                                     */
+                                }
+                            }
+
+                            //Aumentamos los indices para salir de los dos búcles y evitar iteraciones innecesarias
+                            columna = NUM_COLUMNAS;
+                            fila = NUM_FILAS;
+                        }
+                    }
+                }
+            }
+        }
+
+        function dobleClickCasilla(evento) {
+
+            //Si se ha finalizado el juego, se ignora el click
+            if (estado == ESTADO_NORMAL) {
+
+                //Se limpia el Timeout para que no salte el single click
+                if (espera)
+                    clearTimeout(espera);
+
+                //Cogemos la posición del puntero, y el elemento que hay en esa posición
+                var x = evento.clientX, y = evento.clientY;
+                var elementClicked = document.elementFromPoint(x, y);
+
+                //Recorremos todas las celdas para comparar el ID con el de la celda clicada
+                for (var columna = 0; columna < NUM_COLUMNAS; columna++) {
+                    for (var fila = 0; fila < NUM_FILAS; fila++) {
+
+                        //Si la celda actual tiene el mismo ID que la celda clicada, mostramos su posicion
+                        if (elementClicked.id == tabla.rows[fila].cells[columna].id) {
+
+                            console.log("Doble click en: " + columna + " - " + fila);
+
+
+                            //Aumentamos los indices para salir de los dos búcles y evitar iteraciones innecesarias
+                            columna = NUM_COLUMNAS;
+                            fila = NUM_FILAS;
+                        }
+                    }
+                }
+            }
+        }
+
+        function revelarCelda(x, y, click) {
+
+            //Comprobar que la casilla aún no ha sido revelada
+            if (tablero[x][y] < CASILLA_REVELADA) {
+                if (click) {
+                    console.log("Revelar por click: " + x + " - " + y);
+                } else {
+                    console.log("Revelar por propagacion: " + x + " - " + y);
+                }
+
+                var celda = tabla.rows[y].cells[x];
+
+                //Comprobar si tiene una mina
+                if (tablero[x][y] == CASILLA_MINA && click) {
+                    celda.className = "pressed mine";
+                    //TODO fin del juego
+                    estado = ESTADO_GAMEOVER;
+                    document.getElementById("cara-estado").className = "cara-gameover cara-normal";
+                } else {
+                    //Marcar la casilla como revelada
+                    celda.className = "pressed";
+                    tablero[x][y] = CASILLA_REVELADA;
+
+                    //Compobar cuantas minas tiene alrededor
+                    var minasColindantes = comprobarAdyacentes(x, y);
+
+                    //Si no hay minas al rededor se revelan las casillas adyacentes, si hay se pone el numero.
+                    if (minasColindantes == 0) {
+                        revelarColindantes(x, y);
+                    } else {
+
+                        switch (minasColindantes) {
+                            case 1:
+                                celda.className = "pressed mines1";
+                                break;
+                            case 2:
+                                celda.className = "pressed mines2";
+                                break;
+                            case 3:
+                                celda.className = "pressed mines3";
+                                break;
+                            case 4:
+                                celda.className = "pressed mines4";
+                                break;
+                            case 5:
+                                celda.className = "pressed mines5";
+                                break;
+                            case 6:
+                                celda.className = "pressed mines6";
+                                break;
+                            case 7:
+                                celda.className = "pressed mines7";
+                                break;
+                            case 8:
+                                celda.className = "pressed mines8";
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+
+        function revelarColindantes(x, y) {
+
+            if (x > 0 && y > 0)
+                revelarCelda(x - 1, y - 1);
+
+            if (x > 0)
+                revelarCelda(x - 1, y);
+
+            if (x > 0 && y < NUM_FILAS - 1)
+                revelarCelda(x - 1, y + 1);
+
+            if (y < NUM_FILAS - 1)
+                revelarCelda(x, y + 1);
+
+            if (y < NUM_FILAS - 1 && x < NUM_COLUMNAS - 1)
+                revelarCelda(x + 1, y + 1);
+
+            if (x < NUM_COLUMNAS - 1)
+                revelarCelda(x + 1, y);
+
+            if (x < NUM_COLUMNAS - 1 && y > 0)
+                revelarCelda(x + 1, y - 1);
+
+            if (y > 0)
+                revelarCelda(x, y - 1);
+        }
+
+        function comprobarAdyacentes(x, y) {
+            var minasColindantes = 0;
+
+            if (x > 0 && y > 0 && tablero[x - 1][y - 1] == CASILLA_MINA || x > 0 && y > 0 && tablero[x - 1][y - 1] == CASILLA_BANDERA_CORRECTA)
+                minasColindantes++;
+
+            if (x > 0 && tablero[x - 1][y] == CASILLA_MINA || x > 0 && tablero[x - 1][y] == CASILLA_BANDERA_CORRECTA)
+                minasColindantes++;
+
+            if (x > 0 && y < NUM_FILAS - 1 && tablero[x - 1][y + 1] == CASILLA_MINA || x > 0 && y < NUM_FILAS - 1 && tablero[x - 1][y + 1] == CASILLA_BANDERA_CORRECTA)
+                minasColindantes++;
+
+            if (y < NUM_FILAS && tablero[x][y + 1] == CASILLA_MINA || y < NUM_FILAS && tablero[x][y + 1] == CASILLA_BANDERA_CORRECTA)
+                minasColindantes++;
+
+            if (y < NUM_FILAS && x < NUM_COLUMNAS - 1 && tablero[x + 1][y + 1] == CASILLA_MINA || y < NUM_FILAS && x < NUM_COLUMNAS - 1 && tablero[x + 1][y + 1] == CASILLA_BANDERA_CORRECTA)
+                minasColindantes++;
+
+            if (x < NUM_COLUMNAS - 1 && tablero[x + 1][y] == CASILLA_MINA || x < NUM_COLUMNAS - 1 && tablero[x + 1][y] == CASILLA_BANDERA_CORRECTA)
+                minasColindantes++;
+
+            if (x < NUM_COLUMNAS - 1 && y > 0 && tablero[x + 1][y - 1] == CASILLA_MINA || x < NUM_COLUMNAS - 1 && y > 0 && tablero[x + 1][y - 1] == CASILLA_BANDERA_CORRECTA)
+                minasColindantes++;
+
+            if (y > 0 && tablero[x][y - 1] == CASILLA_MINA || y > 0 && tablero[x][y - 1] == CASILLA_BANDERA_CORRECTA)
+                minasColindantes++;
+
+            return minasColindantes;
+        }
+    </script>
+</head>
+<body>
+
+<h1>Buscaminas JS</h1>
+
+<div id="tablero">
+    <div id="informacion">
+        <div id="minas-restantes" class="pressed"></div>
+        <div id="tiempo" class="pressed"></div>
+        <div id="cara-estado" class="cara-sonriente cara-normal" oncontextmenu="return false;"></div>
+    </div>
+
+    <table id="tabla"></table>
+</div>
+
+<br>
+
+<label>
+    Selecciona la dificultad:
+    <select name="dificultad">
+        <option value="facil">Fácil (40 minas)</option>
+        <option value="medio">Medio (70 minas)</option>
+        <option value="dificil">Difícil (100 minas)</option>
+    </select>
+</label>
+
+<button id="boton_inicio">Empezar</button>
+
+
+</body>
+</html>

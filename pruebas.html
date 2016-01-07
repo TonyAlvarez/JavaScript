@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pruebas JavaScript</title>
+
+    <script>
+
+        function fuera(argFuera) {
+            var varFuera = 3;
+
+            function dentro(argDentro) {
+                alert(argFuera + argDentro + ++varFuera);
+            }
+
+            dentro(10);
+        }
+
+        fuera(2);
+        fuera(0);
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script>
+
+        function comprobarTelefono() {
+            var valor = document.getElementById("telefono").value;
+            var expression = /\d{9}/;
+
+            if (expression.test(valor))
+                alert("Validado correctamente");
+            else
+                alert("Error de validación");
+        }
+
+        function comprobarTelefonoPrefijo() {
+            var valor = document.getElementById("telefono_prefijo").value;
+            var expression = /\d{9}/;
+
+            if (expression.test(valor))
+                alert("Validado correctamente");
+            else
+                alert("Error de validación");
+        }
+
+        function comprobarNumeroEntero() {
+            var valor = document.getElementById("numero_entero").value;
+            var expression= /^(\+|\-)?\d+$/;
+
+            if (expression.test(valor))
+                alert("Validado correctamente");
+            else
+                alert("Error de validación");
+        }
+
+        function comprobarNumeroReal() {
+            var valor = document.getElementById("numero_real").value;
+            var expression= /^(\+|\-)?\d+([,.]\d+)?$/;
+
+            if (expression.test(valor))
+                alert("Validado correctamente");
+            else
+                alert("Error de validación");
+        }
+
+        function comprobarMinusculas() {
+            var valor = document.getElementById("minusculas").value;
+            var expression= /[a-z]/;
+
+            if (expression.test(valor))
+                alert("Validado correctamente");
+            else
+                alert("Error de validación");
+        }
+
+        function comprobarMayusculas() {
+            var valor = document.getElementById("mayusculas").value;
+            var expression= /[A-Z]/;
+
+            if (expression.test(valor))
+                alert("Validado correctamente");
+            else
+                alert("Error de validación");
+        }
+
+        function comprobarMayusMinus() {
+            var valor = document.getElementById("mayus_minus").value;
+            var expression= /[A-Z]+[a-z]+/;
+
+            if (expression.test(valor))
+                alert("Validado correctamente");
+            else
+                alert("Error de validación");
+        }
+
+    </script>
+
+</head>
+<body>
+
+<br />
+<br />
+
+<form onsubmit="return false">
+    <label for="telefono">Teléfono: </label>
+    <br />
+    <input type="text" id="telefono">
+    <input type="submit" onclick="comprobarTelefono()">
+</form>
+
+<br />
+
+<form onsubmit="return false">
+    <label for="telefono_prefijo">Teléfono con prefijo internacional: </label>
+    <br />
+    <input type="text" id="telefono_prefijo">
+    <input type="submit" onclick="comprobarTelefonoPrefijo()">
+</form>
+
+<br />
+
+<form onsubmit="return false">
+    <label for="numero_entero">Número entero: </label>
+    <br />
+    <input type="text" id="numero_entero">
+    <input type="submit" onclick="comprobarNumeroEntero()">
+</form>
+
+<br />
+
+<form onsubmit="return false">
+    <label for="numero_real">Número real: </label>
+    <br />
+    <input type="text" id="numero_real">
+    <input type="submit" onclick="comprobarNumeroReal()">
+</form>
+
+<br />
+
+<form onsubmit="return false">
+    <label for="minusculas">Tiene minusculas: </label>
+    <br />
+    <input type="text" id="minusculas">
+    <input type="submit" onclick="comprobarMinusculas()">
+</form>
+
+<br />
+
+<form onsubmit="return false">
+    <label for="mayusculas">Tiene mayúsculas: </label>
+    <br />
+    <input type="text" id="mayusculas">
+    <input type="submit" onclick="comprobarMayusculas()">
+</form>
+
+<br />
+
+<form onsubmit="return false">
+    <label for="mayus_minus">Tiene mayúsculas y minúsculas: </label>
+    <br />
+    <input type="text" id="mayus_minus">
+    <input type="submit" onclick="comprobarMayusMinus()">
+</form>
+
+</body>
+</html>

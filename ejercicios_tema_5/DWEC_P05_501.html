@@ -8,6 +8,7 @@
         window.onload = function () {
             var enlaces = document.getElementsByTagName("a");
 
+            //Añade el evento onclick a todos los enlaces.
             for (var i = 0; i < enlaces.length; i++) {
                 enlaces[i].onclick = mostrar_ocultar;
             }
@@ -15,6 +16,8 @@
 
         function mostrar_ocultar() {
             var p = document.getElementById(this.id).previousElementSibling;
+
+            //Si está oculto lo muestra, y sino lo oculta
             if (p.style.display == "none") {
                 p.style.display = "block";
                 this.innerHTML = "Ocultar contenido";

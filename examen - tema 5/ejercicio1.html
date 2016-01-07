@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 1 - Examen Tema 5</title>
+    <style>
+
+        div#caja1 {
+            background-color: red;
+        }
+        div#caja2 {
+            background-color: green;
+        }
+        div#caja3 {
+            background-color: blue;
+        }
+        div#caja4 {
+            background-color: orange;
+        }
+
+    </style>
+    <script>
+
+        function joSoc(elemento) {
+
+            alert("Información sobre el elemento clicado: \n\n" +
+                    "ID: " + elemento.id + "\n" +
+                    "Background Color: " + getComputedStyle(elemento).backgroundColor + "\n" +
+                    "Contenido: " + elemento.innerHTML);
+        }
+
+    </script>
+</head>
+<body>
+
+<div id="caja1" onclick="joSoc(this)">Div 1</div>
+
+<div id="caja2" onclick="joSoc(this)">Div 2</div>
+
+<div id="caja3" onclick="joSoc(this)">Div 3</div>
+
+<div id="caja4" onclick="joSoc(this)">Div 4</div>
+
+
+</body>
+</html>

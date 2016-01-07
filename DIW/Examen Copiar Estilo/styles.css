@@ -1,0 +1,193 @@
+
+* {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    background: url("images/img01.gif") repeat-x;
+}
+
+h1, h2, h3 {
+    font-weight: normal;
+    color: #85C329;
+}
+
+h1 {
+    font-size: 197%;
+}
+
+h2 {
+    font-size: 167%;
+}
+
+h3 {
+    font-size: 100%;
+    font-weight: bold;
+}
+
+p ol ul {
+    line-height: 180%;
+}
+
+a {
+    color: #e06529;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+#header {
+    width: 760px;
+    height: 90px;
+    margin: 0 auto;
+}
+
+#logo {
+    float: left;
+    padding-top: 20px;
+    background: url("images/img02.gif") no-repeat left bottom;
+}
+
+#logo h1, #logo h2 {
+    padding-left: 60px;
+    font-weight: normal;
+    color: #e06529;
+    margin: 0;
+}
+
+#logo h1 {
+    font-weight: bold;
+}
+
+#logo h2 {
+    font-size: 92%;
+}
+
+#logo a {
+    text-decoration: none;
+}
+
+#header2 {
+    width: 760px;
+    height: 200px;
+    margin: auto;
+}
+
+#menu {
+    float: left;
+    width: 200px;
+    height: 200px;
+    background: url("images/img03.jpg");
+}
+
+#menu ul {
+    padding: 20px 20px 0 20px;
+    list-style: none;
+}
+
+#menu li {
+    display: inline;
+    height: 20%;
+}
+
+#menu li a {
+    display: block;
+    padding: 8px 10px 0 0;
+    text-decoration: none;
+    width: 100%;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+
+#menu a:hover {
+    text-decoration: underline;
+}
+
+#header a {
+    background: none;
+}
+
+
+#page {
+    width: 760px;
+    padding-top: 30px;
+    margin: 0 auto;
+}
+
+#content {
+    float: left;
+    width: 480px;
+    padding-left: 20px;
+}
+
+/*
+    no hay UL dentro de CONTENT
+*/
+
+.title {
+    padding-top: 3px;
+}
+
+.content {
+    padding: 20px;
+    background: url("images/img10.gif") no-repeat;
+}
+
+
+#sidebar {
+    float: right;
+    width: 220px;
+}
+
+#sidebar h2 {
+    color: #FFFFFF;
+    font-size: 120%;
+    border-right: 1px solid #000000;
+    border-bottom: 1px solid #000000;
+    width: 100%;
+    line-height: 35px;
+    margin: 0;
+    padding-left: 10px;
+    background: url("images/img06.gif") repeat-x;
+}
+
+#sidebar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 15px;
+}
+
+#sidebar > ul > li {
+    background: url("images/img07.gif") repeat-x;
+}
+
+#sidebar ul li ul li {
+    margin: 15px 0;
+}
+
+#sidebar ul li a {
+    text-decoration: none;
+}
+
+#sidebar ul li a:hover {
+    text-decoration: underline;
+}
+
+#footer {
+    background: url("images/footer.gif") repeat-x;
+    height: 210px;
+    text-align: center;
+    padding-top: 20px;
+    color: #FFFFFF;
+}
+
+#footer a {
+    color: #FFFFFF;
+}

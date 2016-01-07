@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Try-catch</title>
+    <script>
+
+        var numPeticiones = 0;
+
+        function pedirNombre() {
+
+            try {
+                var nombre = prompt("Introduce tu nombre:");
+
+                if (!/[a-zA-Z]/.test(nombre)) {
+                    throw new Error("El nombre solo puede contener letras");
+                }
+            } catch (e) {
+                alert(e.name + ": " + e.message);
+            } finally {
+                document.getElementById("num_peticiones").innerHTML = "Has pedido el nombre " + ++numPeticiones + " veces.";
+            }
+        }
+    </script>
+
+</head>
+<body>
+
+<button onclick="pedirNombre()">Pedir nombre</button>
+
+<p id="num_peticiones">Aún no has pedido el nombre.</p>
+
+</body>
+</html>

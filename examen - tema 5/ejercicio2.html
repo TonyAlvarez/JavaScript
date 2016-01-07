@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 2 - Examen Tema 5</title>
+    <link rel="stylesheet" href="estilos.css">
+    <script type="text/javascript">
+
+        //Tabla, para no acceder constantemente al document.
+        var tabla;
+
+        window.onload = function () {
+
+            inicializarTabla();
+
+            //Tiempo de espera entre single click y doble click
+            var TIEMPO_ESPERA = 250;
+
+            //Variable donde se guardará el Timeout
+            var espera;
+
+            document.onclick = function (evento) {
+
+                //Si ya hay un Timeout se limpia
+                if (espera)
+                    clearTimeout(espera);
+
+                //Cogemos la posición del puntero, y el elemento que hay en esa posición, para despues mostrar su contenido
+                var x = evento.clientX, y = evento.clientY;
+                var elementClicked = document.elementFromPoint(x, y);
+
+                //Se configura un Timeout, para esperar a un posible doble click
+                espera = setTimeout(function () {
+                    //Si el elemento es un TD
+                    if (elementClicked.tagName == "TD") {
+                        alert(elementClicked.innerHTML);
+                    }
+                }, TIEMPO_ESPERA);
+
+                return false;
+            };
+
+            document.ondblclick = function (event) {
+
+                //Si se hace doble clic se limpia el Timeout para que no salte el single click
+                if (espera)
+                    clearTimeout(espera);
+
+                //Cogemos la posicióndel puntero, y el elemento que hay en esa posición
+                var x = event.clientX, y = event.clientY;
+                var elementClicked = document.elementFromPoint(x, y);
+
+                //Si el elemento es un TD
+                if (elementClicked.tagName == "TD") {
+
+                    //Recorremos todas las celdas para comparar el ID con el de la celda clicada
+                    for (var fila = 0; fila < tabla.rows.length; fila++)
+                        for (var celda = 0; celda < tabla.rows[0].cells.length; celda++)
+                        //Si la celda actual tiene el mismo ID que la celda clicada, mostramos su posicion
+                        if (elementClicked.id == tabla.rows[fila].cells[celda].id) {
+                            alert("Posicion de la celda clicada: \n" +
+                                    "Fila: " + fila + "\n" +
+                                    "Celda: " + celda);
+                        }
+                }
+            }
+        };
+
+        function inicializarTabla() {
+
+            //Le damos valor a la variable tabla
+            tabla = document.getElementById("miTabla");
+
+            //Recorremos todas las filas para poner un ID a cada celda
+            for (var fila = 0; fila < tabla.rows.length; fila++)
+                for (var celda = 0; celda < tabla.rows[0].cells.length; celda++)
+                    tabla.rows[fila].cells[celda].id = "celda" + fila + celda;
+        }
+    </script>
+</head>
+<body>
+
+<table id="miTabla">
+    <caption>Tabla de pruebas</caption>
+    <tbody>
+    <tr>
+        <td>Celda 1 - 1</td>
+        <td>Celda 1 - 2</td>
+        <td>Celda 1 - 3</td>
+        <td>Celda 1 - 4</td>
+    </tr>
+    <tr>
+        <td>Celda 2 - 1</td>
+        <td>Celda 2 - 2</td>
+        <td>Celda 2 - 3</td>
+        <td>Celda 2 - 4</td>
+    </tr>
+    <tr>
+        <td>Celda 3 - 1</td>
+        <td>Celda 3 - 2</td>
+        <td>Celda 3 - 3</td>
+        <td>Celda 3 - 4</td>
+    </tr>
+    <tr>
+        <td>Celda 4 - 1</td>
+        <td>Celda 4 - 2</td>
+        <td>Celda 4 - 3</td>
+        <td>Celda 4 - 4</td>
+    </tr>
+    </tbody>
+</table>
+
+
+</body>
+</html>

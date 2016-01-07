@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 1 - Examen Tema 6</title>
+    <link rel="stylesheet" href="estilos.css">
+    <script type="text/javascript">
+
+        function recorrerElementos() {
+
+            limpiarError();
+
+            var elementos = document.forms[0];
+
+            //Bucle que recorre los elementos del formulario y los comprueba.
+            for (var i = 0; i < elementos.length; i++) {
+
+                if (elementos[i].tagName == "INPUT" || elementos[i].tagName == "TEXTAREA" || elementos[i].tagName == "SELECT") {
+
+                    //Comprobamos el elemento, y si la funcion devuelve false, devolvemos false al formulario.
+                    if (!comprobar(elementos[i]))
+                        return false;
+                }
+            }
+
+            alert("Todos los campos han sido validados correctamente");
+
+            //Si ningún elemento ha devuelto false, devolvemos true.
+            return true;
+        }
+
+        function comprobar(elemento) {
+
+            if (elemento.id == "nombre") {
+                return comprobarNombre(elemento);
+            } else if (elemento.id == "email") {
+                return comprobarMail(elemento);
+            } else if (elemento.id == "website") {
+                return comprobarWeb(elemento);
+            } else if (elemento.name == "sexo") {
+                return comprobarSexo(elemento);
+            } else if (elemento.id == "vehiculo") {
+                return comprobarVehiculo(elemento);
+            } else if (elemento.id == "mensaje") {
+                return comprobarMensaje(elemento);
+            }
+
+            //Si el ID no coincide con ninguno de los elementos que queremos comprobar, devolvemos true.
+            return true;
+        }
+
+        function comprobarNombre(nombre) {
+
+            var correcto = true;
+            var mensaje_error;
+
+            //Campo vacio
+            if (nombre.value == "") {
+                mensaje_error = "El nombre no puede estar vacio";
+                correcto = false;
+            }
+
+            //Campo con menos de 3 caracteres
+            if (nombre.value.length < 3) {
+                mensaje_error = "El nombre tiene que tener al menos 3 caracteres";
+                correcto = false;
+            }
+
+            var valor = nombre.value;
+
+            var sinEspacios = valor.split(" ").join("");
+
+            if (sinEspacios.length == 0) {
+                mensaje_error = "El nombre no puede estar vacio";
+                correcto = false;
+            } else if (sinEspacios.length < 3) {
+                mensaje_error = "El nombre tiene que tener al menos 3 caracteres";
+                correcto = false;
+            }
+
+            //Si hay algun error devolvemos false y lo mostramos
+            if (!correcto) {
+                nombre.focus();
+                document.getElementById("nombre_error").innerHTML = mensaje_error;
+            }
+
+            return correcto;
+        }
+
+        function comprobarMail(email) {
+
+            var correcto = true;
+            var mensaje_error;
+
+            //Campo vacio
+            if (email.value == "") {
+                mensaje_error =  "El email no puede estar vacio";
+                correcto = false;
+            }
+
+            //Separamos el email por la arroba
+            var email_separado = email.value.split("@");
+
+            if (!email_separado[0] || !email_separado[1] || email_separado[0] == "" || email_separado[1] == "") {
+                mensaje_error = "El email no es valido";
+                correcto = false;
+            } else {
+                //Separamos el dominio por el punto
+                var dominio_separado = email_separado[1].split(".");
+                if (!dominio_separado[0] || !dominio_separado[1] || dominio_separado[0] == "" || dominio_separado[1] == "") {
+                    mensaje_error = "El dominio del email no es valido";
+                    correcto = false;
+                }
+            }
+
+            //Si hay algun error devolvemos false y lo mostramos
+            if (!correcto) {
+                email.focus();
+                document.getElementById("email_error").innerHTML = mensaje_error;
+            }
+
+            return correcto;
+        }
+
+        function comprobarWeb(web) {
+
+            var correcto = true;
+            var mensaje_error;
+
+            //Campo vacio
+            if (web.value == "") {
+                mensaje_error = "La web no puede estar vacia";
+                correcto = false;
+            }
+
+            //Comprobar que empieza por http:// o https://
+            if (web.value.indexOf("http://") == -1 && web.value.indexOf("https://") == -1 ) {
+                mensaje_error = "La web tiene un formato incorrecto";
+                correcto = false;
+            }
+
+            //Si hay algun error devolvemos false y lo mostramos
+            if (!correcto) {
+                web.focus();
+                document.getElementById("web_error").innerHTML = mensaje_error;
+            }
+
+            return correcto;
+        }
+
+        function comprobarSexo(sexo) {
+
+            var correcto = true;
+            var mensaje_error;
+
+            var check_hombre = document.getElementById("check_hombre");
+            var check_mujer = document.getElementById("check_mujer");
+
+            //Campo vacio
+            if (!check_hombre.checked && !check_mujer.checked) {
+                mensaje_error = "No has seleccionado ningún genero.";
+                correcto = false;
+            }
+
+            //Si hay algun error devolvemos false y lo mostramos
+            if (!correcto) {
+                sexo.focus();
+                document.getElementById("sexo_error").innerHTML = mensaje_error;
+            }
+
+            return correcto;
+        }
+
+        function comprobarVehiculo(vehiculo) {
+
+            var correcto = true;
+            var mensaje_error;
+
+            var seleccion = vehiculo.selectedIndex;
+
+            //Campo vacio
+            if (seleccion == 0) {
+                mensaje_error = "No has seleccionado ningún vehículo.";
+                correcto = false;
+            }
+
+            //Si hay algun error devolvemos false y lo mostramos
+            if (!correcto) {
+                vehiculo.focus();
+                document.getElementById("vehiculo_error").innerHTML = mensaje_error;
+            }
+
+            return correcto;
+        }
+
+
+
+        function comprobarMensaje(mensaje) {
+
+            var correcto = true;
+            var mensaje_error;
+
+            //Minimo 30 caracteres
+            if (mensaje.value.length < 30) {
+                mensaje_error = "El mensaje tiene que tener al menos 30 caracteres";
+                correcto = false;
+            }
+
+            //Campo vacio
+            if (mensaje.value == "") {
+                mensaje_error = "El mensaje es obligatorio";
+                correcto = false;
+            }
+
+            //Si hay algun error devolvemos false y lo mostramos
+            if (!correcto) {
+                vehiculo.focus();
+                document.getElementById("mensaje_error").innerHTML = mensaje_error;
+            }
+
+            return correcto;
+        }
+
+        function limpiarError() {
+            document.getElementById("nombre_error").innerHTML = "";
+            document.getElementById("email_error").innerHTML = "";
+            document.getElementById("web_error").innerHTML = "";
+            document.getElementById("sexo_error").innerHTML = "";
+            document.getElementById("vehiculo_error").innerHTML = "";
+            document.getElementById("mensaje_error").innerHTML = "";
+        }
+
+    </script>
+</head>
+<body>
+
+<form method="post" onsubmit="return false">
+
+    <label>Nombre:<br/>
+        <input type="text" id="nombre" name="nombre">
+    </label><br/>
+    <span id="nombre_error"></span>
+
+    <label>E-mail:<br/>
+        <input type="text" id="email" name="email">
+    </label><br/>
+    <span id="email_error"></span>
+
+    <label>Sitio Web:<br/>
+        <input type="text" id="website" name="website">
+    </label><br/>
+    <span id="web_error"></span>
+
+    Sexo:
+    <label>
+        <input type="radio" id="check_mujer" name="sexo" value="Mujer"> Mujer
+    </label>
+
+    <label>
+        <input type="radio" id="check_hombre" name="sexo" value="Hombre"> Hombre
+    </label><br/>
+
+    <span id="sexo_error"></span>
+
+    <label>
+        Vehículo:
+        <select id="vehiculo" name="vehiculo">
+            <option value="noselect">No seleccionado</option>
+            <option value="bici">Bici</option>
+            <option value="coche">Coche</option>
+            <option value="patinete">Patinete</option>
+        </select>
+    </label>
+    <br/>
+    <span id="vehiculo_error"></span>
+
+
+    <label>Mensaje:<br/>
+        <textarea id="mensaje" name="mensaje"></textarea>
+    </label>
+    <br/>
+    <span id="mensaje_error"></span>
+
+    <button type="submit" name="enviar" onclick="recorrerElementos()">Enviar</button>
+
+</form>
+
+</body>
+</html>

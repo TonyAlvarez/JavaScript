@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 1 - Examen Tema 7</title>
+    <link rel="stylesheet" href="estilos.css">
+    <script type="text/javascript">
+
+        function recorrerElementos() {
+
+            limpiarError();
+
+            var elementos = document.forms[0];
+
+            //Bucle que recorre los elementos del formulario y los comprueba.
+            for (var i = 0; i < elementos.length; i++) {
+
+
+                //Comprobamos el elemento, y si la funcion devuelve false, devolvemos false al formulario.
+                if (!comprobar(elementos[i]))
+                    return false;
+            }
+
+            alert("Todos los campos han sido validados correctamente");
+
+            //Si ningún elemento ha devuelto false, devolvemos true.
+            return true;
+        }
+
+        function comprobar(elemento) {
+
+            if (elemento.name == "nombre") {
+                return comprobarNombre(elemento);
+            } else if (elemento.name == "email") {
+                return comprobarMail(elemento);
+            } else if (elemento.name == "fijo") {
+                return comprobarFijo(elemento);
+            } else if (elemento.name == "movil") {
+                return comprobarMovil(elemento);
+            } else if (elemento.name == "fecha") {
+                return comprobarFecha(elemento);
+            } else if (elemento.name == "habilidad") {
+                return comprobarHabilidad(elemento);
+            }
+
+            //Si el ID no coincide con ninguno de los elementos que queremos comprobar, devolvemos true.
+            return true;
+        }
+
+        function comprobarNombre(elemento) {
+
+            //Cualquier composicin de mayus y minus con mínimo 3 letras
+            var expression = /[a-zA-Z]{3}/;
+
+            //Si hay algun error devolvemos false y lo mostramos
+            if (expression.test(elemento.value)) {
+                return true;
+            } else {
+                elemento.focus();
+                document.getElementById("nombre_error").innerHTML = "El nombre tiene un formato incorrecto";
+                return false
+            }
+        }
+
+        function comprobarMail(elemento) {
+
+            //Cualquier composición de letras mayus y minus, digitos, punto, barra baja, porcentaje, mas o menos, seguido del dominio de IES Son Ferrer
+            var expression = /^[a-zA-Z0-9._%+-]+@iessonferrer.net$/;
+
+            //Si hay algun error devolvemos false y lo mostramos
+            if (expression.test(elemento.value)) {
+                return true;
+            } else {
+                elemento.focus();
+                document.getElementById("email_error").innerHTML = "El email tiene un formato incorrecto";
+                return false
+            }
+        }
+
+        function comprobarFijo(elemento) {
+
+            //Que empiece por 971 o 871 y le sigan 6 digitos más
+            var expression = /^(971|871)[0-9]{6}$/;
+
+            //Si hay algun error devolvemos false y lo mostramos
+            if (expression.test(elemento.value)) {
+                return true;
+            } else {
+                elemento.focus();
+                document.getElementById("fijo_error").innerHTML = "El telefono tiene un prefijo incorrecto";
+                return false
+            }
+        }
+
+        function comprobarMovil(elemento) {
+
+            //Que empieza por 6 o 7 y le sigan 8 digitos más
+            var expression = /^(6|7)[0-9]{8}$/;
+
+            //Si hay algun error devolvemos false y lo mostramos
+            if (expression.test(elemento.value)) {
+                return true;
+            } else {
+                elemento.focus();
+                document.getElementById("movil_error").innerHTML = "El móvil tiene un formato incorrecto";
+                return false
+            }
+        }
+
+        function comprobarFecha(elemento) {
+
+            //Cualquier dia del 01 al 31, mes del 01 al 12 y año del 2015 al 2020
+            var expression = /^(3[01]|2[1-9]|0[1-9])\/(1[0-2]|0[1-9])\/(201[5-9]|2020)$/;
+
+            //Si hay algun error devolvemos false y lo mostramos
+            if (expression.test(elemento.value)) {
+                return true;
+            } else {
+                elemento.focus();
+                document.getElementById("fecha_error").innerHTML = "La fecha no es válida";
+                return false
+            }
+        }
+
+        function comprobarHabilidad(elemento) {
+
+            //O un 0 o un numero con símbolo del 1 al 5
+            var expression = /^(0|(\+|\-)?[1-5])$/;
+
+            //Si hay algun error devolvemos false y lo mostramos
+            if (expression.test(elemento.value)) {
+                return true;
+            } else {
+                elemento.focus();
+                document.getElementById("habilidad_error").innerHTML = "La habilidad tiene que ser un número entero válido";
+                return false
+            }
+        }
+
+        function limpiarError() {
+            document.getElementById("nombre_error").innerHTML = "";
+            document.getElementById("email_error").innerHTML = "";
+            document.getElementById("fijo_error").innerHTML = "";
+            document.getElementById("movil_error").innerHTML = "";
+            document.getElementById("fecha_error").innerHTML = "";
+            document.getElementById("habilidad_error").innerHTML = "";
+        }
+
+    </script>
+</head>
+<body>
+
+<form method="post" onsubmit="return false">
+
+    <label>Nombre:<br/>
+        <input type="text" name="nombre">
+    </label><br/>
+    <span id="nombre_error"></span>
+
+    <label>E-mail:<br/>
+        <input type="text" name="email">
+    </label><br/>
+    <span id="email_error"></span>
+
+    <label>Teléfono fijo:<br/>
+        <input type="text" name="fijo">
+    </label><br/>
+    <span id="fijo_error"></span>
+
+    <label>Teléfono móvil:<br/>
+        <input type="text" name="movil">
+    </label><br/>
+    <span id="movil_error"></span>
+
+    <label>Fecha alta:<br/>
+        <input type="text" name="fecha">
+    </label><br/>
+    <span id="fecha_error"></span>
+
+    <label>Nivel de habilidad:<br/>
+        <input type="text" name="habilidad">
+    </label><br/>
+    <span id="habilidad_error"></span>
+
+    <button type="submit" name="enviar" onclick="recorrerElementos()">Enviar</button>
+
+</form>
+
+</body>
+</html>

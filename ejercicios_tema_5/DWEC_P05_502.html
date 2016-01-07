@@ -2,28 +2,80 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <title>DWEC_P05 Exercici 2</title>
+
+    <style type="text/css">
+        body {
+            font-family: arial, helvetica;
+        }
+
+        #info {
+            width: 180px;
+            border: thin solid silver;
+            padding: .5em;
+            position: fixed;
+        }
+
+        #info h1 {
+            margin: 0;
+        }
+    </style>
     <script>
 
+        //Configurar loes eventos, para que llamen a determinadas funciones.
         function iniciar() {
             document.onmousemove = movimientoRaton;
             document.onmousedown = clickRaton;
-            document.onmouseup = limpiarRaton;
+            document.onmouseup = limpiarClick;
+            document.onkeypress = keyPressed;
         }
 
+        //Al mover el ratón
         function movimientoRaton(event) {
-            document.getElementById("navegador").innerHTML = "Navegador: " + event.clientX + " - " + event.clientY;
-            document.getElementById("pagina").innerHTML = "Página: " + event.screenX + " - " + event.screenY;
+            document.getElementById("info").style.backgroundColor = "#FFFFFF";
+            document.getElementById("info").children[0].innerHTML = "Ratón";
+            document.getElementById("info").children[1].innerHTML = "Navegador [" + event.clientX + ", " + event.clientY + "]";
+            document.getElementById("info").children[2].innerHTML = "Página [" + event.screenX + ", " + event.screenY + "]";
+            document.getElementById("info").children[3].innerHTML = "Clic izquierdo false";
+            document.getElementById("info").children[4].innerHTML = "Clic derecho false";
+            document.getElementById("info").children[3].style.display = "block";
+            document.getElementById("info").children[4].style.display = "block";
         }
 
+        //Al clicar
         function clickRaton(event) {
-            document.getElementById("izquierda").innerHTML = "Clic izquierdo: " + (event.button == 0);
-            document.getElementById("derecha").innerHTML = "Clic derecho: " +  (event.button == 2);
+            if (event.button == 2 && event.which == 3) {
+                alert("Entra");
+                return false;
+            }
+            document.getElementById("info").style.backgroundColor = "#FFD700";
+            document.getElementById("info").children[0].innerHTML = "Ratón";
+            document.getElementById("info").children[1].innerHTML = "Navegador [" + event.clientX + ", " + event.clientY + "]";
+            document.getElementById("info").children[2].innerHTML = "Página [" + event.screenX + ", " + event.screenY + "]";
+            document.getElementById("info").children[3].innerHTML = "Clic izquierdo " + (event.button == 0 && event.which == 1);
+            document.getElementById("info").children[4].innerHTML = "Clic derecho " + (event.button == 2 && event.which == 3);
+            document.getElementById("info").children[3].style.display = "block";
+            document.getElementById("info").children[4].style.display = "block";
         }
 
-        function limpiarRaton() {
-            document.getElementById("izquierda").innerHTML = "Clic izquierdo: false";
-            document.getElementById("derecha").innerHTML = "Clic derecho: false";
+        //Cuando se suelta el botón del ratón
+        function limpiarClick() {
+            document.getElementById("info").children[0].innerHTML = "Ratón";
+            document.getElementById("info").children[3].innerHTML = "Clic izquierdo false";
+            document.getElementById("info").children[4].innerHTML = "Clic derecho false";
+            document.getElementById("info").children[3].style.display = "block";
+            document.getElementById("info").children[4].style.display = "block";
+        }
+
+        //Al pulsar una tecla
+        function keyPressed(event) {
+            document.getElementById("info").style.backgroundColor = "#1E90FF";
+            document.getElementById("info").children[0].innerHTML = "Teclado";
+            //Para que funcione en Chrome y Firefox uso (event.which || event.keyCode)
+            document.getElementById("info").children[1].innerHTML = "Caracter [" + String.fromCharCode((event.which || event.keyCode)) + "]";
+            document.getElementById("info").children[2].innerHTML = "Código [" + (event.which || event.keyCode) + "]";
+            document.getElementById("info").children[3].style.display = "none";
+            document.getElementById("info").children[4].style.display = "none";
         }
 
     </script>
@@ -31,15 +83,21 @@
 
 <body onload="iniciar()">
 
-<ul>
-    <li></li>
-</ul>
-<a href="DWEC_P05_502.html"></a>
+<div id="info" style="background-color: rgb(255, 255, 255);">
+    <h1>Ratón</h1>
 
-<p id="navegador"></p>
-<p id="pagina"></p>
-<p id="izquierda"></p>
-<p id="derecha"></p>
+    <p>Navegador [0, 0]</p>
+
+    <p>Página [0, 0]</p>
+
+    <p>Clic izquierdo false</p>
+
+    <p>Clic derecho false</p>
+</div>
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
 </body>
 </html>

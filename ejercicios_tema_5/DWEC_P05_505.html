@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DWEC P05 505</title>
+
+    <script>
+
+        window.onload = function () {
+
+            onclick = function (event) {
+
+                //Cogemos la mitad de la anchura y altura de la ventana
+                var mitadAncho = window.innerWidth / 2;
+                var mitadAlto = window.innerHeight / 2;
+
+                //Cogemos la posición del puntero
+                var x = event.clientX;
+                var y = event.clientY;
+
+                //Dependiendo de la posición del puntero, mostramos un mensaje u otro.
+                if (x <= mitadAncho && y <= mitadAlto)
+                    alert("Esquerra - Adalt");
+                else if (x <= mitadAncho && y > mitadAlto)
+                    alert("Esquerra - Abaix");
+                else if (x > mitadAncho && y <= mitadAlto)
+                    alert("Dreta - Adalt");
+                else if (x > mitadAncho && y > mitadAlto)
+                    alert("Dreta - Abaix");
+
+            }
+
+        }
+    </script>
+</head>
+<body>
+
+</body>
+</html>

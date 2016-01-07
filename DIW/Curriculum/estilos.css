@@ -1,0 +1,252 @@
+
+* {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+html, body {
+    padding: 0;
+    margin: 0;
+}
+
+/*
+    LAYOUT
+*/
+
+.menu-container {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    position: relative;
+    z-index: 10;
+}
+
+.container {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    overflow: hidden;
+    height: 100vh;
+    margin-top: -100px;
+    padding-top: 100px;
+    position: relative;
+    width: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.left-container, .data-container {
+    overflow: auto;
+    height: auto;
+    padding: .5rem;
+    -ms-overflow-style: none;
+}
+
+.left-container::-webkit-scrollbar, .data-container::-webkit-scrollbar {
+    display: none;
+}
+
+.left-container {
+    width: 12.5rem;
+}
+
+.data-container {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+}
+
+/*
+    MENU
+*/
+
+.menu-container {
+    text-align: center;
+    background-color: #6699CC;
+    border-bottom: 2px solid #456789;
+}
+
+.menu {
+    list-style-type: none;
+    margin: 0 auto;
+    padding: 0;
+    overflow: hidden;
+    background-color: #6699CC;
+    width: 65%;
+}
+
+.menu li {
+    float: left;
+    width: 20%;
+}
+
+.menu li a {
+    display: block;
+    color: #FFF;
+    text-transform: uppercase;
+    padding: 16px 0;
+    text-decoration: none;
+    font-size: 14px;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.menu li a:hover {
+    background-color: #456789;
+}
+
+/*
+    TITULO
+*/
+
+.title {
+    font-variant: small-caps;
+    font-size: 3.75em;
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
+.title > span:first-of-type {
+    text-shadow: 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000, 1px 1px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+    color: #456789;
+    margin-left: 40px;
+    margin-right: 20px;
+}
+
+.title > span:last-of-type {
+    text-shadow: 2px 0 0 #456789, -2px 0 0 #456789, 0 2px 0 #456789, 0 -2px 0 #456789, 1px 1px #456789, -1px -1px 0 #456789, 1px -1px 0 #456789, -1px 1px 0 #456789;
+    color: #fff;
+}
+
+/*
+    FOTO
+*/
+
+.foto-container {
+    text-align: center;
+}
+
+.foto {
+    width: 100px;
+    height: 130px;
+    border-radius: 50px;
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border: 2px solid #456789;
+}
+
+/*
+       DATOS
+*/
+
+.data-title {
+    font-size: 2.5em;
+    padding: 40px 0 20px 0;
+    font-variant: small-caps;
+}
+
+.data-title > span:first-of-type {
+    color: #456789;
+    margin-right: 10px;
+}
+
+.data-title > span:last-of-type {
+    text-shadow: 1px 1px #456789, -1px -1px 0 #456789, 1px -1px 0 #456789, -1px 1px 0 #456789;
+    color: #fff;
+}
+
+.data-content {
+    margin: 40px;
+}
+
+/*
+    TABLA DATOS PERSONALES
+*/
+
+table#tabla-datos-personales {
+    margin: 0;
+    padding: 0 50px 0 50px;
+    border-collapse: separate;
+    border-spacing: 0 0.75em;
+    width: 100%;
+}
+
+table td {
+    vertical-align: middle;
+    padding: 15px 50px;
+    border-bottom: 1pt solid black;
+    background-color: lightblue;
+}
+
+table td:nth-child(1) {
+    font-weight: bold;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+table td:nth-child(2) {
+
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+/*
+    LISTA ESTUDIOS, EXPERIENCIA Y OTROS
+*/
+
+ul.lista-datos li:before {
+    content: '\2713';
+    display: inline-block;
+    font-size: 1em;
+    color: #456789;
+    padding: 0 20px;
+}
+
+ul.lista-datos li {
+    list-style-type: none;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+ul.lista-datos p {
+    padding: 0 0 0 80px;
+    font-weight: normal;
+    font-size: 1em;
+}
+
+ul.lista-datos li ul {
+    padding: 20px 0;
+    font-weight: normal;
+    font-size: 1em;
+}
+
+
+ul.lista-datos li ul li:before {
+    content: '•';
+    display: inline-block;
+    font-size: 1em;
+    color: #456789;
+    padding: 0 20px;
+}
+
+ul.lista-datos li ul li {
+    padding: 0 0 0 80px;
+    font-weight: normal;
+    font-size: 1em;
+}
