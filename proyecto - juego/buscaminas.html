@@ -30,7 +30,7 @@
 
         #minas-restantes {
             float: left;
-            width: 100px;
+            width: 75px;
             height: 44px;
             background: black;
             border: 3px solid #9b9b9b;
@@ -40,12 +40,17 @@
 
         #tiempo {
             float: right;
-            width: 100px;
+            width: 75px;
             height: 44px;
             background: black;
             border: 3px solid #9b9b9b;
             border-right: 3px solid #d7d7d7;
             border-bottom: 3px solid #d7d7d7;
+        }
+
+        #minas-restantes img, #tiempo img {
+            width: 20px;
+            margin-top: 3px;
         }
 
         #cara-estado {
@@ -162,13 +167,18 @@
         }
     </style>
     <script>
+
+        /*
+         * Variables y constantes globales
+         */
         var NUM_COLUMNAS = 30;
         var NUM_FILAS = 16;
-        var NUM_MINAS = 100;
+        var NUM_MINAS = 15;
 
-        var ESTADO_NORMAL = 0;
-        var ESTADO_GAMEOVER = 1;
-        var ESTADO_GAMEWIN = 2;
+        var ESTADO_STOP = 0;
+        var ESTADO_PLAY = 1;
+        var ESTADO_GAMEOVER = 2;
+        var ESTADO_GAMEWIN = 3;
 
         var CASILLA_OCULTA = 0;
         var CASILLA_MINA = 1;
@@ -177,19 +187,25 @@
         var CASILLA_BANDERA_EQUIVOCADA = 4;
 
         var tablero;
-        var estado = ESTADO_NORMAL;
+        var estado = ESTADO_STOP;
         var minasRestantes = NUM_MINAS;
+
+        var tiempoJuego = 0;
+        var timerID;
 
         //Variable donde se guardará el Timeout para el doble click
         var espera;
         //Tiempo de espera entre single click y doble click
         var TIEMPO_ESPERA = 250;
 
+        /**
+         * Al cargar la página, se configuran los eventos y se inicializa el juego.
+         */
         window.onload = function () {
             var carita = document.getElementById("cara-estado");
             carita.onmousedown = function () {
                 switch (estado) {
-                    case ESTADO_NORMAL:
+                    case ESTADO_PLAY:
                         document.getElementById("cara-estado").className = "cara-sorpresa cara-pressed";
                         break;
                     case ESTADO_GAMEOVER:
@@ -202,11 +218,10 @@
             };
             carita.onmouseup = function () {
                 reiniciarJuego();
-                document.getElementById("cara-estado").className = "cara-normal normal";
             };
             carita.onmousemove = function () {
                 switch (estado) {
-                    case ESTADO_NORMAL:
+                    case ESTADO_PLAY:
                         document.getElementById("cara-estado").className = "cara-sonriente cara-normal";
                         break;
                     case ESTADO_GAMEOVER:
@@ -218,23 +233,48 @@
                 }
             };
 
+            document.onmousedown = function () {
+                if (estado == ESTADO_PLAY)
+                    document.getElementById("cara-estado").className = "cara-sorpresa cara-normal";
+            };
+
+            document.onmouseup = function () {
+                if (estado == ESTADO_PLAY)
+                    document.getElementById("cara-estado").className = "cara-sonriente cara-normal";
+            };
+
             iniciarJuego();
         };
 
+        /**
+         * Iniciar el juego por primera vez
+         */
         function iniciarJuego() {
             inicializarArray();
             colocarMinas();
             crearTablero();
+            actualizarContadorMinas();
         }
 
+        /**
+         * Al hacer click en la carita se reinicia el juego
+         */
         function reiniciarJuego() {
-            estado = ESTADO_NORMAL;
+            estado = ESTADO_STOP;
             minasRestantes = NUM_MINAS;
+            tiempoJuego = 0;
+            clearInterval(timerID);
             inicializarArray();
             colocarMinas();
             reiniciarTablero();
+            actualizarContadorMinas();
+            actualizarContadorTiempo();
+            document.getElementById("cara-estado").className = "cara-normal normal";
         }
 
+        /**
+         * Crear el array bidimensional que servirá para saber que hay en cada casilla del tablero
+         */
         function inicializarArray() {
 
             tablero = [];
@@ -247,6 +287,9 @@
             }
         }
 
+        /**
+         * Colocar las minas aleatoriamente en el array bidimensional
+         */
         function colocarMinas() {
 
             //Esta función coloca las minas aleatoriamente en el tablero
@@ -267,6 +310,10 @@
             }
         }
 
+
+        /**
+         * Añadir las celdas necesarias a la tabla y congigurar los eventos de los mismas.
+         */
         function crearTablero() {
             var tabla = document.getElementById("tabla");
 
@@ -284,6 +331,9 @@
             }
         }
 
+        /**
+         * Al reiniciar el juego, reiniciar todas las celdas de la tabla
+         */
         function reiniciarTablero() {
             //Recorremos todas las celdas para eliminar las clases
             for (var columna = 0; columna < NUM_COLUMNAS; columna++) {
@@ -293,10 +343,42 @@
             }
         }
 
+
+        /**
+         * Click (derecho o izquierdo) en una casilla
+         *
+         * Al hacer click derecho en una casilla:
+         *
+         * 1 - Si es una casilla sin revelar -> Se marca con una bandera (Correcta o incorrecta)
+         * 2 - Si es una casilla ya marcada -> Se desmarca (Como oculta o como mina)
+         * 3 - Si ya está revelada -> Se ignora
+         *
+         * Al hacer click izquierdo en una casilla:
+         *
+         * 1 - Si es una mina -> Fin del juego
+         * 2 - Si es una casilla vacia con minas alrededor -> Se revela y se pone un número
+         * 3 - Si es una casilla vacía sin minas alrededor -> Se revela la casilla clicada y todas las adyacentes.
+         * 4 - Si es una casilla ya revelada o marcada con bandera -> Se ignora
+         *
+         */
         function clickCasilla(evento) {
 
-            //Si se ha finalizado el juego, se ignora el click
-            if (estado == ESTADO_NORMAL) {
+            //Comprobar que el juego no se ha finalizado
+            if (estado <= ESTADO_PLAY) {
+
+                //El juego se inicia con este click, ponemos en marcha el contador del tiempo
+                if (estado == ESTADO_STOP) {
+
+                    //El contador del tiempo es un setInterval que llama a una función anonima,
+                    // que a su vez llama a la función que actualiza el contador del tablero.
+                    timerID = setInterval(
+                            function () {
+                                tiempoJuego++;
+                                actualizarContadorTiempo();
+                            }, 1000);
+
+                    estado = ESTADO_PLAY;
+                }
 
                 if (espera)
                     clearTimeout(espera);
@@ -318,46 +400,35 @@
                                 //Click derecho, poner o quitar bandera
                                 if (evento.button == 2 && evento.which == 3) {
 
-                                    //Si ya hay bandera, se quita
-                                    if (tablero[columna][fila] >= CASILLA_BANDERA_CORRECTA) {
+                                    //Si ya hay bandera correcta, se quita y se pone una mina
+                                    if (tablero[columna][fila] == CASILLA_BANDERA_CORRECTA) {
+                                        tablero[columna][fila] = CASILLA_MINA;
+                                        tabla.rows[fila].cells[columna].className = "";
+                                        minasRestantes++;
+                                        //Si ya hay bandera equivocada, se quita y se pone una casilla vacia oculta
+                                    } else if (tablero[columna][fila] == CASILLA_BANDERA_EQUIVOCADA) {
                                         tablero[columna][fila] = CASILLA_OCULTA;
                                         tabla.rows[fila].cells[columna].className = "";
+                                        minasRestantes++;
                                         //Si hay mina, se marca como bandera correcta
                                     } else if (tablero[columna][fila] == CASILLA_MINA) {
                                         tablero[columna][fila] = CASILLA_BANDERA_CORRECTA;
                                         tabla.rows[fila].cells[columna].className = "flag";
+                                        minasRestantes--;
                                         //Si no hay mina, bandera equivocada
                                     } else {
                                         tablero[columna][fila] = CASILLA_BANDERA_EQUIVOCADA;
                                         tabla.rows[fila].cells[columna].className = "flag";
+                                        minasRestantes--;
                                     }
+
+                                    actualizarContadorMinas();
+
+                                    //Click izquierdo en casilla sin revelar y sin bandera, se revela la casilla
                                 } else if (tablero[columna][fila] < CASILLA_REVELADA) {
 
-                                    //Click izquierdo, si no hay bandera se revela la casilla
-
-                                    //Se configura un Timeout, para esperar a un posible doble click
-
-                                    //El closure es necesario porque el bucle continua,
-                                    //y el valor de las variables columna y fila sigue aumentando en cada iteración,
-                                    //y en el momento de ejecucion del timeout tendrá valores distintos.
-                                    //Al hacer el closure las variables internas tienen su propio valor, independiente al de los indicies.
-
-                                    (function (x, y) {
-                                        espera = setTimeout(function () {
-                                            console.log("Click en: " + x + " - " + y);
-                                            revelarCelda(x, y, true);
-                                        }, TIEMPO_ESPERA);
-                                    })(columna, fila);
-
-                                    //Código sin closure, da error porque se cambian el calor de los indices.
-                                    //Para reproducirlo cambiar el closure anterior por el código siguiente:
-
-                                    /*
-                                         espera = setTimeout(function() {
-                                         console.log("Click en: " + columna + " - " + fila);
-                                         revelarCelda(columna, fila, true);
-                                         }, TIEMPO_ESPERA);
-                                     */
+                                    console.log("Click en: " + columna + " - " + fila);
+                                    revelarCelda(columna, fila, 1);
                                 }
                             }
 
@@ -370,10 +441,14 @@
             }
         }
 
+        /**
+         * Cuando se hace doble click en una casilla, si ya se han marcado todas las minas que tiene alrededor, se revela el resto de casillas.
+         * Si una mina se ha marcado mal, se revelará la verdadera posición de la mina y el jego habrá finalizado.
+         */
         function dobleClickCasilla(evento) {
 
             //Si se ha finalizado el juego, se ignora el click
-            if (estado == ESTADO_NORMAL) {
+            if (estado == ESTADO_PLAY) {
 
                 //Se limpia el Timeout para que no salte el single click
                 if (espera)
@@ -390,8 +465,12 @@
                         //Si la celda actual tiene el mismo ID que la celda clicada, mostramos su posicion
                         if (elementClicked.id == tabla.rows[fila].cells[columna].id) {
 
-                            console.log("Doble click en: " + columna + " - " + fila);
-
+                            //Si la casilla está revelada y hay tantas banderas marcadas alrededor como minas tiene alrededor, se revelan las casillas de alrededor restantes
+                            if (tablero[columna][fila] == CASILLA_REVELADA &&
+                                    contarMinasAdyacentes(columna, fila) == contarBanderasAdyacentes(columna, fila)) {
+                                console.log("Doble click en: " + columna + " - " + fila);
+                                revelarColindantes(columna, fila, 2);
+                            }
 
                             //Aumentamos los indices para salir de los dos búcles y evitar iteraciones innecesarias
                             columna = NUM_COLUMNAS;
@@ -402,96 +481,100 @@
             }
         }
 
+        /**
+         * Función que revela una casilla determinada
+         *
+         * Hay 3 posibilidades para que una casilla sea revelada:
+         *
+         *  1 - Que se haya clicado en ella
+         *  2 - Que se haya hecho doble click en una casilla colindante
+         *  3 - que tenga una casilla vacía colindante y se haya revelado automáticamente
+         */
         function revelarCelda(x, y, click) {
 
-            //Comprobar que la casilla aún no ha sido revelada
+            //Comprobar que la casilla aún no ha sido revelada y que no tiene banderas
             if (tablero[x][y] < CASILLA_REVELADA) {
-                if (click) {
+                if (click == 1) {
                     console.log("Revelar por click: " + x + " - " + y);
+                } else if (click == 2) {
+                    console.log("Revelar por doble click colindante: " + x + " - " + y);
                 } else {
-                    console.log("Revelar por propagacion: " + x + " - " + y);
+                    //Cuando se descubre una casilla vacia, se revelan las colindantes automaticamente
+                    console.log("Revelar por casilla vacia colindante: " + x + " - " + y);
                 }
 
                 var celda = tabla.rows[y].cells[x];
 
                 //Comprobar si tiene una mina
-                if (tablero[x][y] == CASILLA_MINA && click) {
+                if (tablero[x][y] == CASILLA_MINA && click > 0) {
                     celda.className = "pressed mine";
                     //TODO fin del juego
-                    estado = ESTADO_GAMEOVER;
-                    document.getElementById("cara-estado").className = "cara-gameover cara-normal";
+                    gameOver();
                 } else {
                     //Marcar la casilla como revelada
                     celda.className = "pressed";
                     tablero[x][y] = CASILLA_REVELADA;
 
                     //Compobar cuantas minas tiene alrededor
-                    var minasColindantes = comprobarAdyacentes(x, y);
+                    var minasColindantes = contarMinasAdyacentes(x, y);
 
-                    //Si no hay minas al rededor se revelan las casillas adyacentes, si hay se pone el numero.
+                    //Si no hay minas alrededor se revela la casilla y las casillas adyacentes.
                     if (minasColindantes == 0) {
-                        revelarColindantes(x, y);
+                        revelarColindantes(x, y, 0);
+                        //Si hay minas alrededor se revela la casilla y se pone el numero de minas que tiene alrededor.
                     } else {
+                        celda.className = "pressed mines" + minasColindantes;
+                    }
+                }
 
-                        switch (minasColindantes) {
-                            case 1:
-                                celda.className = "pressed mines1";
-                                break;
-                            case 2:
-                                celda.className = "pressed mines2";
-                                break;
-                            case 3:
-                                celda.className = "pressed mines3";
-                                break;
-                            case 4:
-                                celda.className = "pressed mines4";
-                                break;
-                            case 5:
-                                celda.className = "pressed mines5";
-                                break;
-                            case 6:
-                                celda.className = "pressed mines6";
-                                break;
-                            case 7:
-                                celda.className = "pressed mines7";
-                                break;
-                            case 8:
-                                celda.className = "pressed mines8";
-                                break;
-                        }
+
+                //Si la casilla que se acaba de revelar no ea una mina, comprobar el final del juego
+                if (estado == ESTADO_PLAY) {
+                    console.log("Comprobar final; " + comprobarFinal());
+                    if (comprobarFinal()) {
+                        //Juego ganado
+                        gameWin();
                     }
                 }
             }
         }
 
-        function revelarColindantes(x, y) {
+        /**
+         * Función que revela las casillas colindantes de una casilla determinada
+         *
+         * Cuando una casilla no tiene ninguna mina alrededor, las casillas colindantes se revelan automáticamente con esta función.
+         */
+        function revelarColindantes(x, y, click) {
 
             if (x > 0 && y > 0)
-                revelarCelda(x - 1, y - 1);
+                revelarCelda(x - 1, y - 1, click);
 
             if (x > 0)
-                revelarCelda(x - 1, y);
+                revelarCelda(x - 1, y, click);
 
             if (x > 0 && y < NUM_FILAS - 1)
-                revelarCelda(x - 1, y + 1);
+                revelarCelda(x - 1, y + 1, click);
 
             if (y < NUM_FILAS - 1)
-                revelarCelda(x, y + 1);
+                revelarCelda(x, y + 1, click);
 
             if (y < NUM_FILAS - 1 && x < NUM_COLUMNAS - 1)
-                revelarCelda(x + 1, y + 1);
+                revelarCelda(x + 1, y + 1, click);
 
             if (x < NUM_COLUMNAS - 1)
-                revelarCelda(x + 1, y);
+                revelarCelda(x + 1, y, click);
 
             if (x < NUM_COLUMNAS - 1 && y > 0)
-                revelarCelda(x + 1, y - 1);
+                revelarCelda(x + 1, y - 1, click);
 
             if (y > 0)
-                revelarCelda(x, y - 1);
+                revelarCelda(x, y - 1, click);
         }
 
-        function comprobarAdyacentes(x, y) {
+        /**
+         * Función que devuelve el  número de minas que tiene alrededor una casilla determinada
+         */
+        function contarMinasAdyacentes(x, y) {
             var minasColindantes = 0;
 
             if (x > 0 && y > 0 && tablero[x - 1][y - 1] == CASILLA_MINA || x > 0 && y > 0 && tablero[x - 1][y - 1] == CASILLA_BANDERA_CORRECTA)
@@ -520,6 +603,123 @@
 
             return minasColindantes;
         }
+
+        /**
+         * Función que devuelve el  número de banderas que tiene alrededor una casilla determinada
+         */
+        function contarBanderasAdyacentes(x, y) {
+            var banderasColindantes = 0;
+
+            if (x > 0 && y > 0 && tablero[x - 1][y - 1] == CASILLA_BANDERA_EQUIVOCADA || x > 0 && y > 0 && tablero[x - 1][y - 1] == CASILLA_BANDERA_CORRECTA)
+                banderasColindantes++;
+
+            if (x > 0 && tablero[x - 1][y] == CASILLA_BANDERA_EQUIVOCADA || x > 0 && tablero[x - 1][y] == CASILLA_BANDERA_CORRECTA)
+                banderasColindantes++;
+
+            if (x > 0 && y < NUM_FILAS - 1 && tablero[x - 1][y + 1] == CASILLA_BANDERA_EQUIVOCADA || x > 0 && y < NUM_FILAS - 1 && tablero[x - 1][y + 1] == CASILLA_BANDERA_CORRECTA)
+                banderasColindantes++;
+
+            if (y < NUM_FILAS && tablero[x][y + 1] == CASILLA_BANDERA_EQUIVOCADA || y < NUM_FILAS && tablero[x][y + 1] == CASILLA_BANDERA_CORRECTA)
+                banderasColindantes++;
+
+            if (y < NUM_FILAS && x < NUM_COLUMNAS - 1 && tablero[x + 1][y + 1] == CASILLA_BANDERA_EQUIVOCADA || y < NUM_FILAS && x < NUM_COLUMNAS - 1 && tablero[x + 1][y + 1] == CASILLA_BANDERA_CORRECTA)
+                banderasColindantes++;
+
+            if (x < NUM_COLUMNAS - 1 && tablero[x + 1][y] == CASILLA_BANDERA_EQUIVOCADA || x < NUM_COLUMNAS - 1 && tablero[x + 1][y] == CASILLA_BANDERA_CORRECTA)
+                banderasColindantes++;
+
+            if (x < NUM_COLUMNAS - 1 && y > 0 && tablero[x + 1][y - 1] == CASILLA_BANDERA_EQUIVOCADA || x < NUM_COLUMNAS - 1 && y > 0 && tablero[x + 1][y - 1] == CASILLA_BANDERA_CORRECTA)
+                banderasColindantes++;
+
+            if (y > 0 && tablero[x][y - 1] == CASILLA_BANDERA_EQUIVOCADA || y > 0 && tablero[x][y - 1] == CASILLA_BANDERA_CORRECTA)
+                banderasColindantes++;
+
+            return banderasColindantes;
+        }
+
+        /**
+         * Si hay tantas casillas sin revelar como minas en el tablero,
+         * quiere decir que se han descubierto todas las casillas que no son minas, y se ha ganado el juego.
+         */
+        function comprobarFinal() {
+
+            var casillasRestantes = 0;
+
+            //Recorremos todas las celdas para contar las que faltan por revelar
+            for (var columna = 0; columna < NUM_COLUMNAS; columna++) {
+                for (var fila = 0; fila < NUM_FILAS; fila++) {
+
+                    //Comprobar que la casilla no esté revelada
+                    if (tablero[columna][fila] != CASILLA_REVELADA)
+                        casillasRestantes++;
+
+                    //Si hay más casillas sin revelar que minas en el tablero, aún no se ha finalizado el juego.
+                    //Devolvemos false para evitar iteraciones innecesarias.
+                    if (casillasRestantes > NUM_MINAS)
+                        return false;
+                }
+            }
+
+
+            //Si aún no hemos devuelto false, es que ya se ha finalizado el juego,
+            //porque es imposible que haya menos casillas sin revelar que minas en el tablero.
+            return true;
+        }
+
+        /**
+         * Fin del juego, partida perdida.
+         */
+        function gameOver() {
+            estado = ESTADO_GAMEOVER;
+            clearInterval(timerID);
+            document.getElementById("cara-estado").className = "cara-gameover cara-normal";
+        }
+
+        /**
+         * Fin del juego, partida ganada.
+         */
+        function gameWin() {
+            estado = ESTADO_GAMEWIN;
+            minasRestantes = 0;
+            actualizarContadorMinas();
+            document.getElementById("cara-estado").className = "cara-gamewin cara-normal";
+            clearInterval(timerID);
+            //TODO revelar todas las minas
+        }
+
+        /**
+         * Actualiza el contador de minas restantes cada vez que se pone o se quita una bandera.
+         */
+        function actualizarContadorMinas() {
+            var unidades = Math.floor(minasRestantes % 10);
+            var decenas = Math.floor(minasRestantes / 10 % 10);
+            var centenas = Math.floor(minasRestantes / 100 % 10);
+
+            var contadorUnidades = document.getElementById("minas-unidades");
+            var contadorDecenas = document.getElementById("minas-decenas");
+            var contadorCentenas = document.getElementById("minas-centenas");
+
+            contadorUnidades.src = "./img/contador" + unidades + ".png";
+            contadorDecenas.src = "./img/contador" + decenas + ".png";
+            contadorCentenas.src = "./img/contador" + centenas + ".png";
+        }
+
+        /**
+         * Actualiza el contador del tiempo transcurrido.
+         */
+        function actualizarContadorTiempo() {
+            var unidades = Math.floor(tiempoJuego % 10);
+            var decenas = Math.floor(tiempoJuego / 10 % 10);
+            var centenas = Math.floor(tiempoJuego / 100 % 10);
+
+            var contadorUnidades = document.getElementById("tiempo-unidades");
+            var contadorDecenas = document.getElementById("tiempo-decenas");
+            var contadorCentenas = document.getElementById("tiempo-centenas");
+
+            contadorUnidades.src = "./img/contador" + unidades + ".png";
+            contadorDecenas.src = "./img/contador" + decenas + ".png";
+            contadorCentenas.src = "./img/contador" + centenas + ".png";
+        }
     </script>
 </head>
 <body>
@@ -528,8 +728,16 @@
 
 <div id="tablero">
     <div id="informacion">
-        <div id="minas-restantes" class="pressed"></div>
-        <div id="tiempo" class="pressed"></div>
+        <div id="minas-restantes" class="pressed">
+            <img id="minas-centenas" src="./img/contador0.png"/>
+            <img id="minas-decenas" src="./img/contador0.png"/>
+            <img id="minas-unidades" src="./img/contador0.png"/>
+        </div>
+        <div id="tiempo" class="pressed">
+            <img id="tiempo-centenas" src="./img/contador0.png"/>
+            <img id="tiempo-decenas" src="./img/contador0.png"/>
+            <img id="tiempo-unidades" src="./img/contador0.png"/>
+        </div>
         <div id="cara-estado" class="cara-sonriente cara-normal" oncontextmenu="return false;"></div>
     </div>
 
