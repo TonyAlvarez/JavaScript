@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+	
+function enviaPeticio(objxmlhttp, url, func) {
+	if (objxmlhttp) {
+		objxmlhttp.onreadystatechange = func;
+		objxmlhttp.open("GET",url,true);
+		objxmlhttp.send();
+	}
+}
+function creaXMLHTTP() {
+	if (window.XMLHttpRequest) {
+		// code for IE7+, Firefox, Chrome, Opera, Safari
+	  return new XMLHttpRequest();
+	}
+	else  {
+		// code for IE6, IE5
+		return new ActiveXObject("Microsoft.XMLHTTP");
+	}
+
+}
+function carregaDadesSel(url, campo, idSelect) {
+	var xmlhttp = creaXMLHTTP();	
+	enviaPeticio(xmlhttp, url, function() {
+			if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+				 xmlDoc=xmlhttp.responseXML;
+			    var txt = "";
+			    x = xmlDoc.getElementsByTagName(campo);
+			    var campo1 = "";
+			    var campo2 = "";
+			    for (i=0;i<x.length;i++) {
+				   campo1 = x[i].childNodes[0].childNodes[0].nodeValue;
+					campo2 = x[i].childNodes[1].childNodes[0].nodeValue;
+			      txt = txt + '<option value="'+campo1+'">'+campo2+'</option>';
+			    }
+				 document.getElementById(idSelect).innerHTML = txt;
+		   }  	
+	});
+}
+function carregaDades() {
+	carregaDadesSel('http://192.168.56.101/ajax06.php','DEPARTAMENTO', 'selDep');
+	carregaDadesSel('http://192.168.56.101/ajax07.php','PRODUCTO', 'selPro');
+}
+</script>
+</head>
+<body>
+<h2>AJAX</h2>
+<select id="selDep"></select>
+<select id="selPro"></select>
+<button type="button" onclick="carregaDades()">Carrega dades</button>
+</body>
+</html>

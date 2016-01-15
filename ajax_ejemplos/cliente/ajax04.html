@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+function loadXMLDoc() {
+	//Versió síncrona de ajax01.html
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+		// code for IE7+, Firefox, Chrome, Opera, Safari
+	  xmlhttp=new XMLHttpRequest();
+	}
+	else  {
+		// code for IE6, IE5
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	}
+
+	xmlhttp.open("GET","http://192.168.56.101/ajax01.php",false);
+	xmlhttp.send();
+	document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
+}
+</script>
+</head>
+<body>
+<h2>AJAX</h2>
+<button type="button" onclick="loadXMLDoc()">Request data</button>
+<div id="myDiv"></div>
+</body>
+</html>
