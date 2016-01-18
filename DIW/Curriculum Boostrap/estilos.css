@@ -1,0 +1,42 @@
+.navbar-inner {
+    min-height: 0px;
+}
+.navbar-brand,
+.navbar-nav li a,
+.navbar-nav button {
+    line-height: 60px;
+    height: 60px;
+    padding-top: 0;
+}
+
+.main {
+    text-align: center;
+}
+
+.row {
+    padding: 40px 0;
+}
+
+h2, .nombre {
+    margin: 40px 0;
+}
+
+.img-responsive {
+    margin: 0 auto;
+}
+
+.cara {
+    margin-top: 80px;
+    border-radius: 100px;
+    width: 200px;
+    height: 260px;
+}
+
+.nombre {
+    font-size: 84px;
+    color: white;
+}
+
+.color-1 {
+    background: #456789;
+}
