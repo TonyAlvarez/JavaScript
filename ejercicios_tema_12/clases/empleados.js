@@ -48,12 +48,3 @@ function getNombreEmpleado(idEmpleado) {
 
     }
 }
-
-/**
- * Añade un empleado al array de empleados
- *
- * @param empleado
- */
-function addEmpleado(empleado) {
-    arrayEmpleados.push(empleado);
-}
