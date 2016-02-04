@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AJAX</title>
+    <link rel="stylesheet" href="estilos.css">
+    <script type="text/javascript" src="clases/empleados.js"></script>
+    <script type="text/javascript" src="clases/departamento.js"></script>
+    <script>
+
+        //Globales para todas las peticiones al servidor
+        var METHOD = 'POST';
+        var URL = 'http://192.168.56.101/DWEC_P12_05.php';
+
+        //Cuando cargue la página, iniciamos las peticiones
+        window.onload = function () {
+
+            //Crear la tabla donde meteremos los resultados.
+            var tabla = document.createElement("table");
+            tabla.id = "tabla_empleados";
+
+            document.body.insertBefore(tabla, document.body.childNodes[3]);
+
+            //Cargar los departamento
+            cargarDepartamentos();
+        };
+
+        function cargarDepartamentos() {
+
+            if (window.XMLHttpRequest) {
+                var xmlhttp = new XMLHttpRequest();
+
+                xmlhttp.open(METHOD, URL, true);
+                xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+                xmlhttp.onreadystatechange = function () {
+
+                    if (xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200) {
+
+                        var xmlDoc = xmlhttp.responseXML;
+
+                        //Si hay algún error al recibir el XML, avisamos al usuario y salir.
+                        if (xmlDoc === null) {
+                            alert("Error al recibir los datos del servidor");
+                            return;
+                        }
+
+                        //Arrays con los resultados
+                        var departamentos = xmlDoc.getElementsByTagName("DEPARTAMENTO");
+
+                        for (var i = 0; i < departamentos[0].childNodes.length; i++) {
+
+                            //Creamos un objeto Departamento que guarda todos los atributos del mismo, y lo añadimos al array de departamentos.
+                            addDepartamento(new Departamento(
+                                    departamentos[i].childNodes[0].childNodes[0].nodeValue,
+                                    departamentos[i].childNodes[1].childNodes[0].nodeValue
+                            ));
+                        }
+
+                        //Ya tenemos los departamentos, es momento de cargar los empleados
+                        cargarEmpleados();
+                    }
+                }
+            }
+
+            xmlhttp.send("opt=dep");
+        }
+
+        function cargarEmpleados() {
+
+            if (window.XMLHttpRequest) {
+                var xmlhttp = new XMLHttpRequest();
+
+                xmlhttp.open(METHOD, URL, true);
+                xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+                xmlhttp.onreadystatechange = function () {
+                    if (xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200) {
+
+                        var xmlDoc = xmlhttp.responseXML;
+
+                        //Si hay algún error al recibir el XML, avisamos al usuario y salir.
+                        if (xmlDoc === null) {
+                            alert("Error al recibir los datos del servidor");
+                            return;
+                        }
+
+                        //Arrays con los resultados
+                        var empleados = xmlDoc.getElementsByTagName("EMPLEADO");
+
+                        //Tabla donde meteremos los resultados
+                        var tabla = document.getElementById("tabla_empleados");
+
+
+                        /**
+                         * Eliminamos todos los elementos de la tabla, este metodo es más eficiente que innertHTML = "";
+                         *
+                         * Sacado de StackOverflow:
+                         *
+                         * http://stackoverflow.com/a/3955238/710274
+                         */
+                        while (tabla.firstChild)
+                            tabla.removeChild(tabla.firstChild);
+
+                        //Creamos la cabecera principal de la tabla
+                        var fila = tabla.insertRow(-1);
+                        fila.className = "cabecera-principal";
+                        var cabecera = fila.insertCell(0);
+                        var h3 = document.createElement("h3");
+                        h3.appendChild(document.createTextNode("GESTIÓN DE EMPLEADOS"));
+                        cabecera.colSpan = "10";
+                        cabecera.appendChild(h3);
+
+                        //Creamos las cabeceras de las columnas
+                        fila = tabla.insertRow(-1);
+                        fila.className = "cabecera";
+
+                        for (var y = 0; y < empleados[0].childNodes.length; y++) {
+                            celda = fila.insertCell(-1);
+                            celda.appendChild(document.createTextNode(empleados[0].childNodes[y].nodeName));
+                        }
+
+                        //Cabecera de la columna de acciones
+                        celda = fila.insertCell(-1);
+                        celda.appendChild(document.createTextNode("ACCIONES"));
+
+                        //Variable para crear celdas y insertarlas en la tabla
+                        var celda;
+
+                        //Recorremos los empleados
+                        for (var i = 0; i < empleados.length; i++) {
+
+                            //Creamos un objeto Empleado que guarda todos los atributos del mismo
+                            var empleado = new Empleado(
+                                    empleados[i].childNodes[0].childNodes[0].nodeValue,
+                                    empleados[i].childNodes[1].childNodes[0].nodeValue,
+                                    empleados[i].childNodes[2].childNodes[0].nodeValue,
+                                    empleados[i].childNodes[3].childNodes[0].nodeValue,
+                                    empleados[i].childNodes[4].childNodes[0].nodeValue,
+                                    empleados[i].childNodes[5].childNodes[0].nodeValue,
+                                    empleados[i].childNodes[6].childNodes[0].nodeValue,
+                                    empleados[i].childNodes[7].childNodes[0].nodeValue
+                            );
+
+                            //Añadimos el empleado al array de empleados
+                            arrayEmpleados.push(empleado);
+
+                            //Insertar una nueva fila al final de la tabla
+                            fila = tabla.insertRow(-1);
+                            //Poner el ID del empleado como id de la fila para luego recuperar los datos más fácilmente
+                            fila.id = empleados[i].childNodes[0].childNodes[0].nodeValue;
+
+                            //Metemos los datos del empleado en la fila
+                            for (var x = 0; x < empleados[i].childNodes.length; x++) {
+
+                                //Insertar celda al final de la fila
+                                celda = fila.insertCell(-1);
+
+                                if (empleados[i].childNodes[x].childNodes.length != 0)
+                                    celda.appendChild(document.createTextNode(arrayEmpleados[i]));
+
+                            }
+
+                            //Celda que contiene los botones para editar y eliminar el empleado
+                            celda = fila.insertCell(-1);
+
+                            //Boton de editar empleado
+                            var botonEditar = document.createElement("button");
+                            botonEditar.className = "editar";
+                            celda.appendChild(botonEditar);
+
+                            //Boton de eliminar empleado
+                            var botonEliminar = document.createElement("button");
+                            botonEliminar.className = "eliminar";
+                            celda.appendChild(botonEliminar);
+                        }
+
+
+                        //Ver el XML devuelto.
+                        //document.getElementById("xml").innerHTML = escapeXml(xmlhttp.responseText);
+                    }
+                };
+
+                xmlhttp.send("opt=datemps");
+
+
+            } else {
+                //Si el navegador no soporta XMLHttpRequest avisamos al usuario.
+                document.write("Este navegador no soporta AJAX.");
+            }
+        }
+
+
+        function escapeXml(unsafe) {
+            return unsafe.replace(/[<>&'"]/g, function (c) {
+                switch (c) {
+                    case '<':
+                        return '<br />&lt;';
+                    case '>':
+                        return '&gt;<br />';
+                    case '&':
+                        return '&amp;';
+                    case '\'':
+                        return '&apos;';
+                    case '"':
+                        return '&quot;';
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<h2>DWEC_P12_05</h2>
+
+<p id="xml"></p>
+</body>
+</html>

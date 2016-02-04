@@ -182,7 +182,6 @@ function colocarMinas() {
     }
 }
 
-
 /**
  * Añadir las celdas necesarias a la tabla y configurar los eventos de los mismas.
  */

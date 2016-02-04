@@ -5,36 +5,76 @@
     <title>AJAX</title>
     <script>
         function loadXMLDoc() {
+
+            //Soportado por IE7+, Firefox, Chrome, Opera, Safari
             if (window.XMLHttpRequest) {
-            var xmlhttp;
-                // code for IE7+, Firefox, Chrome, Opera, Safari
-                xmlhttp = new XMLHttpRequest();
+                var xmlhttp = new XMLHttpRequest();
+                var method = 'POST';
+                var url = 'http://192.168.56.101/DWEC_P12_01.php';
+
+                xmlhttp.open(method, url, true);
+                xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
                 xmlhttp.onreadystatechange = function () {
-                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    if (xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200) {
+
                         var xmlDoc = xmlhttp.responseXML;
                         var resultado = "";
+
+                        //Array con los resultados
                         var paises = xmlDoc.getElementsByTagName("PAIS");
+
+                        //Bucle para concatenar los resultados al string
                         for (var i = 0; i < paises.length; i++) {
-                            resultado += paises[i].childNodes[0].nodeValue + ", ";
+                            resultado += paises[i].childNodes[0].nodeValue;
+
+                            //Si no es el último pais añadimos una coma
+                            if (i < paises.length - 1)
+                                resultado += ", ";
                         }
+
+                        //Mostrar los resultados en la página
                         document.getElementById("resultados").innerHTML = resultado;
+
+                        //Ver el XML devuelto.
+                        document.getElementById("xml").innerHTML = escapeXml(xmlhttp.responseText);
                     }
                 };
 
-                xmlhttp.open("POST", "http://192.168.56.101/DWEC_P12_01.php", true);
-                xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
                 xmlhttp.send("l=" + document.getElementById("myInput").value);
             } else {
+                //Si el navegador no soporta XMLHttpRequest avisamos al usuario.
                 document.getElementById("resultados").innerHTML = "Este navegador no soporta AJAX.";
             }
+        }
+
+
+        function escapeXml(unsafe) {
+            return unsafe.replace(/[<>&'"]/g, function (c) {
+                switch (c) {
+                    case '<':
+                        return '<br />&lt;';
+                    case '>':
+                        return '&gt;<br />';
+                    case '&':
+                        return '&amp;';
+                    case '\'':
+                        return '&apos;';
+                    case '"':
+                        return '&quot;';
+                }
+            });
         }
     </script>
 </head>
 <body>
-<h2>AJAX</h2>
+<h2>DWEC_P12_01</h2>
 <input type="text" id="myInput" onkeyup="loadXMLDoc()">
 
 <p id="resultados"></p>
+
+<br/><br/><br/>
+
+<p id="xml"></p>
 </body>
 </html>

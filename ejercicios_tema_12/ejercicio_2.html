@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AJAX</title>
+    <link rel="stylesheet" href="estilos.css">
+    <script>
+
+
+        //Crear el select y añadirle todos los options
+        window.onload = function () {
+
+            var selectList = document.createElement("select");
+            selectList.id = "select_letra";
+            selectList.onchange = function () {
+                loadXMLDoc(selectList.value);
+            };
+
+            document.body.insertBefore(selectList, document.body.childNodes[2]);
+
+            var letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+            for (var i = 0; i < letras.length; i++) {
+                var option = document.createElement("option");
+                option.id = "letra-" + letras[i];
+                option.value = letras[i];
+                option.innerHTML = letras[i];
+                selectList.appendChild(option);
+            }
+
+
+            //Crear la tabla donde meteremos los resultados.
+            var tablaResultados = document.createElement("table");
+            tablaResultados.id = "tabla_resultados";
+
+            document.body.insertBefore(tablaResultados, document.body.childNodes[3]);
+        };
+
+        function loadXMLDoc(letra) {
+
+            //Soportado por IE7+, Firefox, Chrome, Opera, Safari
+            if (window.XMLHttpRequest) {
+                var xmlhttp = new XMLHttpRequest();
+                var method = 'POST';
+                var url = 'http://192.168.56.101/DWEC_P12_01.php';
+
+                xmlhttp.open(method, url, true);
+                xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+                xmlhttp.onreadystatechange = function () {
+                    if (xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200) {
+
+                        var xmlDoc = xmlhttp.responseXML;
+
+                        //Array con los resultados
+                        var paises = xmlDoc.getElementsByTagName("PAIS");
+
+                        //Tabla donde meteremos los resultados
+                        var tabla = document.getElementById("tabla_resultados");
+
+                        /**
+                         * Eliminamos todos los elementos de la tabla, este metodo es más eficiente que innertHTML = "";
+                         *
+                         * Sacado de StackOverflow:
+                         *
+                         * http://stackoverflow.com/a/3955238/710274
+                         */
+
+                        while (tabla.firstChild)
+                            tabla.removeChild(tabla.firstChild);
+
+                        //Creamos la cabecera de la tabla
+                        var fila = tabla.insertRow(0);
+                        var cabecera = fila.insertCell(0);
+                        var bold = document.createElement("b");
+                        bold.appendChild(document.createTextNode("Países"));
+                        cabecera.appendChild(bold);
+
+                        //Metemos los datos en la tabla
+                        for (var i = 0; i < paises.length; i++) {
+
+                            //Insertar una nueva fila al final de la tabla
+                            fila = tabla.insertRow(-1);
+
+                            var celda = fila.insertCell(0);
+                            celda.appendChild(document.createTextNode(paises[i].childNodes[0].nodeValue));
+                        }
+
+                        //Ver el XML devuelto.
+                        document.getElementById("xml").innerHTML = escapeXml(xmlhttp.responseText);
+                    }
+                };
+
+                xmlhttp.send("l=" + letra);
+            } else {
+                //Si el navegador no soporta XMLHttpRequest avisamos al usuario.
+                document.getElementById("resultados").innerHTML = "Este navegador no soporta AJAX.";
+            }
+        }
+
+        function escapeXml(unsafe) {
+            return unsafe.replace(/[<>&'"]/g, function (c) {
+                switch (c) {
+                    case '<':
+                        return '<br />&lt;';
+                    case '>':
+                        return '&gt;<br />';
+                    case '&':
+                        return '&amp;';
+                    case '\'':
+                        return '&apos;';
+                    case '"':
+                        return '&quot;';
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<h2>DWEC_P12_02</h2>
+
+<br/><br/><br/>
+
+<p id="resultados"></p>
+
+<p id="xml"></p>
+</body>
+</html>

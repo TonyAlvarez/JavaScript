@@ -1,6 +1,7 @@
 .navbar-inner {
     min-height: 0px;
 }
+
 .navbar-brand,
 .navbar-nav li a,
 .navbar-nav button {
@@ -27,7 +28,6 @@ h2, .nombre {
 
 .cara {
     margin-top: 80px;
-    border-radius: 100px;
     width: 200px;
     height: 260px;
 }
@@ -39,4 +39,12 @@ h2, .nombre {
 
 .color-1 {
     background: #456789;
+}
+
+.color-1 h2, .color-1 p, .color-1 li {
+    color: white;
+}
+
+ul, li {
+    list-style-type: none;
 }
