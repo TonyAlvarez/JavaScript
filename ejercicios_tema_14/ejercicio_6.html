@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>jQuery - Ejercicio 6</title>
+    <link rel="stylesheet" href="ejercicio_6.css">
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            //Guardar la tabla para no usar el selector constantemente
+            var tabla = $('#miTabla');
+
+            //Guardar num de filas y columnas
+            var numFilas = tabla.find('tr').length;
+            var numColumnas = tabla.find('tr:first td').length;
+
+            /**
+             * Añadir columna en la posicion especificada
+             */
+            $("#addColumna").click(function () {
+
+                tabla.find('tr').each(function () {
+                    //TODO Añadir celda en la posicion especificada
+                });
+                var html = "<tr>";
+
+                for (var i = 0; i < numColumnas; i++)
+                    html += "<td>" + $('#texto').val() + "</td>";
+
+                html += "</tr>";
+
+                var numColumna = $('#numColumna').val();
+
+                if (numColumna > numColumnas) {
+                    alert("El número de columna no existe");
+                    return;
+                }
+
+                if (numColumna == 0)
+                    tabla.find('> tbody > tr').eq(numColumna).before(html);
+                else
+                    tabla.find('> tbody > tr').eq(numColumna - 1).after(html);
+
+                numColumna++;
+            });
+
+            /**
+             * Añadir fila en la posicion especificada
+             */
+            $("#addFila").click(function () {
+
+                var html = "<tr>";
+
+                for (var i = 0; i < numColumnas; i++)
+                    html += "<td>" + $('#texto').val() + "</td>";
+
+                html += "</tr>";
+
+                var numFila = $('#numFila').val();
+
+                if (numFila > numFilas) {
+                    alert("El número de fila no existe");
+                    return;
+                }
+
+                if (numFila == 0) //Añadir el nuevo TR antes del primer TR de la tabla
+                    tabla.find('> tbody > tr').eq(numFila).before(html);
+                else
+                    tabla.find('> tbody > tr').eq(numFila - 1).after(html);
+
+                numFilas++;
+            });
+
+            /**
+             *  Borrar una columna específica
+             */
+            $("#borraColumna").click(function () {
+
+            });
+
+            /**
+             *  Borrar una fila específica
+             */
+            $("#borraFila").click(function () {
+
+            });
+
+
+            /**
+             * Cambiar el valor de una celda específica
+             */
+            $("#cambiaCelda").click(function () {
+
+            });
+
+            /**
+             * Cambiar el valor de todas las celdas
+             */
+            $("#cambiaTodas").click(function () {
+
+            });
+        });
+    </script>
+</head>
+
+<body>
+<table id="miTabla" summary="Taula de proves per a l'exercici 3.16">
+    <caption>Taula Ex. 3.16</caption>
+    <tbody>
+    <tr>
+        <td>Celda 1 - 1</td>
+        <td>Celda 1 - 2</td>
+    </tr>
+    <tr>
+        <td>Celda 2 - 1</td>
+        <td>Celda 2 - 2</td>
+    </tr>
+    </tbody>
+</table>
+Text: <input id="texto" type="text"><br>
+Nóm. Fila: <input id="numFila" type="number" min="0"><br>
+Nóm. Columna: <input id="numColumna" type="number" min="0"><br>
+<input type="button" value="Añade columna" id="addColumna">
+<input type="button" value="Añade fila" id="addFila">
+<input type="button" value="Cambia valor celda" id="cambiaCelda"><br>
+<input type="button" value="Borra columna" id="borraColumna">
+<input type="button" value="Borra fila" id="borraFila">
+<input type="button" value="Cambia celdas tabla" id="cambiaTodas">
+</body>
+</html>
