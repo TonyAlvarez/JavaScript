@@ -33,18 +33,29 @@ function getEmpleado(idEmpleado) {
 
 
 /**
- * Función que devuelve el apellido de un empleado a partir del ID que se le pasa como argumento
+ * Función que devuelve la posicion del empleado en el Array de empleados
  *
  * @param idEmpleado
  * @returns {*}
  */
-function getNombreEmpleado(idEmpleado) {
+function getIndiceEmpleado(idEmpleado) {
     for (var i = 0; i < arrayEmpleados.length; i++) {
 
         var current = arrayEmpleados[i];
 
         if (current.idEmpleado == idEmpleado)
-            return current.apellido;
+            return i;
 
     }
+}
+
+
+/**
+ * Función que devuelve el ID de empleado más alto
+ *
+ * @returns {*}
+ */
+function getMaxID() {
+
+    return arrayEmpleados[arrayEmpleados.length - 1].idEmpleado;
 }

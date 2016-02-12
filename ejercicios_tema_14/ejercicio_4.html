@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>jQuery - Ejercicio 4</title>
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#boton").click(function () {
+                $("#lista").append('<li>' + $('#data1').val() + '</li>');
+            });
+        });
+    </script>
+</head>
+
+<body>
+
+<ol id="lista">
+    <li>Lorem ipsum dolor sit amet</li>
+    <li>Consectetuer adipiscing elit</li>
+    <li>Sed mattis enim vitae orci</li>
+    <li>Phasellus libero</li>
+    <li>Maecenas nisl arcu</li>
+</ol>
+<input id="data1" type="text">
+<input id="boton" type="button" value="Afegeix element">
+
+</body>
+</html>

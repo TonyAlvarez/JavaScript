@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>jQuery</title>
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+    <!-- jQuery UI -->
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+
+    <script>
+
+
+        $(document).ready(function () {
+
+
+            $("p").on({
+                mouseenter: function () {
+                    $(this).css("background-color", "lightgray");
+                },
+                mouseleave: function () {
+                    $(this).css("background-color", "lightblue");
+                },
+
+                mousedown: function () {
+                    $(this).css("background-color", "red");
+                },
+                click: function () {
+                    $(this).css("background-color", "yellow");
+                }
+            });
+
+
+            $("#toggle").click(function () {
+                $("p").toggle(500);
+            });
+
+
+            $("#fadein").click(function () {
+                $("p").fadeIn(500);
+            });
+
+            $("#fadeout").click(function () {
+                $("p").fadeOut(500);
+            });
+
+            $("#fade_toggle").click(function () {
+                $("p").fadeToggle(500);
+            });
+
+            $("#slideup").click(function () {
+                $("p").slideUp(500);
+            });
+
+            $("#slidedown").click(function () {
+                $("p").slideDown(500);
+            });
+
+            $("#slide_toggle").click(function () {
+                $("p").slideToggle(500);
+            });
+
+
+            $("#animate").click(function () {
+                $("p").animate({
+                    height: '100px',
+                    borderRadius: '50px',
+                    backgroundColor: '#f00',
+                    opacity: '0.4'
+                }, 'slow').animate({
+                    height: '50px',
+                    borderRadius: '0',
+                    backgroundColor: '#ff0',
+                    opacity: '1'
+                }, 'slow').animate({
+                    height: '100px',
+                    borderRadius: '50px',
+                    backgroundColor: '#fff',
+                    opacity: '0.4'
+                }, 'slow').animate({
+                    height: '50px',
+                    borderRadius: '0',
+                    backgroundColor: '#00f',
+                    opacity: '1'
+                }, 'slow');
+            });
+
+
+        });
+
+
+    </script>
+</head>
+<body>
+
+
+<div class="ui-widget">
+
+
+    <p>Click 1</p>
+    <p>Click 2</p>
+    <p>Click 3</p>
+    <p>Click 4</p>
+    <p>Click 5</p>
+
+    <button id="animate">Animar</button>
+
+    <button id="toggle">Mostrar/Ocultar</button>
+
+    <button id="fadein">Fade in</button>
+    <button id="fadeout">Fade out</button>
+    <button id="fade_toggle">Fade in/out</button>
+
+    <button id="slideup">Slide up</button>
+    <button id="slidedown">Slide down</button>
+    <button id="slide_toggle">Slide up/down</button>
+
+</div>
+</body>
+</html>

@@ -10,7 +10,7 @@ table td {
     border: 1px #4d4d4d solid;
 }
 
-tr:nth-child(even) {
+tr:nth-child(even), tr:nth-child(even) input:disabled, tr:nth-child(even) select:disabled {
     background: #f0f0f0
 }
 
@@ -27,7 +27,7 @@ table tr.cabecera {
     display: none;
 }
 
-button.eliminar, button.editar {
+button {
     cursor: pointer;
     border: 1px solid black;
     border-radius: 5px;
@@ -37,7 +37,7 @@ button.eliminar, button.editar {
 }
 
 button.editar {
-    background: #17ba00 url(./img/edit_icon.png) no-repeat center;
+    background: #0081ff url(./img/edit_icon.png) no-repeat center;
     background-size: 20px;
 }
 
@@ -45,4 +45,45 @@ button.eliminar {
     background: #f00 url(./img/delete_icon.png) no-repeat center;
     background-size: 20px;
 }
+
+button.guardar {
+    background: #17ba00 url(./img/save_icon.png) no-repeat center;
+    background-size: 20px;
+}
+
+button.cancelar {
+    background: #f00 url(./img/cancel_icon.png) no-repeat center;
+    background-size: 20px;
+}
+
+button.anadir {
+    padding: 10px;
+    background: #17ba00 url(./img/add_icon.png) no-repeat left;
+    background-size: 20px;
+    background-origin: content-box;
+    width: 185px;
+    height: 40px;
+    text-align: right;
+    font-weight: bold;
+    font-size: 16px;
+    vertical-align: middle;
+}
+
+input, select {
+    min-width: 100px;
+    width: 120px;
+    text-align: center;
+    font-size: 14px;
+
+}
+
+input:disabled, select:disabled {
+    color: #000;
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    border: none;
+    background: #FFF;
+}
+
 

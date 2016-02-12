@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ejercicio 2</title>
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+            $("#boton").click(function () {
+                $('#resultado').text(String(0 - $('#num2').val() / $('#num1').val()));
+            });
+        });
+    </script>
+
+</head>
+
+<body>
+
+<h1>jQuery - Ejercicio 2</h1>
+
+<p>Introduce los coeficientes de la ecuación:</p>
+
+<input id="num1"/> X + <input id="num2"/> = 0
+<br/>
+<button id="boton">Enviar</button>
+
+<p id="resultado">Clic en enviar para ver el resultado</p>
+</body>
+</html>

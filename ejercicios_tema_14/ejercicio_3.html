@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>jQuery - Ejercicio 3</title>
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".enlace").click(function () {
+                $(this).prev().toggle(100);
+                $(this).text(($(this).text() == "Ocultar") ? "Mostrar" : "Ocultar");
+            });
+        });
+    </script>
+</head>
+<body>
+
+<p class="contenido">[1] Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed mattis enim vitae orci. Phasellus
+    libero. Maecenas nisl arcu, consequat congue, commodo nec, commodo ultricies, turpis. Quisque sapien nunc, posuere
+    vitae, rutrum et, luctus at, pede. Pellentesque massa ante, ornare id, aliquam vitae, ultrices porttitor, pede.
+    Nullam sit amet nisl elementum elit convallis malesuada. Phasellus magna sem, semper quis, faucibus ut, rhoncus non,
+    mi. Duis pellentesque, felis eu adipiscing ullamcorper, odio urna consequat arcu, at posuere ante quam non dolor.
+    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Duis scelerisque.</p>
+<a class="enlace" href="#">Ocultar</a>
+
+<br>
+
+<p class="contenido">[2] Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed mattis enim vitae orci. Phasellus
+    libero. Maecenas nisl arcu, consequat congue, commodo nec, commodo ultricies, turpis. Quisque sapien nunc, posuere
+    vitae, rutrum et, luctus at, pede. Pellentesque massa ante, ornare id, aliquam vitae, ultrices porttitor, pede.
+    Nullam sit amet nisl elementum elit convallis malesuada. Phasellus magna sem, semper quis, faucibus ut, rhoncus non,
+    mi. Duis pellentesque, felis eu adipiscing ullamcorper, odio urna consequat arcu, at posuere ante quam non dolor.
+    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Duis scelerisque.</p>
+<a class="enlace" href="#">Ocultar</a>
+
+<br>
+
+<p class="contenido">[3] Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed mattis enim vitae orci. Phasellus
+    libero. Maecenas nisl arcu, consequat congue, commodo nec, commodo ultricies, turpis. Quisque sapien nunc, posuere
+    vitae, rutrum et, luctus at, pede. Pellentesque massa ante, ornare id, aliquam vitae, ultrices porttitor, pede.
+    Nullam sit amet nisl elementum elit convallis malesuada. Phasellus magna sem, semper quis, faucibus ut, rhoncus non,
+    mi. Duis pellentesque, felis eu adipiscing ullamcorper, odio urna consequat arcu, at posuere ante quam non dolor.
+    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Duis scelerisque.</p>
+<a class="enlace" href="#">Ocultar</a>
+
+
+</body>
+
+</html>

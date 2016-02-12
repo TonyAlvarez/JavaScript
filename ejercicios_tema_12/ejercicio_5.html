@@ -51,10 +51,11 @@
                         //Arrays con los resultados
                         var departamentos = xmlDoc.getElementsByTagName("DEPARTAMENTO");
 
-                        for (var i = 0; i < departamentos[0].childNodes.length; i++) {
+                        for (var i = 0; i < departamentos.length; i++) {
+
 
                             //Creamos un objeto Departamento que guarda todos los atributos del mismo, y lo añadimos al array de departamentos.
-                            addDepartamento(new Departamento(
+                            arrayDepartamentos.push(new Departamento(
                                     departamentos[i].childNodes[0].childNodes[0].nodeValue,
                                     departamentos[i].childNodes[1].childNodes[0].nodeValue
                             ));
@@ -100,11 +101,11 @@
                                     empleados[i].childNodes[0].childNodes[0].nodeValue, //El ID el NOT NULL
                                     empleados[i].childNodes[1].childNodes[0] === undefined ? "NO DEFINIDO" : empleados[i].childNodes[1].childNodes[0].nodeValue,
                                     empleados[i].childNodes[2].childNodes[0] === undefined ? "NO DEFINIDO" : empleados[i].childNodes[2].childNodes[0].nodeValue,
-                                    empleados[i].childNodes[3].childNodes[0] === undefined ? "NO TIENE" : empleados[i].childNodes[3].childNodes[0].nodeValue,
+                                    empleados[i].childNodes[3].childNodes[0] === undefined ? "SIN JEFE" : empleados[i].childNodes[3].childNodes[0].nodeValue,
                                     empleados[i].childNodes[4].childNodes[0].nodeValue, //La fecha de alta siempre tiene que estar definida
                                     empleados[i].childNodes[5].childNodes[0] === undefined ? "0.00" : empleados[i].childNodes[5].childNodes[0].nodeValue,
                                     empleados[i].childNodes[6].childNodes[0] === undefined ? "0.00" : empleados[i].childNodes[6].childNodes[0].nodeValue,
-                                    empleados[i].childNodes[7].childNodes[0] === undefined ? "NO DEFINIDO" : empleados[i].childNodes[7].childNodes[0].nodeValue
+                                    empleados[i].childNodes[7].childNodes[0] === undefined ? "0" : empleados[i].childNodes[7].childNodes[0].nodeValue
                             );
 
                             //Añadimos el empleado al array de empleados
@@ -128,11 +129,84 @@
             }
         }
 
+        /**
+         *
+         * Genera un SELECT con los directores que puede tener un empleado, excluyendo a si mismo, y poniendo como seleccionado a su director actual
+         *
+         */
+        function generarSelectDirector(indiceEmpleado, nuevo) {
+
+            var select = document.createElement("select");
+
+            if (!nuevo)
+                select.setAttribute("disabled", "disabled");
+
+            //Añadir la opción SIN JEFE
+            var opcion = document.createElement("option");
+            opcion.value = 0;
+            opcion.appendChild(document.createTextNode("SIN JEFE"));
+            select.appendChild(opcion);
+
+            for (var i = 0; i < arrayEmpleados.length; i++) {
+
+                //Si el empleado de la iteración actual, es el mismo para el que estamos generando el select, lo ignoramos
+                if (arrayEmpleados[i].idEmpleado == arrayEmpleados[indiceEmpleado].idEmpleado)
+                    continue;
+
+                opcion = document.createElement("option");
+
+                var idEmp = arrayEmpleados[i].idEmpleado;
+                var apellido = arrayEmpleados[i].apellido;
+
+                opcion.value = idEmp;
+                opcion.appendChild(document.createTextNode(apellido));
+
+                //Si el id del empleado de la iteración es el mismo que del director del empleado para el que estamos generando el SELECT, lo ponemos como seleccionado.
+                if (opcion.value == arrayEmpleados[indiceEmpleado].director)
+                    opcion.setAttribute("selected", "selected");
+
+                select.appendChild(opcion);
+            }
+
+            return select;
+        }
+
+        /**
+         *
+         * Genera un SELECT con los departamentos a los que puede pertenecer un empleado, poniendo como seleccionado a su departamento actual
+         *
+         */
+        function generarSelectDepartamento(idDepartamentoActual, nuevo) {
+
+            var select = document.createElement("select");
+
+            if (!nuevo)
+                select.setAttribute("disabled", "disabled");
+
+            //Añadir la opción SIN DEPARTAMENTO
+            var opcion = document.createElement("option");
+            opcion.value = 0;
+            opcion.appendChild(document.createTextNode("NO DEFINIDO"));
+            select.appendChild(opcion);
+
+            for (var i = 0; i < arrayDepartamentos.length; i++) {
+
+                opcion = document.createElement("option");
+                opcion.value = arrayDepartamentos[i].idDepartamento;
+                opcion.appendChild(document.createTextNode(arrayDepartamentos[i].nombreDep));
+
+                if (opcion.value == idDepartamentoActual)
+                    opcion.setAttribute("selected", "selected");
+
+                select.appendChild(opcion);
+            }
+
+            return select;
+        }
 
         function refrescarTablaEmpleados() {
             //Recuperar la tabla
             var tabla = document.getElementById("tabla_empleados");
-
 
             /**
              * Eliminamos todos los elementos de la tabla, este metodo es más eficiente que innertHTML = "";
@@ -170,14 +244,13 @@
             celda = fila.insertCell(-1);
             celda.appendChild(document.createTextNode("ACCIONES"));
 
-
             //Recorrer las propiedades del objeto empleado recién creado para introducir los valores en la tabla
             for (var i = 0; i < arrayEmpleados.length; i++) {
 
                 //Insertar una nueva fila al final de la tabla
                 fila = tabla.insertRow(-1);
                 //Poner el ID del empleado como id de la fila para luego recuperar los datos más fácilmente
-                fila.id = arrayEmpleados.idEmpleado;
+                fila.id = arrayEmpleados[i].idEmpleado;
                 for (var property in arrayEmpleados[i]) {
                     if (arrayEmpleados[i].hasOwnProperty(property)) {
 
@@ -187,27 +260,16 @@
                         //Porpiedades de la clase Empleado;
                         //idEmpleado, apellido, oficio, director, fechaAlta, salario, comision, departamento
                         if (property == "director") {
-                            var select = document.createElement("select");
-                            for (var k = 0; k < arrayEmpleados.length; k++) {
-
-                                var opcion = document.createElement("option");
-
-                                var id = arrayEmpleados[k].idEmpleado;
-                                var apellido = arrayEmpleados[k].apellido;
-
-                                opcion.value = id;
-                                opcion.appendChild(document.createTextNode(apellido));
-                                if (opcion.value == arrayEmpleados[i].director)
-                                    opcion.setAttribute("selected", "selected");
-
-                                if (opcion.value != arrayEmpleados[i].idEmpleado)
-                                    select.appendChild(opcion);
-                            }
-
-                            celda.appendChild(select);
+                            celda.appendChild(generarSelectDirector(i));
+                        } else if (property == "departamento") {
+                            celda.appendChild(generarSelectDepartamento(arrayEmpleados[i].departamento));
                         } else if (property != "idEmpleado" && property != "fechaAlta") {
                             var input = document.createElement("input");
+                            input.setAttribute("disabled", "disabled");
                             input.value = arrayEmpleados[i][property];
+
+                            input.type = (property == "salario" || property == "comision") ? "number" : "text";
+
                             celda.appendChild(input);
                         } else {
                             celda.appendChild(document.createTextNode(arrayEmpleados[i][property]));
@@ -220,14 +282,167 @@
 
                 //Boton de editar empleado
                 var botonEditar = document.createElement("button");
+                botonEditar.value = arrayEmpleados[i].idEmpleado;
                 botonEditar.className = "editar";
+                botonEditar.onclick = editarEmpleado;
                 celda.appendChild(botonEditar);
 
                 //Boton de eliminar empleado
                 var botonEliminar = document.createElement("button");
+                botonEliminar.value = arrayEmpleados[i].idEmpleado;
                 botonEliminar.className = "eliminar";
+                botonEliminar.onclick = eliminarEmpleado;
                 celda.appendChild(botonEliminar);
             }
+
+            //Insertar la última fila y la última celda, que contienen el botón para añadir un nuevo empleado
+            fila = tabla.insertRow(-1);
+            fila.id = "Nuevo empleado";
+
+            celda = fila.insertCell(-1);
+            celda.colSpan = "10";
+
+            //Boton para añadir empleado
+            var botonAnadir = document.createElement("button");
+            botonAnadir.className = "anadir";
+            botonAnadir.onclick = insertarEmpleado;
+            botonAnadir.appendChild(document.createTextNode("Añadir empleado"));
+            celda.appendChild(botonAnadir);
+
+        }
+
+        function insertarEmpleado(nuevo, empleado) {
+            //Recuperar tabla
+            var tabla = document.getElementById("tabla_empleados");
+
+            //Si insertamos un nuevo empleado, o hacemos en la última fila, ya existente, en caso contrario estamos pintando toda la tabla y hay que crear una nueva fila.
+            var fila = nuevo ? tabla.rows[tabla.rows.length - 1] : tabla.insertRow(-1);
+
+            if (nuevo) {
+                while (fila.firstChild)
+                    fila.removeChild(fila.firstChild);
+            }
+
+            if (nuevo) {
+                empleado = new Empleado(1 + parseInt(getMaxID()));
+                arrayEmpleados.push(empleado);
+            }
+
+            var indiceEmpleado = getIndiceEmpleado(empleado.idEmpleado);
+
+            //Poner el ID del empleado como id de la fila para luego recuperar los datos más fácilmente
+            fila.id = empleado.idEmpleado;
+
+            for (var property in empleado) {
+                if (empleado.hasOwnProperty(property)) {
+
+                    //Insertar celda al final de la fila
+                    var celda = fila.insertCell(-1);
+
+                    //Porpiedades de la clase Empleado;
+                    //idEmpleado, apellido, oficio, director, fechaAlta, salario, comision, departamento
+                    switch (property) {
+                        case "idEmpleado":
+                            celda.appendChild(document.createTextNode(arrayEmpleados[indiceEmpleado][property]));
+                            break;
+                        case "director":
+                            celda.appendChild(generarSelectDirector(indiceEmpleado, nuevo));
+                            break;
+                        case "departamento":
+                            celda.appendChild(generarSelectDepartamento(arrayEmpleados[indiceEmpleado].departamento, nuevo));
+                            break;
+                        case "fechaAlta":
+                            if (nuevo) {
+                                var f = new Date();
+                                celda.appendChild(document.createTextNode(f.getFullYear() + "-" + f.getMonth() + "-" + f.getDate()));
+                            } else {
+                                celda.appendChild(document.createTextNode(arrayEmpleados[indiceEmpleado][property]));
+                            }
+                            break;
+                        case "apellido":
+                        case "oficio":
+                        case "salario":
+                        case "comision":
+                            var input = document.createElement("input");
+                            if (!nuevo)
+                                input.value = arrayEmpleados[indiceEmpleado][property];
+
+                            input.type = (property == "salario" || property == "comision") ? "number" : "text";
+
+                            celda.appendChild(input);
+
+                            break;
+                        default:
+                            celda.appendChild(document.createTextNode(arrayEmpleados[indiceEmpleado][property]));
+
+                            break;
+                    }
+                }
+            }
+
+            //Celda que contiene los botones para editar y eliminar el empleado
+            celda = fila.insertCell(-1);
+
+            if (nuevo) {
+                //Boton guardar empleado
+                var botonGuardar = document.createElement("button");
+                botonGuardar.className = "guardar";
+                botonGuardar.onclick = guardarEmpleado;
+                celda.appendChild(botonGuardar);
+
+                //Boton guardar empleado
+                var botonCancelar = document.createElement("button");
+                botonCancelar.className = "cancelar";
+                botonCancelar.onclick = cancelarEmpleado;
+                celda.appendChild(botonCancelar);
+            } else {
+                //Boton de editar empleado
+                var botonEditar = document.createElement("button");
+                botonEditar.value = arrayEmpleados[indiceEmpleado].idEmpleado;
+                botonEditar.className = "editar";
+                botonEditar.onclick = editarEmpleado;
+                celda.appendChild(botonEditar);
+
+                //Boton de eliminar empleado
+                var botonEliminar = document.createElement("button");
+                botonEliminar.value = arrayEmpleados[indiceEmpleado].idEmpleado;
+                botonEliminar.className = "eliminar";
+                botonEliminar.onclick = eliminarEmpleado;
+                celda.appendChild(botonEliminar);
+            }
+        }
+
+        function anadirEmpleado() {
+
+            insertarEmpleado(true);
+        }
+
+        function guardarEmpleado() {
+
+            alert("Guardar empleado");
+        }
+
+        function cancelarEmpleado() {
+
+            alert("Cencelar empleado");
+        }
+
+        function editarEmpleado(evento) {
+
+            //Cogemos la posición del puntero, y el elemento que hay en esa posición
+            var x = evento.clientX, y = evento.clientY;
+            var elementClicked = document.elementFromPoint(x, y);
+
+            alert("Editar empleado: " + elementClicked.value);
+        }
+
+        function eliminarEmpleado(evento) {
+
+            //Cogemos la posición del puntero, y el elemento que hay en esa posición
+            var x = evento.clientX, y = evento.clientY;
+            var elementClicked = document.elementFromPoint(x, y);
+
+            alert("Elminar empleado: " + elementClicked.value);
         }
 
 

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#face").click(function () {
+                $(this).attr('src', function (i, src) {
+                    return (src == 'happy.png') ? 'sad.png' : 'happy.png';
+                });
+            });
+        });
+    </script>
+
+</head>
+<body>
+
+<h1>jQuery - Ejercicio 1</h1>
+
+<h3>Clica en la imagen para cambiarla</h3>
+
+<img id="face" src="happy.png"/>
+
+</body>
+</html>
