@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Examen AJAX - Ejercicio 3</title>
+    <script>
+
+        //Al cargar la página, cargar los paises, que a su vez cargará las regiones, y las localidades
+        window.onload = function () {
+            cargarPaises();
+        };
+
+        function cargarPaises() {
+
+            //Soportado por IE7+, Firefox, Chrome, Opera, Safari
+            if (window.XMLHttpRequest) {
+                var xmlhttp = new XMLHttpRequest();
+                var method = 'GET';
+                var url = 'http://192.168.56.101/examen02_paises.php';
+
+                xmlhttp.open(method, url, true);
+
+                xmlhttp.onreadystatechange = function () {
+                    if (xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200) {
+
+                        var xmlDoc = xmlhttp.responseXML;
+
+                        //Si hay algún error al recibir el XML, avisamos al usuario y salir.
+                        if (xmlDoc === null) {
+                            alert("Error al recibir los datos del servidor");
+                            return;
+                        }
+
+                        //Array con los resultados
+                        var paises = xmlDoc.getElementsByTagName("PAIS");
+
+                        generarSelectPaises(paises);
+
+                        //Cargar las regiones del primer pais
+                        cargarRegiones();
+                    }
+                };
+
+                xmlhttp.send();
+            } else {
+                //Si el navegador no soporta XMLHttpRequest avisamos al usuario.
+                document.getElementById("resultados").innerHTML = "Este navegador no soporta AJAX.";
+            }
+        }
+
+        function cargarRegiones() {
+
+            //Soportado por IE7+, Firefox, Chrome, Opera, Safari
+            if (window.XMLHttpRequest) {
+                var xmlhttp = new XMLHttpRequest();
+                var method = 'GET';
+                var url = 'http://192.168.56.101/examen02_regiones.php?p=' + document.getElementById("selectPaises").value;
+
+                xmlhttp.open(method, url, true);
+
+                xmlhttp.onreadystatechange = function () {
+                    if (xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200) {
+
+                        var xmlDoc = xmlhttp.responseXML;
+
+                        //Si hay algún error al recibir el XML, avisamos al usuario y salir.
+                        if (xmlDoc === null) {
+                            alert("Error al recibir los datos del servidor");
+                            return;
+                        }
+
+                        //Array con los resultados
+                        var regiones = xmlDoc.getElementsByTagName("REGION");
+
+                        generarSelectRegiones(regiones);
+
+                        //Cargar las localidades de la primera provincia del paises seleccionado
+                        cargarLocalidades();
+                    }
+                };
+
+                xmlhttp.send();
+            } else {
+                //Si el navegador no soporta XMLHttpRequest avisamos al usuario.
+                document.getElementById("resultados").innerHTML = "Este navegador no soporta AJAX.";
+            }
+        }
+
+        function cargarLocalidades() {
+
+            //Soportado por IE7+, Firefox, Chrome, Opera, Safari
+            if (window.XMLHttpRequest) {
+                var xmlhttp = new XMLHttpRequest();
+                var method = 'GET';
+                var urlBase = 'http://192.168.56.101/examen02_localidades.php';
+                var getPais = '?p=' + document.getElementById("selectPaises").value;
+                var getRegion = '&r=' + document.getElementById("selectRegiones").value;
+
+
+                xmlhttp.open(method, urlBase + getPais + getRegion, true);
+
+                xmlhttp.onreadystatechange = function () {
+                    if (xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200) {
+
+                        var xmlDoc = xmlhttp.responseXML;
+
+                        //Si hay algún error al recibir el XML, avisamos al usuario y salir.
+                        if (xmlDoc === null) {
+                            alert("Error al recibir los datos del servidor");
+                            return;
+                        }
+
+                        //Array con los resultados
+                        var localidades = xmlDoc.getElementsByTagName("LOCALIDAD");
+
+                        var resultado = "";
+
+                        //Bucle para concatenar los resultados al string
+                        for (var i = 0; i < localidades.length; i++) {
+                            resultado += localidades[i].childNodes[1].childNodes[0].nodeValue;
+
+                            //Si no es el último pais añadimos una coma
+                            if (i < localidades.length - 1)
+                                resultado += ", ";
+                        }
+
+                        //Mostrar los resultados en la página
+                        document.getElementById("localidades").innerHTML = resultado;
+                    }
+                };
+
+                xmlhttp.send();
+            } else {
+                //Si el navegador no soporta XMLHttpRequest avisamos al usuario.
+                document.getElementById("resultados").innerHTML = "Este navegador no soporta AJAX.";
+            }
+        }
+
+        function insertarLocalidad() {
+
+            //Comprobar que el campo Localidad no este vacio, si esta vacio salimos de la funcion
+            if (document.getElementById("inputLocalidad").value == "") {
+                alert("Error: El campo \"Localidad\" no puede estar vacio");
+                return;
+            }
+
+            //Soportado por IE7+, Firefox, Chrome, Opera, Safari
+            if (window.XMLHttpRequest) {
+                var xmlhttp = new XMLHttpRequest();
+
+                var method = 'POST';
+                var url = 'http://192.168.56.101/examen03.php';
+
+                //Recuperar los IDS del paise y la region seleccionados y el contenido del input de localidad para pasarlos en el POST
+                var pais = 'p=' + document.getElementById("selectPaises").value;
+                var region = '&r=' + document.getElementById("selectRegiones").value;
+                var localidad = '&l=' + document.getElementById("inputLocalidad").value;
+
+                xmlhttp.open(method, url, true);
+                xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+                xmlhttp.onreadystatechange = function () {
+                    if (xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200) {
+
+                        var xmlDoc = xmlhttp.responseXML;
+
+                        //Si hay algún error al recibir el XML, avisamos al usuario y salir.
+                        if (xmlDoc === null) {
+                            alert("Error al recibir los datos del servidor");
+                            return;
+                        }
+
+                        //Comprobar si se inserta bien la localidad
+                        var error = xmlDoc.getElementsByTagName("DATOS");
+
+                        //Comprobar si la etiqueta DATOS tiene alguna etiqueta ERROR dentro
+                        //Si la hubiese significa que ha habido problemas al ejecutar la consulta
+                        if (error[0].childNodes.length > 0)
+                            alert("Error al insertar la localidad en la base de datos");
+                        //Si no hay error se cargan de nuevo las localidades para mostrar la recien insertada
+                        else
+                            cargarLocalidades();
+                    }
+                };
+
+                xmlhttp.send(pais + region + localidad);
+            } else {
+                //Si el navegador no soporta XMLHttpRequest avisamos al usuario.
+                document.getElementById("resultados").innerHTML = "Este navegador no soporta AJAX.";
+            }
+        }
+
+        function generarSelectPaises(paises) {
+            //Recuperar el select de paises
+            var select = document.getElementById("selectPaises");
+
+            //Recorrer el XML
+            for (var i = 0; i < paises.length; i++) {
+
+                //Crear un Option por cada pais
+                var opcion = document.createElement("option");
+
+                //Meter el ID de pais como value del option
+                opcion.value = paises[i].childNodes[0].childNodes[0].nodeValue;
+
+                //Meter el nombre de pais en el Option
+                opcion.appendChild(document.createTextNode(paises[i].childNodes[1].childNodes[0].nodeValue));
+
+                //Añadir el option al select
+                select.appendChild(opcion);
+            }
+        }
+
+        function generarSelectRegiones(regiones) {
+            //Recuperar el select de regiones
+            var select = document.getElementById("selectRegiones");
+
+            //Borrar las regiones del anterior pais seleccionado
+            while (select.firstChild)
+                select.removeChild(select.firstChild);
+
+            //Recorrer el XML
+            for (var i = 0; i < regiones.length; i++) {
+
+                //Crear un Option por cada region del pais
+                var opcion = document.createElement("option");
+
+                //Meter el ID de region como value del option
+                opcion.value = regiones[i].childNodes[0].childNodes[0].nodeValue;
+
+                //Meter el nombre de la region en el Option
+                opcion.appendChild(document.createTextNode(regiones[i].childNodes[1].childNodes[0].nodeValue));
+
+                //Añadir el option al select
+                select.appendChild(opcion);
+            }
+        }
+    </script>
+</head>
+<body>
+<h1>Examen AJAX - Ejercicio 3</h1>
+
+<h3>Paises:</h3>
+
+<select id="selectPaises" onchange="cargarRegiones()"></select>
+
+<h3>Regiones:</h3>
+
+<select id="selectRegiones" onchange="cargarLocalidades()"></select>
+
+<h3>Localidades:</h3>
+
+<p id="localidades"></p>
+
+<hr>
+
+<h3>Insertar localidad:</h3>
+
+Localidad: <input id="inputLocalidad" type="text">
+
+<br/><br/>
+
+<input id="guardar" type="button" value="Guardar" onclick="insertarLocalidad()">
+
+
+<p id="xml"></p>
+</body>
+</html>

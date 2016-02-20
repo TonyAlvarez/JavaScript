@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="estilos.css">
     <script>
 
-
         //Crear el select y añadirle todos los options
         window.onload = function () {
 
@@ -34,6 +33,9 @@
             tablaResultados.id = "tabla_resultados";
 
             document.body.insertBefore(tablaResultados, document.body.childNodes[3]);
+
+
+            loadXMLDoc("A");
         };
 
         function loadXMLDoc(letra) {
@@ -85,9 +87,6 @@
                             var celda = fila.insertCell(0);
                             celda.appendChild(document.createTextNode(paises[i].childNodes[0].nodeValue));
                         }
-
-                        //Ver el XML devuelto.
-                        document.getElementById("xml").innerHTML = escapeXml(xmlhttp.responseText);
                     }
                 };
 
@@ -97,23 +96,6 @@
                 document.getElementById("resultados").innerHTML = "Este navegador no soporta AJAX.";
             }
         }
-
-        function escapeXml(unsafe) {
-            return unsafe.replace(/[<>&'"]/g, function (c) {
-                switch (c) {
-                    case '<':
-                        return '<br />&lt;';
-                    case '>':
-                        return '&gt;<br />';
-                    case '&':
-                        return '&amp;';
-                    case '\'':
-                        return '&apos;';
-                    case '"':
-                        return '&quot;';
-                }
-            });
-        }
     </script>
 </head>
 <body>
@@ -122,7 +104,5 @@
 <br/><br/><br/>
 
 <p id="resultados"></p>
-
-<p id="xml"></p>
 </body>
 </html>

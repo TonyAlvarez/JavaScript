@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>jQuery - Ejercicio 8</title>
+
+    <style type="text/css">
+        body, div {
+            margin: 0 auto;
+            font-family: arial, helvetica, serif;
+        }
+
+        #info {
+            width: 180px;
+            border: thin solid silver;
+            padding: .5em;
+            position: fixed;
+        }
+    </style>
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+    <script>
+
+        $(document).mousedown(function (event) {
+            var info = $('#info');
+            info.css('backgroundColor', "#FFD700");
+            info.find('h1').html('Ratón');
+            info.find('p').eq(0).html('Navegador [' + event.clientX + ', ' + event.clientY + ']');
+            info.find('p').eq(1).html('Página [' + event.pageX + ', ' + event.pageY + ']');
+            info.find('p').eq(2).html('Click izquierdo ' + (event.which == 1));
+            info.find('p').eq(3).html('Click derecho ' + (event.which == 3));
+            info.find('p').eq(2).show(100);
+            info.find('p').eq(3).show(100);
+        });
+
+        $(document).mousemove(function (event) {
+            var info = $('#info');
+            info.css('backgroundColor', "#FFFFFF");
+            info.find('h1').html('Ratón');
+            info.find('p').eq(0).html('Navegador [' + event.clientX + ', ' + event.clientY + ']');
+            info.find('p').eq(1).html('Página [' + event.pageX + ', ' + event.pageY + ']');
+            info.find('p').eq(2).html('Click izquierdo ' + (event.which == 1));
+            info.find('p').eq(3).html('Click derecho ' + (event.which == 3));
+            info.find('p').eq(2).show(100);
+            info.find('p').eq(3).show(100);
+        });
+
+        $(document).keypress(function (event) {
+            var info = $('#info');
+            info.css('backgroundColor', "#1E90FF");
+            info.find('h1').html('Teclado');
+            info.find('p').eq(0).html('Caracter [' + String.fromCharCode(event.which) + ']');
+            info.find('p').eq(1).html('Código [' + event.which + ']');
+            info.find('p').eq(2).hide(100);
+            info.find('p').eq(3).hide(100);
+        });
+
+    </script>
+</head>
+
+<body oncontextmenu="return false;">
+
+<div id="info">
+    <h1>Ratón</h1>
+
+    <p>Navegador [0, 0]</p>
+
+    <p>Página [0, 0]</p>
+
+    <p>Clic izquierdo false</p>
+
+    <p>Clic derecho false</p>
+</div>
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+</body>
+</html>

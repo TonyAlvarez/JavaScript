@@ -6,4 +6,8 @@ function Departamento(idDepartamento, nombreDep) {
     this.nombreDep = nombreDep;
 }
 
+
+/*
+ * ARRAY PARA ALMACENAR LOS DEPARTAMENTOS
+ */
 var arrayDepartamentos = [];

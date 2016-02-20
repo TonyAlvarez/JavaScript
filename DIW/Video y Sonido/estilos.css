@@ -1,0 +1,59 @@
+.main {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.color-1, .color-2 {
+    padding: 40px 0;
+}
+
+.color-1 {
+    background: #fff;
+    color: #6AC612;
+}
+
+.color-2 {
+    background: #6AC612;
+    color: #fff;
+}
+
+#sonido, #video, .div-tema, .div-preview-confirmar, .div-nueva-busqueda {
+    display: none;
+}
+
+#sonido {
+    margin-bottom: 40px;
+}
+
+#nueva_busqueda {
+    margin-top: 50px;
+}
+
+.form-group:first-of-type {
+    margin-top: 30px;
+}
+
+#controles-video {
+    padding-top: 20px;
+}
+
+.btn {
+    min-width: 80px;
+}
+
+.div-preview-confirmar .btn {
+    min-width: 100px;
+}
+
+/*
+    Alinear los items del footer
+*/
+ul.navbar-nav:last-of-type {
+    width: 100%;
+    text-align: center;
+}
+
+ul.navbar-nav:last-of-type > li {
+    float: none;
+    display: inline-block;
+}

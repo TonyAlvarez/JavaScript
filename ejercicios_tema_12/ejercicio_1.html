@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <title>AJAX</title>
     <script>
+
+        window.onload = function () {
+            loadXMLDoc()
+        };
+
         function loadXMLDoc() {
 
             //Soportado por IE7+, Firefox, Chrome, Opera, Safari
@@ -36,7 +41,7 @@
                         //Mostrar los resultados en la página
                         document.getElementById("resultados").innerHTML = resultado;
 
-                        //Ver el XML devuelto.
+                        //Ver el texto devuelto por el servidor.
                         document.getElementById("xml").innerHTML = escapeXml(xmlhttp.responseText);
                     }
                 };
@@ -47,7 +52,6 @@
                 document.getElementById("resultados").innerHTML = "Este navegador no soporta AJAX.";
             }
         }
-
 
         function escapeXml(unsafe) {
             return unsafe.replace(/[<>&'"]/g, function (c) {

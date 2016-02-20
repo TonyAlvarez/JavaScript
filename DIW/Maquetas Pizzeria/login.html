@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{$title} - {$pagina}</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <!-- Tema bootsrap -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="css/estilos.css" type="text/css">
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+    <script type="text/javascript" src="js/jssor.slider.mini.js"></script>
+</head>
+
+<body>
+<header>
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.php">Pizzería</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a href="index.php#masas">Masas</a></li>
+                    <li><a href="index.php#pizzas">Pizzas</a></li>
+                    <li><a href="index.php#contacto">Contacto</a></li>
+                    <li><a href="#">Nuevo Pedido</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="login.php"><span class="glyphicon glyphicon-log-in"></span> Entrar</a></li>
+                    <li><a href="record.php"><span class="glyphicon glyphicon-user"></span> Registrarse</a></li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+</header>
+
+<div class="container main">
+
+    <div class="row color-1" id="formulario_login">
+        <div class="col-xs-12">
+            <h1>Acceder como usuario registrado.</h1>
+
+            <form method="POST" class="form-horizontal">
+                <fieldset>
+
+                    <!-- Input Usuario -->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="nick">Nombre de usuario: </label>
+                        <div class="col-md-4">
+                            <input class="form-control input-md" type="text" name="nick" id="nick"/>
+
+                            <span class="help-block" style='color:red'>El nombre de usuario no existe</span>
+                        </div>
+                    </div>
+
+                    <!-- Input Contraseña -->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="nick">Contraseña: </label>
+                        <div class="col-md-4">
+                            <input class="form-control input-md" type="password" name="pass" id="pass"/>
+
+                            <span class="help-block" style='color:red'>La contraseña es incorrecta</span>
+                        </div>
+                    </div>
+
+                    <!-- Captcha -->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="captcha">Introduce el texto de la imagen: </label>
+                        <div class="col-md-4">
+
+                            <img class='img-rounded' id="img-captcha" src='captcha.jpg' alt='CAPTCHA code'>
+                            <input class="form-control input-md" type="text" name="captcha" id="captcha"/>
+                            <span class="help-block" style='color:red'>El texto no coincide, prueba de nuevo</span>
+                        </div>
+                    </div>
+
+                    <input type='hidden' name='intentos' value='{$passVacio}'/>
+
+                    <div class="form-group">
+                        <!-- Button Enviar -->
+                        <label class="col-md-4 control-label" for="enviar"></label>
+                        <div class="col-md-4">
+                            <button type="submit" id="enviar" name="enviar" class="btn btn-primary">Entrar</button>
+                        </div>
+                    </div>
+
+                </fieldset>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+        crossorigin="anonymous"></script>
+
+</body>
+</html>

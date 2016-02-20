@@ -8,6 +8,14 @@
 
         //Crear el select y añadirle todos los options
         window.onload = function () {
+
+            var selectPaises = document.getElementById("paises");
+            //Configurar evento onChange del select de paises
+            selectPaises.onchange = function () {
+                //Cargar regiones del servidor
+                loadXMLData(selectPaises.value);
+            };
+
             loadXMLData();
         };
 
@@ -39,10 +47,11 @@
                         }
 
                         //Si existe el parámetro idPais, mostramos las regiones, en caso contrario los paises.
-                        if (idPais)
+                        if (idPais) {
                             cargarRegiones(xmlDoc);
-                        else
+                        } else {
                             cargarPaises(xmlDoc);
+                        }
                     }
                 };
 
@@ -68,12 +77,7 @@
                 selectPaises.appendChild(option);
             }
 
-            //Configurar evento onChange del select de paises
-            selectPaises.onchange = function () {
-
-                //Cargar regiones del servidor
-                loadXMLData(selectPaises.value);
-            };
+            loadXMLData(selectPaises.value);
         }
 
 

@@ -1,0 +1,72 @@
+#slider-container-portada {
+    position: relative; 
+    top: 0px; 
+    left: 0px; 
+    width: 960px; 
+    height: 319px;
+    overflow: hidden;
+}
+
+#slides-portada {
+    cursor: move; 
+    position: absolute; 
+    overflow: hidden; 
+    left: 0px; 
+    top: 0px; 
+    width: 960px; 
+    height: 319px;
+}
+
+#slider-container-instalaciones {
+    position: relative; 
+    top: 0px; 
+    left: 0px; 
+    width: 960px; 
+    height: 638px;
+    overflow: hidden;
+}
+
+#slides-instalaciones {
+    cursor: move; 
+    position: absolute; 
+    overflow: hidden; 
+    left: 0px; 
+    top: 0px; 
+    width: 960px; 
+    height: 638px;
+}
+
+.arrow-left, .arrow-right, .arrow-leftdn, .arrow-rightdn {
+    position: absolute;
+    cursor: pointer;
+    display: block;
+    background: url(../images/arrows.png) no-repeat;
+    overflow:hidden;
+}
+
+.arrow-left {
+    width: 55px; height: 55px; top: 123px; left: 8px;
+}
+
+.arrow-right {
+    width: 55px; height: 55px; top: 123px; right: 8px;
+}
+
+.arrow-left { background-position: -3px -33px; }
+.arrow-right { background-position: -63px -33px; }
+.arrow-left:hover { background-position: -123px -33px; }
+.arrow-right:hover { background-position: -183px -33px; }
+.arrow-leftdn { background-position: -243px -33px; }
+.arrow-rightdn { background-position: -303px -33px; }
+
+
+.bullets div, .bullets div:hover, .bullets .av {
+    background: url(../images/bullets.png) no-repeat;
+    overflow:hidden;
+    cursor: pointer;
+}
+
+.bullets div { background-position: -5px -5px; }
+.bullets div:hover, .jssorb21 .av:hover { background-position: -35px -5px; }
+.bullets .av { background-position: -65px -5px; }
+.bullets .dn, .jssorb21 .dn:hover { background-position: -95px -5px; }

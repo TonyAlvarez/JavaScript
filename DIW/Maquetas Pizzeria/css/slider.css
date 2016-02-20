@@ -1,0 +1,86 @@
+#slider-container {
+    visibility: hidden;
+    position: relative;
+    width: 1024px;
+    height: 256px;
+    overflow: hidden;
+}
+
+#slider-div {
+    cursor: move;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1024px;
+    height: 256px;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.bullets {
+    bottom: 16px;
+    position: absolute;
+}
+
+.bullets div, .bullets div:hover, .bullets .av {
+    position: absolute;
+    /* size of bullet elment */
+    width: 16px;
+    height: 16px;
+    background: url(../img/img-slider/bullets.png) no-repeat;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.bullets div {
+    background-position: -7px -7px;
+}
+
+.bullets div:hover, .bullets .av:hover {
+    background-position: -37px -7px;
+}
+
+.bullets .av {
+    background-position: -67px -7px;
+}
+
+.bullets .dn, .bullets .dn:hover {
+    background-position: -97px -7px;
+}
+
+.arrow-left, .arrow-right {
+    display: block;
+    position: absolute;
+    /* size of arrow element */
+    width: 37px;
+    height: 37px;
+    cursor: pointer;
+    background: url(../img/img-slider/arrows.png) no-repeat;
+    overflow: hidden;
+}
+
+.arrow-left {
+    left: 8px;
+    background-position: -11px -41px;
+}
+
+.arrow-right {
+    right: 8px;
+    background-position: -71px -41px;
+}
+
+.arrow-left:hover {
+    background-position: -131px -41px;
+}
+
+.arrow-right:hover {
+    background-position: -191px -41px;
+}
+
+.arrow-left.jssora11ldn {
+    background-position: -251px -41px;
+}
+
+.arrow-right.jssora11rdn {
+    background-position: -311px -41px;
+}

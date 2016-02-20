@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AJAX y JSON</title>
+    <script>
+
+        //Al cargar la pagina, cargar todos los paises
+        window.onload = function () {
+            loadXMLDoc();
+        };
+
+        function loadXMLDoc() {
+
+            //Soportado por IE7+, Firefox, Chrome, Opera, Safari
+            if (window.XMLHttpRequest) {
+                var xmlhttp = new XMLHttpRequest();
+                var method = 'POST';
+                var url = 'http://192.168.56.101/DWEC_P13_01.php';
+                //var url = 'http://localhost/PHP/DWEC_P13_01.php';
+
+                xmlhttp.open(method, url, true);
+                xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+                xmlhttp.onreadystatechange = function () {
+                    if (xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200) {
+
+                        var arrayResultados = JSON.parse(xmlhttp.responseText);
+
+                        var resultado = "";
+
+                        //Bucle para concatenar los resultados al string
+                        for (var i = 0; i < arrayResultados.length; i++) {
+                            resultado += arrayResultados[i].nombre;
+
+                            //Si no es el último pais añadimos una coma
+                            if (i < arrayResultados.length - 1)
+                                resultado += ", ";
+                        }
+
+                        //Mostrar los resultados en la página
+                        document.getElementById("resultados").innerHTML = resultado;
+                    }
+                };
+
+                xmlhttp.send("l=" + document.getElementById("myInput").value);
+            } else {
+                //Si el navegador no soporta XMLHttpRequest avisamos al usuario.
+                document.getElementById("resultados").innerHTML = "Este navegador no soporta AJAX.";
+            }
+        }
+    </script>
+</head>
+<body>
+<h2>DWEC_P13_01</h2>
+<input type="text" id="myInput" onkeyup="loadXMLDoc()">
+
+<p id="resultados"></p>
+</body>
+</html>

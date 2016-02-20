@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AJAX y JSON</title>
+    <link rel="stylesheet" href="estilos.css">
+    <script>
+
+        //Crear el select y añadirle todos los options
+        window.onload = function () {
+            loadXMLData();
+        };
+
+        function loadXMLData() {
+
+            var method = 'POST';
+
+            var url = 'http://192.168.56.101/DWEC_P13_04.php';
+            //var url = 'http://localhost/PHP/DWEC_P13_04.php';
+
+            if (window.XMLHttpRequest) {
+                var xmlhttp = new XMLHttpRequest();
+
+                xmlhttp.open(method, url, true);
+                xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+                xmlhttp.onreadystatechange = function () {
+                    if (xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200) {
+
+                        //Array con los resultados
+                        var arrayResultados = JSON.parse(xmlhttp.responseText);
+
+                        var selectDepartamentos = document.getElementById("select_departamentos");
+                        var option;
+
+                        for (var i = 0; i < arrayResultados[0].length; i++) {
+                            option = document.createElement("option");
+                            option.value = arrayResultados[0][i]["DEP_NO"];
+                            option.innerHTML = arrayResultados[0][i]["DNOMBRE"];
+                            selectDepartamentos.appendChild(option);
+                        }
+
+                        var selectDirectores = document.getElementById("select_directores");
+
+                        for (var x = 0; x < arrayResultados[1].length; x++) {
+                            option = document.createElement("option");
+                            option.value = arrayResultados[1][x]["EMP_NO"];
+                            option.innerHTML = arrayResultados[1][x]["APELLIDO"];
+                            selectDirectores.appendChild(option);
+                        }
+                    }
+                };
+
+                xmlhttp.send("opt=depdir");
+
+            } else {
+                //Si el navegador no soporta XMLHttpRequest avisamos al usuario.
+                document.getElementById("resultados").innerHTML = "Este navegador no soporta AJAX.";
+            }
+        }
+    </script>
+</head>
+<body>
+
+<h2>DWEC_P13_04</h2>
+
+<h4>Departamentos:</h4>
+<select id="select_departamentos"></select>
+
+<h4>Directores:</h4>
+<select id="select_directores"></select>
+
+</body>
+</html>

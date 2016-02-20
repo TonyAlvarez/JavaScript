@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AJAX y JSON</title>
+    <link rel="stylesheet" href="estilos.css">
+    <script>
+
+        //Crear el select y añadirle todos los options
+        window.onload = function () {
+            var selectPaises = document.getElementById("paises");
+            //Configurar evento onChange del select de paises
+            selectPaises.onchange = function () {
+                //Cargar regiones del servidor
+                loadXMLData(selectPaises.value);
+            };
+
+            loadXMLData();
+        };
+
+        function loadXMLData(idPais) {
+
+            var method = 'POST';
+            var url = "";
+
+            //Si existe el parámetro idPais, es que queremos sacar las regiones, en caso contrario sacamos los paises.
+            if (idPais)
+                url = 'http://192.168.56.101/DWEC_P13_03_2.php';
+            //url = 'http://localhost/PHP/DWEC_P13_03_2.php';
+            else
+                url = 'http://192.168.56.101/DWEC_P13_03.php';
+            //url = 'http://localhost/PHP/DWEC_P13_03.php';
+
+            if (window.XMLHttpRequest) {
+                var xmlhttp = new XMLHttpRequest();
+
+                xmlhttp.open(method, url, true);
+                xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+                xmlhttp.onreadystatechange = function () {
+                    if (xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200) {
+
+                        //Array con los resultados
+                        var arrayResultados = JSON.parse(xmlhttp.responseText);
+
+                        //Si existe el parámetro idPais, mostramos las regiones, en caso contrario los paises.
+                        if (idPais)
+                            cargarRegiones(arrayResultados);
+                        else
+                            cargarPaises(arrayResultados);
+                    }
+                };
+
+                if (idPais)
+                    xmlhttp.send("l=" + idPais);
+                else
+                    xmlhttp.send();
+
+            } else {
+                //Si el navegador no soporta XMLHttpRequest avisamos al usuario.
+                document.getElementById("resultados").innerHTML = "Este navegador no soporta AJAX.";
+            }
+        }
+
+        function cargarPaises(arrayPaises) {
+
+            var selectPaises = document.getElementById("paises");
+
+            for (var i = 0; i < arrayPaises.length; i++) {
+                var option = document.createElement("option");
+                option.value = arrayPaises[i].id;
+                option.innerHTML = arrayPaises[i].nombre;
+                selectPaises.appendChild(option);
+            }
+
+            //Configurar evento onChange del select de paises
+            selectPaises.onchange = function () {
+
+                //Cargar regiones del servidor
+                loadXMLData(selectPaises.value);
+            };
+
+
+            loadXMLData(selectPaises.value);
+        }
+
+        function cargarRegiones(arrayRegiones) {
+
+            var selectRegiones = document.getElementById("select_regiones");
+
+            /**
+             * Eliminamos todos los elementos del select, este metodo es más eficiente que innertHTML = "";
+             *
+             * Sacado de StackOverflow:
+             *
+             * http://stackoverflow.com/a/3955238/710274
+             */
+
+            while (selectRegiones.firstChild)
+                selectRegiones.removeChild(selectRegiones.firstChild);
+
+            var option;
+
+            for (var i = 0; i < arrayRegiones.length; i++) {
+                option = document.createElement("option");
+                option.value = arrayRegiones[i].id;
+                option.innerHTML = arrayRegiones[i].nombre;
+                selectRegiones.appendChild(option);
+            }
+        }
+    </script>
+</head>
+<body>
+<h2>DWEC_P13_03</h2>
+
+<h4>Selecciona un país:</h4>
+<select id="paises"></select>
+
+<h4 id="titulo_regiones">Regiones del país seleccionado:</h4>
+<select id="select_regiones"></select>
+
+<br/><br/><br/>
+
+<p id="resultados"></p>
+
+<p id="xml"></p>
+</body>
+</html>

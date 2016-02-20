@@ -11,23 +11,3 @@ table td {
     border: 1px black solid;
     width: 100px;
 }
-
-/*Primera fila, primera celda*/
-table tr:first-child td:first-child {
-    border-radius: 5px 0 0 0;
-}
-
-/*Primera fila, última celda*/
-table tr:first-child td:last-child {
-    border-radius: 0 5px 0 0;
-}
-
-/*Última fila, primera celda*/
-table tr:last-child td:first-child {
-    border-radius: 0 0 0 5px;
-}
-
-/*Última fila, última celda*/
-table tr:last-child td:last-child {
-    border-radius: 0 0 5px 0;
-}

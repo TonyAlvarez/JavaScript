@@ -23,29 +23,24 @@
              */
             $("#addColumna").click(function () {
 
-                tabla.find('tr').each(function () {
-                    //TODO Añadir celda en la posicion especificada
-                });
-                var html = "<tr>";
-
-                for (var i = 0; i < numColumnas; i++)
-                    html += "<td>" + $('#texto').val() + "</td>";
-
-                html += "</tr>";
-
                 var numColumna = $('#numColumna').val();
 
-                if (numColumna > numColumnas) {
+                if (numColumna < 0 || numColumna > numColumnas) {
                     alert("El número de columna no existe");
                     return;
                 }
 
-                if (numColumna == 0)
-                    tabla.find('> tbody > tr').eq(numColumna).before(html);
-                else
-                    tabla.find('> tbody > tr').eq(numColumna - 1).after(html);
+                var html = "<td>" + $('#texto').val() + "</td>";
 
-                numColumna++;
+                tabla.find('tr').each(function () {
+
+                    if (numColumna == 0) //Añadir el nuevo TD antes del primer TD de la fila
+                        $(this).find('td').eq(numColumna).before(html);
+                    else
+                        $(this).find('td').eq(numColumna - 1).after(html);
+                });
+
+                numColumnas++;
             });
 
             /**
@@ -53,19 +48,19 @@
              */
             $("#addFila").click(function () {
 
+                var numFila = $('#numFila').val();
+
+                if (numFila < 0 || numFila > numFilas) {
+                    alert("El número de fila no existe");
+                    return;
+                }
+
                 var html = "<tr>";
 
                 for (var i = 0; i < numColumnas; i++)
                     html += "<td>" + $('#texto').val() + "</td>";
 
                 html += "</tr>";
-
-                var numFila = $('#numFila').val();
-
-                if (numFila > numFilas) {
-                    alert("El número de fila no existe");
-                    return;
-                }
 
                 if (numFila == 0) //Añadir el nuevo TR antes del primer TR de la tabla
                     tabla.find('> tbody > tr').eq(numFila).before(html);
@@ -80,6 +75,18 @@
              */
             $("#borraColumna").click(function () {
 
+                var numColumna = $('#numColumna').val();
+
+                if (numColumna < 0 || numColumna >= numColumnas) {
+                    alert("El número de columna no existe");
+                    return;
+                }
+
+                tabla.find('tr').each(function () {
+                    $(this).find('td').eq(numColumna).remove();
+                });
+
+                numColumnas--;
             });
 
             /**
@@ -87,14 +94,34 @@
              */
             $("#borraFila").click(function () {
 
-            });
+                var numFila = $('#numFila').val();
 
+                if (numFila < 0 || numFila >= numFilas) {
+                    alert("El número de fila no existe");
+                    return;
+                }
+
+                tabla.find('tr').eq(numFila).remove();
+
+                numFilas--;
+            });
 
             /**
              * Cambiar el valor de una celda específica
              */
             $("#cambiaCelda").click(function () {
+                var numColumna = $('#numColumna').val();
+                var numFila = $('#numFila').val();
 
+                if (numColumna < 0 || numColumna >= numColumnas) {
+                    alert("El número de columna no existe");
+                    return;
+                } else if (numFila < 0 || numFila >= numFilas) {
+                    alert("El número de fila no existe");
+                    return;
+                }
+
+                tabla.find('tr').eq(numFila).find('td').eq(numColumna).text($('#texto').val());
             });
 
             /**
@@ -102,6 +129,11 @@
              */
             $("#cambiaTodas").click(function () {
 
+                tabla.find('tr').each(function () {
+
+                    $(this).find('td').text($('#texto').val());
+
+                });
             });
         });
     </script>

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Sonido y video - Toni Alvarez</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <!-- Tema bootsrap -->
+    <link rel="stylesheet" href="bootstrap.min.css" type="text/css">
+
+    <!-- CSS personalizado -->
+    <link rel="stylesheet" href="estilos.css" type="text/css">
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            //Arrays para simplificar la configuracion de tags audio y video
+            var videos = [["video1.webm", "video2.webm"], ["video3.webm", "video4.webm"], ["video5.webm", "video6.webm"]];
+            var canciones = [["cancion1.ogg", "cancion2.ogg"], ["cancion3.ogg", "cancion4.ogg"], ["cancion5.ogg", "cancion6.ogg"]];
+            var titulos = [["Bang my head", "Dangerous"], ["How Deep Is Your Love", "Summer"], ["Don't Look Down", "Animals"]];
+
+            //Cachear los selects y los reproductores para evitar acceder al DOM constantemente
+            var selectArtista = $('#artista');
+            var selectTema = $('#tema');
+
+            var repVideo = $('#rep_video');
+            var repAudio = $('#rep_audio');
+
+            //Timeout para para el preview
+            var previewTimeout;
+
+            /**
+             * Cuando se elija un artista, mostrar sus temas
+             */
+            selectArtista.change(function () {
+
+                //Eliminar el Timeout del Preview, si lo hay
+                clearTimeout(previewTimeout);
+                //Si se está reproduciendo el Preview, pararlo.
+                stopAudio();
+
+                if (selectArtista.prop('selectedIndex') != 0) {
+                    //Configurar las opciones del select de temas en función del artista seleccionado
+                    selectTema.find('option').eq(1).text(titulos[selectArtista.prop('selectedIndex') - 1][0]);
+                    selectTema.find('option').eq(2).text(titulos[selectArtista.prop('selectedIndex') - 1][1]);
+
+                    //Mostrar el select de los temas
+                    $('.div-tema').slideDown(250);
+                } else {
+                    //Ningun artista seleccionado, ocultar el select de temas y el botón de confirmar
+                    selectTema.val('0');
+                    $('.div-tema').slideUp(250);
+                    $('.div-preview-confirmar').slideUp(250);
+                }
+            });
+
+            /**
+             * Cuando se elija un tema, configurar los reproductores y mostrar los botones Preview y Seleccionar
+             */
+            selectTema.change(function () {
+
+                //Eliminar el Timeout del Preview, si lo hay
+                clearTimeout(previewTimeout);
+                //Si se está reproduciendo el Preview, pararlo.
+                stopAudio();
+
+                if (selectTema.prop('selectedIndex') != 0) {
+
+                    //Configurar los SRC en función del artista y tema seleccionado
+                    repVideo.attr('src', videos[selectArtista.prop('selectedIndex') - 1][selectTema.prop('selectedIndex') - 1]);
+                    repAudio.attr('src', canciones[selectArtista.prop('selectedIndex') - 1][selectTema.prop('selectedIndex') - 1]);
+
+                    //Mostrar el botón de confirmar
+                    $('.div-preview-confirmar').slideDown(250);
+                } else {
+
+                    //Ningún tema seleccionado, ocultar el botón de confirmar
+                    $('.div-preview-confirmar').slideUp(250);
+                }
+            });
+
+            /**
+             * Reproducir Preview de 5 segundos
+             */
+            $('#preview').click(function () {
+
+                //Iniciar la reproduccion
+                if (repAudio[0].paused) {
+                    repAudio[0].play();
+
+                    //Parar la reproducción tras 5 segundos
+                    previewTimeout = setTimeout(function () {
+                        stopAudio();
+                    }, 5000);
+                }
+            });
+
+            /**
+             * Seleccionar un tema, esconder el formulario y hacer scroll hasta los reproductores
+             */
+            $('#confirmar').click(function () {
+
+                //Eliminar el Timeout del Preview, si lo hay
+                clearTimeout(previewTimeout);
+                //Si se está reproduciendo el Preview, pararlo.
+                stopAudio();
+
+                //Cambiar título
+                $('#titulo_busqueda').text($("#artista option:selected").text() + ' - ' + $("#tema option:selected").text());
+
+                //Esconder el formulario
+                $('.div-artista').slideUp(250);
+                $('.div-tema').slideUp(250);
+                $('.div-preview-confirmar').slideUp(250);
+
+                setTimeout(function () {
+
+                    //Mostrar los reproductores y el botón para cambiar de tema
+                    $('#video').slideDown(400);
+                    $('#sonido').slideDown(400);
+                    $('.div-nueva-busqueda').slideDown(400);
+
+                    setTimeout(function () {
+
+                        //Hacer scroll a los resproductores
+                        $('html, body').animate({
+                            scrollTop: $('#video').offset().top
+                        }, 500);
+                    }, 250);
+                }, 400);
+            });
+
+            /**
+             * Mostrar de nuevo el formulario y esconder los reproductores
+             */
+            $('#nueva_busqueda').click(function () {
+
+                //Si se está reproduciendo el video o el sonido, pararlo.
+                stopAudio();
+                stopVideo();
+
+                //Esconder los reproductores
+                $('#video').slideUp(250);
+                $('#sonido').slideUp(250);
+
+                //Cambiar texto
+                $('#titulo_busqueda').text("¿Que quieres ver?");
+
+                //Una vez escondidos los reproductores, mostrar de nuevo el formulario
+                setTimeout(function () {
+                    selectArtista.val('0');
+                    selectTema.val('0');
+
+                    //Mostrar la seleccion de artista
+                    $('.div-artista').slideDown(250);
+
+                    //Esconder el boton de cambiar tema
+                    $('.div-nueva-busqueda').slideUp(250);
+
+                    //Hacer scroll al formulario
+                    $('html body').animate({
+                        scrollTop: $('#formulario').offset().top
+                    }, 500);
+                }, 300);
+            });
+
+            /**
+             * Reproducir video
+             */
+            $('#play').click(function () {
+                if (repVideo[0].paused)
+                    repVideo[0].play();
+            });
+
+            /**
+             * Pausar video
+             */
+            $('#pause').click(function () {
+                if (!repVideo[0].paused)
+                    repVideo[0].pause();
+            });
+
+            /**
+             * Para video
+             */
+            $('#stop').click(function () {
+                stopVideo();
+            });
+
+            /**
+             * Subir volumen
+             */
+            $('#vol_plus').click(function () {
+                //Evita errores al poner volumen > 1
+                if (repVideo[0].volume <= 0.9)
+                    repVideo[0].volume += 0.1;
+                else
+                    repVideo[0].volume = 1;
+            });
+
+            /**
+             * Bajar volumen
+             */
+            $('#vol_minus').click(function () {
+                //Evita errores al poner volumen < 0
+                if (repVideo[0].volume >= 0.1)
+                    repVideo[0].volume -= 0.1;
+                else
+                    repVideo[0].volume = 0;
+            });
+
+            /**
+             * Funciones para parar el audio y el vídeo, ya que estas acciones se utilizan varias veces
+             */
+            function stopAudio() {
+                if (!repAudio[0].paused)
+                    repAudio[0].pause();
+
+                repAudio[0].currentTime = 0;
+            }
+
+            function stopVideo() {
+                if (!repVideo[0].paused)
+                    repVideo[0].pause();
+
+                repVideo[0].currentTime = 0;
+            }
+
+            /**
+             * Evento onPlay del reproductor de video, parar el audio.
+             */
+            repAudio[0].onplay = function () {
+                stopVideo();
+            };
+
+            /**
+             * Evento onPlay del reproductor de audio, parar el video.
+             */
+            repVideo[0].onplay = function () {
+                stopAudio();
+            };
+
+
+            /**
+             * Evento onPlay del reproductor de audio, parar el video.
+             */
+            repVideo.click(function () {
+
+                if (repVideo[0].paused)
+                    repVideo[0].play();
+                else
+                    repVideo[0].pause();
+
+            });
+        });
+
+    </script>
+
+</head>
+<body>
+
+<header>
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Menu</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+                <a class="navbar-brand" href="#inicio">DIW</a>
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+</header>
+
+<div class="container-fluid main">
+    <div class="row color-1" id="title">
+        <div class="col-xs-12">
+
+            <h1>Práctica sonido y video - Toni Alvarez</h1>
+
+        </div>
+    </div>
+    <div class="row color-2" id="formulario">
+        <div class="col-xs-12">
+
+            <h2 id="titulo_busqueda">¿Que quieres ver?</h2>
+
+            <form class="form-horizontal">
+                <fieldset>
+
+                    <!-- Select Artista -->
+                    <div class="form-group div-artista">
+                        <label class="col-md-4 control-label" for="artista">Artista</label>
+                        <div class="col-md-4">
+                            <select id="artista" name="artista" class="form-control">
+                                <option value="0">Selecciona artista</option>
+                                <option value="1">David Guetta</option>
+                                <option value="2">Calvin Harris</option>
+                                <option value="3">Martin Garrix</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Select Temas -->
+                    <div class="form-group div-tema">
+                        <label class="col-md-4 control-label" for="tema">Tema</label>
+                        <div class="col-md-4">
+                            <select id="tema" name="tema" class="form-control">
+                                <option value="0">Selecciona tema</option>
+                                <option value="1"></option>
+                                <option value="2"></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Buttones Preview y Confirmar -->
+                    <div class="col-xs-12 form-group div-preview-confirmar">
+                        <label class="control-label" for="preview"></label>
+                        <label class="control-label" for="confirmar"></label>
+                        <button type="button" id="preview" class="btn btn-info">Preview</button>
+                        <button type="button" id="confirmar" class="btn btn-primary">Seleccionar</button>
+                    </div>
+
+                    <!-- Button Nueva búsqueda -->
+                    <div class="form-group div-nueva-busqueda">
+                        <label class="col-md-4 control-label" for="confirmar"></label>
+                        <div class="col-md-4">
+                            <button type="button" id="nueva_busqueda" class="btn btn-primary">Cambiar tema</button>
+                        </div>
+                    </div>
+
+                </fieldset>
+            </form>
+
+        </div>
+    </div>
+    <div class="row color-1" id="video">
+        <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+
+            <h3>Ver vídeoclip</h3>
+
+            <div class="embed-responsive embed-responsive-16by9">
+                <video id="rep_video" class="embed-responsive-item"></video>
+            </div>
+
+            <div id="controles-video">
+                <button id="play" class="btn btn-success">
+                    <span class="glyphicon glyphicon-play" aria-hidden="true"></span> Play
+                </button>
+                <button id="pause" class="btn btn-warning">
+                    <span class="glyphicon glyphicon-pause" aria-hidden="true"></span> Pause
+                </button>
+                <button id="stop" class="btn btn-danger">
+                    <span class="glyphicon glyphicon-stop" aria-hidden="true"></span> Stop
+                </button>
+                <button id="vol_plus" class="btn btn-info">
+                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> Vol
+                </button>
+                <button id="vol_minus" class="btn btn-info">
+                    <span class="glyphicon glyphicon-minus-sign" aria-hidden="true"></span> Vol
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row color-2" id="sonido">
+        <div class="col-xs-12">
+
+            <h3>Reproducir música</h3>
+
+            <audio controls id="rep_audio"></audio>
+
+        </div>
+    </div>
+</div>
+<nav class="navbar navbar-default navbar-fixed-bottom">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="pull-left"><a href="#">Quienes somos</a></li>
+                <li><a href="#">Síguenos</a></li>
+                <li class="pull-right"><a href="#">Contacto</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+        crossorigin="anonymous"></script>
+</body>
+</html>

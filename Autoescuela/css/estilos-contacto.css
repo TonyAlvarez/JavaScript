@@ -1,0 +1,79 @@
+.aviso-legal {
+    float: left;
+    font-size: 11px;
+    width: 100%;
+}
+
+.div-izquierda {
+    box-sizing: border-box;
+    float: left;
+    width: 50%;
+    padding-right: 25px;
+    padding-bottom: 50px;
+}
+
+.div-derecha {
+    box-sizing: border-box;
+    float: left;
+    width: 50%;
+    padding-left: 25px;
+    padding-bottom: 50px;
+}
+
+
+.formulario span,
+.formulario input,
+.formulario textarea {
+    display: block;
+}
+
+.formulario input {
+    min-width: 150px;
+}
+
+
+.formulario ul {  
+    list-style-type: none;  
+    list-style-position: outside;  
+    margin: 0px;  
+    padding: 0px;  
+}
+
+.formulario label {
+    display: inline-block;
+    float: left;  
+}
+
+.formulario textarea {
+    max-width: 100%;   
+}
+
+.contacto {
+    clear: both;
+}
+
+.contenido-principal {
+    overflow: hidden;
+}
+
+
+
+/* 
+====================
+MOVILES GRANDES Y TABLETS
+====================
+*/
+@media only screen and (max-width: 600px) {
+
+    .div-izquierda,
+    .div-derecha {
+        width: 100%;
+        padding-right: 0;
+        padding-left: 0;
+    }
+
+}
+
+
+
+
