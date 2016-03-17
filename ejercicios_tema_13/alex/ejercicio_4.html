@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AJAX JSON 13.4</title>
+    <script>
+        // Array que contiene todos los objetos de Departamento.
+        var departamentos = [];
+        // Objeto Departamento
+        function Departamento(num, nom) {
+            this.num = num;
+            this.nom = nom;
+        }
+        // Array que contiene todos los objetos de Departamento.
+        var directores = [];
+        // Objeto Director.
+        function Director(num, nom) {
+            this.num = num;
+            this.nom = nom;
+        }
+        function toInit() {
+            var addHeader = document.createElement("h1");
+            addHeader.appendChild(document.createTextNode("Práctica 13.4"));
+            document.body.appendChild(addHeader);
+            loadXMLDoc();
+        }
+        function loadXMLDoc() {
+            var xmlhttp = new XMLHttpRequest();
+            var url = "http://localhost/PHP/DWEC_P13_04.php";
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    alert(xmlhttp.responseText);
+                    var myArr = JSON.parse(xmlhttp.responseText);
+                    var xNom = "";
+                    var xId = "";
+                    // INTRODUCE DENTRO DE LOS ARRAYS DE LOS OBJETOS EL ID Y NOMBRE DE CADA DEPARTAMENTO.
+                    for (var x = 0; x < myArr[0].length; x++) {
+                        xId = myArr[0][x].DEP_NOM;
+                        xNom = myArr[0][x].DNOMBRE;
+                        departamentos[x] = new Departamento(xId, xNom);
+                    }
+                    createSelect(departamentos);
+                    // INTRODUCE DENTRO DE LOS ARRAYS DE LOS OBJETOS EL ID Y NOMBRE DE CADA DIRECTOR.
+                    for (var i = 0; i < myArr[1].length; i++) {
+                        xId = myArr[1][i].EMP_NO;
+                        xNom = myArr[1][i].APELLIDO;
+                        directores[i] = new Director(xId, xNom);
+                    }
+                    createSelect(directores);
+                }
+            };
+            xmlhttp.open("POST", url, true);
+            xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xmlhttp.send("opt=depdir");
+        }
+        // CREA LOS SELECTS TANTO DE DEPARTAMENTOS COMO DE DIRECTORES.
+        function createSelect(array) {
+            var addSelect = document.createElement("SELECT");
+            var addOption = document.createElement("OPTION");
+            document.body.appendChild(addSelect);
+            for (var j = 0; j < array.length; j++) {
+                addOption = document.createElement("OPTION");
+                addSelect.appendChild(addOption);
+                addOption.value = array[j].num;
+                addOption.appendChild(document.createTextNode(array[j].nom));
+            }
+        }
+    </script>
+</head>
+<body onload="toInit()">
+</body>
+</html>

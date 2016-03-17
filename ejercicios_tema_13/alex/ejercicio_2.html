@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AJAX JSON 13.2</title>
+    <style>
+        table, td, th {
+            border: 1px solid #000;
+            padding: 5px 20px;
+            border-collapse: collapse;
+        }
+    </style>
+    <script>
+        function init() {
+            var car = "abcdefghijklmnopqrstuvwxyz";
+            var element = document.getElementById('select');
+            for (var i = 0; i < car.length; i++) {
+                element.innerHTML += "<option value='" + car.charAt(i).toUpperCase() + "'>" + car.charAt(i).toUpperCase() + "</option>";
+            }
+        }
+        function loadXMLDoc() {
+            var xmlhttp = new XMLHttpRequest();
+            var url = "http://localhost/PHP/DWEC_P13_01.php";
+            var element = document.getElementById('myTable');
+            element.innerHTML = "<tr><th>Countries</th></tr>";
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    var myArr = JSON.parse(xmlhttp.responseText);
+                    for (var i = 0; i < myArr.length; i++)
+                        element.innerHTML += "<tr><td>" + myArr[i].nombre + "</td></tr>";
+                }
+            };
+            var c = document.getElementById('select').selectedIndex;
+            var y = document.getElementById('select').options;
+            xmlhttp.open("POST", url, true);
+            xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xmlhttp.send("l=" + y[c].text);
+        }
+    </script>
+</head>
+<body onload="init()">
+<h1>Práctica 13.2</h1>
+<label for="select">Selecciona un letra</label>
+<select id="select" name="l" onchange="loadXMLDoc()"></select>
+<br/>
+<br/>
+<table id="myTable"></table>
+</body>
+</html>

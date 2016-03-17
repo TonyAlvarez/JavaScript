@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JQuery - Ejercicio 13</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script>
+
+
+        $(document).ready(function() {
+
+            $("#paises").change(function() {
+                cargarRegiones($("#paises").val());
+            });
+
+
+            cargarPaises();
+        });
+        function cargarPaises() {
+            //var url = 'http://192.168.56.101/DWEC_P13_03.php';
+            var url = 'http://localhost/PHP/DWEC_P13_03.php';
+
+
+            $.getJSON(url, function (result) {
+                generarSelectPaises(result);
+            });
+        }
+
+        function cargarRegiones() {
+            //var url = 'http://192.168.56.101/DWEC_P13_03_2.php';
+            var url = 'http://localhost/PHP/DWEC_P13_03_2.php';
+
+            $.getJSON(url, {'l': $('#paises').val()}, function (result) {
+                generarSelectRegiones(result);
+            });
+        }
+
+        function generarSelectPaises(arrayPaises) {
+
+            var selectPaises = $("#paises");
+
+            for (var i = 0; i < arrayPaises.length; i++) {
+                var option = $("<option>");
+                option.val(arrayPaises[i].id);
+                option.text(arrayPaises[i].nombre);
+                selectPaises.append(option);
+            }
+
+            cargarRegiones();
+
+        }
+
+        function generarSelectRegiones(arrayRegiones) {
+
+            var selectRegiones = document.getElementById("select_regiones");
+
+            /**
+             * Eliminamos todos los elementos del select, este metodo es más eficiente que innertHTML = "";
+             *
+             * Sacado de StackOverflow:
+             *
+             * http://stackoverflow.com/a/3955238/710274
+             */
+
+            while (selectRegiones.firstChild)
+                selectRegiones.removeChild(selectRegiones.firstChild);
+
+            var option;
+
+            for (var i = 0; i < arrayRegiones.length; i++) {
+                option = document.createElement("option");
+                option.value = arrayRegiones[i].id;
+                option.innerHTML = arrayRegiones[i].nombre;
+                selectRegiones.appendChild(option);
+            }
+        }
+    </script>
+</head>
+<body>
+<h2>JQuery - Ejercicio 13</h2>
+
+<h4>Selecciona un país:</h4>
+<select id="paises"></select>
+
+<h4 id="titulo_regiones">Regiones del país seleccionado:</h4>
+<select id="select_regiones"></select>
+
+<br/><br/><br/>
+
+<p id="resultados"></p>
+
+<p id="xml"></p>
+</body>
+</html>

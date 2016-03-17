@@ -1,0 +1,77 @@
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Menus principal */
+ul.menu {
+    width: 600px;
+    margin: 0 auto;
+}
+
+/* Menus y submenus */
+ul {
+    list-style: none;
+}
+
+/* Links de todos los menus y submenus */
+ul.menu a {
+    color: #000;
+    text-decoration: none;
+    text-align: center;
+    padding: 20px;
+    width: 100px;
+    display: block;
+}
+
+/* Todos los items del menu */
+ul.menu li {
+    float: left;
+}
+
+/* Submenus */
+ul.menu li ul {
+    display: none;
+    position: absolute;
+}
+
+
+/* Posicion relativa a todos los items de los submenus */
+ul.menu li {
+    position: relative;
+}
+
+/* posicion del segundo submenu */
+ul.menu li ul {
+    right: 0;
+    top: 58px;
+}
+
+/* posicion del tercer submenu */
+ul.menu li ul li ul {
+    left: -90px;
+    top: 58px;
+}
+
+/* color del primer nivel del menu */
+div#header li a {
+    background-color: rgb(67, 111, 255);
+}
+
+/* color del segundo nivel del menu, para que no salga encima */
+div#header li ul li a {
+    background-color: rgb(219, 182, 137);
+}
+
+
+/* color del tercer nivel del menu */
+div#header li ul li ul li a {
+    background-color: rgb(219, 76, 137);
+    /* tercer nivel del menu más ancho */
+    width: 200px;
+}
+
+/* z-index del tercer nivel del menu, para que no salga debajo */
+div#header li ul li ul li {
+    z-index: 993;
+}

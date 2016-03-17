@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JQuery - Ejercicio 12</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            cargarPaises();
+        });
+        $(document).keyup(function () {
+            cargarPaises();
+        });
+
+        var url = 'http://192.168.56.101/DWEC_P13_01.php';
+        //var url = 'http://localhost/PHP/DWEC_P13_01.php';
+
+        function cargarPaises() {
+            var resultado = $("#resultados");
+
+            $.getJSON(url, {'l': $('#pais').val()}, function (result) {
+
+                resultado.text("");
+
+                $.each(result, function (i, field) {
+                    if (resultado.text() == "")
+                        resultado.text(field.nombre);
+                    else
+                        resultado.text(resultado.text() + ", " + field.nombre);
+                });
+            });
+
+        }
+    </script>
+</head>
+<body>
+<h2>JQuery - Ejercicio 12</h2>
+<input type="text" id="pais">
+
+<p id="resultados"></p>
+</body>
+</html>

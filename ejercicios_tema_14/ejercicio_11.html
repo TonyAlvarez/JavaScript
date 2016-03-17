@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>jQuery - Ejercicio 11</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            cargarPaises();
+        });
+        $(document).keyup(function () {
+            cargarPaises();
+        });
+
+        function cargarPaises() {
+            var resultado = "";
+
+            $.ajax({
+                type: "POST",
+                url: "http://192.168.56.101/DWEC_P12_01.php",
+                data: {'l': $('#pais').val()},
+
+                success: function (response) {
+                    var responseSerialized = new XMLSerializer().serializeToString(response);
+                    $(responseSerialized).find('PAIS').each(function () {
+                        resultado += $(this).text() + ",";
+                    });
+
+                    $("#resultados").text(resultado);
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<h3>Introduce el nombre del pais:</h3>
+<input id="pais">
+<br/>
+<p>Coincidencias:</p>
+<div id="resultados"></div>
+</body>
+</html>

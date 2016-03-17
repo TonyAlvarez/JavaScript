@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AJAX JSON 13.1</title>
+    <script>
+        function loadXMLDoc() {
+            var xmlhttp = new XMLHttpRequest();
+            var url = "http://localhost/PHP/DWEC_P13_01.php";
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    var myArr = JSON.parse(xmlhttp.responseText);
+                    var out = "";
+                    for (var i = 0; i < myArr.length; i++)
+                        out += myArr[i].nombre + ", ";
+                    document.getElementById("resultados").innerHTML = out;
+                }
+            };
+            xmlhttp.open("POST", url, true);
+            xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xmlhttp.send("l=" + document.getElementById('pais').value);
+        }
+    </script>
+</head>
+<body>
+<h1>JSON 13.1</h1>
+<label for="pais">Introduce el país:</label>
+<input id="pais" name="l" onkeyup="loadXMLDoc()">
+<br />
+<br />
+<div id="resultados"></div>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JQuery - Ejericicio 14</title>
+
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+    <!-- JQuery validation -->
+    <script src="http://cdn.jsdelivr.net/jquery.validation/1.15.0/jquery.validate.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+
+            $("#formulario :checkbox").click(function () {
+
+                if ($(this).is(':checked')) {
+                    $('#validar').prop("disabled", false);
+                } else {
+                    $('#validar').prop("disabled", true);
+                }
+            });
+
+            $("#formulario").validate({
+                rules: {
+                    // no quoting necessary
+                    nombre: "required",
+                    email: "email",
+                    password: "password"
+                }
+            });
+        });
+
+    </script>
+
+</head>
+<body>
+
+<h1>JQuery - Ejericicio 14</h1>
+
+<form id="formulario">
+
+
+    <label for="nombre">Nombre:
+        <input type="text" id="nombre" name="nombre" required>
+    </label>
+
+    <br/>
+    <br/>
+
+    <label for="email">Email:
+        <input type="email" id="email" name="email" required>
+    </label>
+
+    <br/>
+    <br/>
+
+    <label for="password">Password:
+        <input type="password" id="password" name="password" required>
+    </label>
+
+    <br/>
+    <br/>
+
+    <label for="condiciones">Acepta las condiciones:
+        <input type="checkbox" id="condiciones" name="condiciones" required>
+    </label>
+
+    <br/>
+    <br/>
+
+    <button type="submit" id="validar" name="validar" disabled>Validar</button>
+</form>
+
+</body>
+</html>

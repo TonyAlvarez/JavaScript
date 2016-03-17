@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AJAX JSON 13.3</title>
+    <script>
+        function loadXMLDoc(onWrite, num) {
+            var xmlhttp;
+            var url1 = "http://localhost/PHP/DWEC_P13_03.php";
+            var url2 = "http://localhost/PHP/DWEC_P13_03_2.php";
+            if (window.XMLHttpRequest) {
+                // code for IE7+, Firefox, Chrome, Opera, Safari
+                xmlhttp = new XMLHttpRequest();
+            }
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    var myArr = JSON.parse(xmlhttp.responseText);
+                    var element = document.getElementById(onWrite);
+                    var xNom = "";
+                    var xId = "";
+                    element.innerHTML = "";
+                    for (var i = 0; i < myArr.length; i++) {
+                        xId = myArr[i].id;
+                        xNom = myArr[i].nombre;
+                        element.innerHTML += "<option value='" + xId + "'>" + xNom + "</option>";
+                    }
+                }
+            };
+            switch (num) {
+                case 1:
+                    xmlhttp.open("POST", url1, true);
+                    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    xmlhttp.send();
+                    break;
+                case 2:
+                    var c = document.getElementById('mySelect').selectedIndex;
+                    var y = document.getElementById('mySelect').options;
+                    xmlhttp.open("POST", url2, true);
+                    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    xmlhttp.send("l=" + y[c].value);
+                    break;
+            }
+        }
+    </script>
+</head>
+<body onload="loadXMLDoc('mySelect', 1)">
+<select id="mySelect" name="p" onchange="loadXMLDoc('myRegiones', 2)"></select>
+<select id="myRegiones"></select>
+</body>

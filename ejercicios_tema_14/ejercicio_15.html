@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JQuery - Ejercicio 15</title>
+
+    <link rel="stylesheet" href="ejercicio_15.css">
+
+
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+    <script type="text/javascript" src="clases/empleados.js"></script>
+    <script type="text/javascript" src="clases/departamento.js"></script>
+
+    <script>
+
+        //Alamacenar la tabla para no tener que acceder al DOM cada vez
+        var tabla;
+
+        //Globales para todas las peticiones al servidor
+        var METHOD = 'POST';
+        var URL = 'http://192.168.56.101/DWEC_P12_05.php';
+
+        var CABECERAS = ["ID EMPLEADO", "APELLIDO", "OFICIO", "DIRECTOR", "FECHA DE ALTA", "SALARIO", "COMISION", "DEPARTAMENTO", "ACCIONES"];
+
+        //Cuando cargue la página, iniciamos las peticiones
+        $(document).ready(function () {
+
+            //Recuperar la tabla y ponerle un id
+            tabla = $('<table>');
+            tabla.prop('id', 'tabla_empleados');
+
+            $("body").append(tabla);
+
+            //Cargar los departamento
+            cargarDepartamentos();
+        });
+
+        function cargarDepartamentos() {
+
+            if (window.XMLHttpRequest) {
+                var xmlhttp = new XMLHttpRequest();
+
+                xmlhttp.open(METHOD, URL, true);
+                xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+                xmlhttp.onreadystatechange = function () {
+
+                    if (xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200) {
+
+                        var xmlDoc = xmlhttp.responseXML;
+
+                        //Si hay algún error al recibir el XML, avisamos al usuario y salir.
+                        if (xmlDoc === null) {
+                            alert("Error al recibir los datos del servidor");
+                            return;
+                        }
+
+                        //Arrays con los resultados
+                        var departamentos = xmlDoc.getElementsByTagName("DEPARTAMENTO");
+
+                        for (var i = 0; i < departamentos.length; i++) {
+
+                            //Creamos un objeto Departamento que guarda todos los atributos del mismo, y lo añadimos al array de departamentos.
+                            arrayDepartamentos.push(new Departamento(
+                                    departamentos[i].childNodes[0].childNodes[0].nodeValue,
+                                    departamentos[i].childNodes[1].childNodes[0].nodeValue
+                            ));
+                        }
+
+                        //Ya tenemos los departamentos, es momento de cargar los empleados
+                        cargarEmpleados();
+                    }
+                }
+            }
+
+            xmlhttp.send("opt=dep");
+        }
+
+        function cargarEmpleados() {
+
+            if (window.XMLHttpRequest) {
+                var xmlhttp = new XMLHttpRequest();
+
+                xmlhttp.open(METHOD, URL, true);
+                xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+                xmlhttp.onreadystatechange = function () {
+                    if (xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200) {
+
+                        var xmlDoc = xmlhttp.responseXML;
+
+                        //Si hay algún error al recibir el XML, avisamos al usuario y salir.
+                        if (xmlDoc === null) {
+                            alert("Error al recibir los datos del servidor");
+                            return;
+                        }
+
+                        //Arrays con los resultados
+                        var empleados = xmlDoc.getElementsByTagName("EMPLEADO");
+
+                        //Recorremos los empleados
+                        for (var i = 0; i < empleados.length; i++) {
+
+                            //Creamos un objeto Empleado que guarda todos los atributos del mismo
+                            var empleado = new Empleado(
+                                    empleados[i].childNodes[0].childNodes[0].nodeValue, //El ID el NOT NULL
+                                    empleados[i].childNodes[1].childNodes[0] === undefined ? "NO DEFINIDO" : empleados[i].childNodes[1].childNodes[0].nodeValue,
+                                    empleados[i].childNodes[2].childNodes[0] === undefined ? "NO DEFINIDO" : empleados[i].childNodes[2].childNodes[0].nodeValue,
+                                    empleados[i].childNodes[3].childNodes[0] === undefined ? "SIN JEFE" : empleados[i].childNodes[3].childNodes[0].nodeValue,
+                                    empleados[i].childNodes[4].childNodes[0].nodeValue, //La fecha de alta siempre tiene que estar definida
+                                    empleados[i].childNodes[5].childNodes[0] === undefined ? "0.00" : empleados[i].childNodes[5].childNodes[0].nodeValue,
+                                    empleados[i].childNodes[6].childNodes[0] === undefined ? "0.00" : empleados[i].childNodes[6].childNodes[0].nodeValue,
+                                    empleados[i].childNodes[7].childNodes[0] === undefined ? "0" : empleados[i].childNodes[7].childNodes[0].nodeValue
+                            );
+
+                            //Añadimos el empleado al array de empleados
+                            arrayEmpleados.push(empleado);
+                        }
+
+                        refrescarTablaEmpleados();
+                    }
+                };
+
+                xmlhttp.send("opt=datemps");
+
+            } else {
+                //Si el navegador no soporta XMLHttpRequest avisamos al usuario.
+                document.write("Este navegador no soporta AJAX.");
+            }
+        }
+
+        /**
+         *
+         * Genera un SELECT con los directores que puede tener un empleado, excluyendo a si mismo, y poniendo como seleccionado a su director actual
+         *
+         */
+        function generarSelectDirector(indiceEmpleado, edicion) {
+
+            var select = document.createElement("select");
+
+            if (!edicion)
+                select.setAttribute("disabled", "disabled");
+
+            //Añadir la opción SIN JEFE
+            var opcion = document.createElement("option");
+            opcion.value = 0;
+            opcion.appendChild(document.createTextNode("SIN JEFE"));
+            select.appendChild(opcion);
+
+            for (var i = 0; i < arrayEmpleados.length; i++) {
+
+                //Si el empleado de la iteración actual, es el mismo para el que estamos generando el select, lo ignoramos
+                if (arrayEmpleados[i].idEmpleado == arrayEmpleados[indiceEmpleado].idEmpleado)
+                    continue;
+
+                opcion = document.createElement("option");
+
+                var idEmp = arrayEmpleados[i].idEmpleado;
+                var apellido = arrayEmpleados[i].apellido;
+
+                opcion.value = idEmp;
+                opcion.appendChild(document.createTextNode(apellido));
+
+                //Si el id del empleado de la iteración es el mismo que del director del empleado para el que estamos generando el SELECT, lo ponemos como seleccionado.
+                if (opcion.value == arrayEmpleados[indiceEmpleado].director)
+                    opcion.setAttribute("selected", "selected");
+
+                select.appendChild(opcion);
+            }
+
+            return select;
+        }
+
+        /**
+         *
+         * Genera un SELECT con los departamentos a los que puede pertenecer un empleado, poniendo como seleccionado a su departamento actual
+         *
+         */
+        function generarSelectDepartamento(idDepartamentoActual, nuevo) {
+
+            var select = document.createElement("select");
+
+            if (!nuevo)
+                select.setAttribute("disabled", "disabled");
+
+            //Añadir la opción SIN DEPARTAMENTO
+            var opcion = document.createElement("option");
+            opcion.value = 0;
+            opcion.appendChild(document.createTextNode("NO DEFINIDO"));
+            select.appendChild(opcion);
+
+            for (var i = 0; i < arrayDepartamentos.length; i++) {
+
+                opcion = document.createElement("option");
+                opcion.value = arrayDepartamentos[i].idDepartamento;
+                opcion.appendChild(document.createTextNode(arrayDepartamentos[i].nombreDep));
+
+                if (opcion.value == idDepartamentoActual)
+                    opcion.setAttribute("selected", "selected");
+
+                select.appendChild(opcion);
+            }
+
+            return select;
+        }
+
+        function refrescarTablaEmpleados() {
+
+            /**
+             * Eliminamos todos los elementos de la tabla, este metodo es más eficiente que innertHTML = "";
+             *
+             * Sacado de StackOverflow:
+             *
+             * http://stackoverflow.com/a/3955238/710274
+             */
+            while (tabla.firstChild)
+                tabla.removeChild(tabla.firstChild);
+
+            //Creamos la cabecera principal de la tabla
+            var fila = $('<tr>');
+            tabla.append(fila);
+            fila.prop('class', 'cabecera-principal');
+
+            var h3 = document.createElement("h3");
+            h3.appendChild(document.createTextNode("GESTIÓN DE EMPLEADOS"));
+
+            var cabecera = $('<td>');
+            fila.append(cabecera);
+            cabecera.prop('colSpan', '10');
+            cabecera.append(h3);
+
+            //Creamos las cabeceras de las columnas
+            fila = $('<tr>');
+            tabla.append(fila);
+            fila.prop('class', 'cabecera');
+
+            var celda;
+
+            //Añadir las celdas de las cabeceras
+            for (var y = 0; y <= 8; y++) {
+                celda = $('<td>');
+                fila.append(celda);
+                celda.text(CABECERAS[y]);
+            }
+
+            //Recorrer las propiedades del objeto empleado recién creado para introducir los valores en la tabla
+            for (var i = 0; i < arrayEmpleados.length; i++) {
+                insertarEmpleado(false, arrayEmpleados[i]);
+            }
+
+            anadirBotonAnadirEmpleado();
+
+        }
+
+        function anadirBotonAnadirEmpleado() {
+            //Insertar la última fila y la última celda, que contienen el botón para añadir un nuevo empleado
+            var fila = $('<tr>');
+            tabla.append(fila);
+            fila.prop('id', 'Nuevo empleado');
+
+            var celda = $('<td>');
+            fila.append(celda);
+            celda.prop('colSpan', '10');
+
+            //Boton para añadir empleado
+            var botonAnadir = $('<button>');
+            botonAnadir.addClass('anadir');
+            botonAnadir.click(function() {
+                anadirEmpleado();
+            });
+            botonAnadir.text("Añadir empleado");
+            celda.append(botonAnadir);
+        }
+
+        function insertarEmpleado(nuevo, empleado) {
+
+            var fila;
+
+            //Si insertamos un nuevo empleado, o hacemos en la última fila, ya existente, en caso contrario estamos pintando toda la tabla y hay que crear una nueva fila.
+            if (nuevo) {
+                fila = tabla.find('tr:last');
+            } else {
+                fila = $('<tr>');
+                tabla.append(fila);
+            }
+
+            if (nuevo) {
+                while (fila.firstChild)
+                    fila.removeChild(fila.firstChild);
+            }
+
+            if (nuevo) {
+                empleado = new Empleado(1 + parseInt(getMaxID()));
+                arrayEmpleados.push(empleado);
+            }
+
+            var indiceEmpleado = getIndiceEmpleado(empleado.idEmpleado);
+
+            //Poner el ID del empleado como id de la fila para luego recuperar los datos más fácilmente
+            fila.prop('id', empleado.idEmpleado);
+
+            for (var property in empleado) {
+                if (empleado.hasOwnProperty(property)) {
+
+                    //Insertar celda al final de la fila
+                    var celda = $('<td>');
+                    fila.append(celda);
+
+                    //Porpiedades de la clase Empleado;
+                    //idEmpleado, apellido, oficio, director, fechaAlta, salario, comision, departamento
+                    switch (property) {
+                        case "idEmpleado":
+                            celda.text(arrayEmpleados[indiceEmpleado][property]);
+                            break;
+                        case "director":
+                            celda.append(generarSelectDirector(indiceEmpleado, nuevo));
+                            break;
+                        case "departamento":
+                            celda.append(generarSelectDepartamento(arrayEmpleados[indiceEmpleado].departamento, nuevo));
+                            break;
+                        case "fechaAlta":
+                            if (nuevo) {
+                                var f = new Date();
+                                celda.text(f.getFullYear() + "-" + addZeros(f.getMonth(), 2) + "-" + addZeros(f.getDate(), 2));
+                            } else {
+                                celda.text(arrayEmpleados[indiceEmpleado][property]);
+                            }
+                            break;
+                        case "apellido":
+                        case "oficio":
+                        case "salario":
+                        case "comision":
+                            var input = $('<input>');
+
+                            //Si el empleado no es nuevo, es que estamos rellenando la tabla, desactivamos los inputs y los rellenamos
+                            if (!nuevo) {
+                                input.prop("disabled", true);
+                                input.val(arrayEmpleados[indiceEmpleado][property]);
+                            }
+
+                            if (property == "salario" || property == "comision") {
+                                input.attr('type', 'number');
+                            } else {
+                                input.attr('type', 'text');
+                            }
+
+                            celda.append(input);
+
+                            break;
+                        default:
+                            celda.text(arrayEmpleados[indiceEmpleado][property]);
+                            break;
+                    }
+                }
+            }
+
+            //Celda que contiene los botones para editar y eliminar el empleado
+            celda = $('<td>');
+            fila.append(celda);
+
+            if (nuevo) {
+                anadirBotonesGuardarCancelar(celda, arrayEmpleados[indiceEmpleado].idEmpleado)
+            } else {
+                anadirBotonesEditarEliminar(celda, arrayEmpleados[indiceEmpleado].idEmpleado);
+            }
+        }
+
+
+        function addZeros(number, zeros) {
+            for (var i = 0; i < zeros; i++) {
+                number = "0" + number;
+            }
+
+            return number.substring(number.length - zeros, number.length);
+        }
+
+        function anadirBotonesGuardarCancelar(celda, idEmpleado, editando) {
+            //Boton guardar empleado
+            var botonGuardar = $('<button>');
+            botonGuardar.val(idEmpleado);
+            botonGuardar.addClass("guardar");
+            if (editando)
+                botonGuardar.click(function() {
+                    guardarEdicionEmpleado();
+                });
+            else
+                botonGuardar.click(function() {
+                    guardarNuevoEmpleado();
+                });
+            celda.append(botonGuardar);
+
+            if (!editando) {
+                //Boton guardar empleado
+                var botonCancelar =  $('<button>');
+                botonCancelar.val(idEmpleado);
+                botonCancelar.addClass("cancelar");
+                botonCancelar.click(function() {
+                    cancelarNuevoEmpleado();
+                });
+                celda.append(botonCancelar);
+            }
+        }
+
+        function anadirBotonesEditarEliminar(celda, idEmpleado) {
+
+            //Boton de editar empleado
+            var botonEditar = $('<button>');
+            botonEditar.val(idEmpleado);
+            botonEditar.addClass("editar");
+            botonEditar.click(function() {
+                editarEmpleado();
+            });
+            celda.append(botonEditar);
+
+            //Boton de eliminar empleado
+            var botonEliminar = $('<button>');
+            botonEliminar.val(idEmpleado);
+            botonEliminar.addClass("eliminar");
+            botonEliminar.click(function() {
+                deleteEmpleadoTabla();
+            });
+            celda.append(botonEliminar);
+        }
+
+        function desHabilitarTabla(habilitar) {
+            var botonesEditar = document.getElementsByClassName("editar");
+            var botonesEliminar = document.getElementsByClassName("eliminar");
+
+            for (var i = 0; i < botonesEditar.length; i++)
+                botonesEditar[i].disabled = habilitar;
+
+            for (var x = 0; x < botonesEliminar.length; x++)
+                botonesEliminar[x].disabled = habilitar;
+        }
+
+        function anadirEmpleado() {
+            desHabilitarTabla(true);
+            insertarEmpleado(true);
+        }
+
+        function guardarNuevoEmpleado(evento) {
+            guardarDatosEmpleado(evento, false);
+        }
+
+        function guardarEdicionEmpleado(evento) {
+            guardarDatosEmpleado(evento, true);
+        }
+
+        function guardarDatosEmpleado(evento, editando) {
+
+            //Cogemos la posición del puntero, y el elemento que hay en esa posición
+            var x = evento.clientX, y = evento.clientY;
+            var botonGuardar = document.elementFromPoint(x, y);
+            var idEmpleado = botonGuardar.value;
+
+            var empleado = getEmpleado(idEmpleado);
+            var filaEmpleado = document.getElementById(idEmpleado);
+
+            var inputApellido = filaEmpleado.getElementsByTagName('td')[1].children[0];
+            var inputOficio = filaEmpleado.getElementsByTagName('td')[2].children[0];
+            var inputDirector = filaEmpleado.getElementsByTagName('td')[3].children[0];
+            var inputFecha = filaEmpleado.getElementsByTagName('td')[4];
+            var inputSalario = filaEmpleado.getElementsByTagName('td')[5].children[0];
+            var inputComision = filaEmpleado.getElementsByTagName('td')[6].children[0];
+            var inputDepartamento = filaEmpleado.getElementsByTagName('td')[7].children[0];
+
+            if (inputApellido.value == "") {
+                alert("El campo APELLIDO está vacio");
+                return;
+            } else if (inputOficio.value == "") {
+                alert("El campo OFICIO está vacio");
+                return;
+            } else if (inputDepartamento.value == 0) {
+                inputDepartamento.value = "";
+                alert("El campo DEPARTAMENTO está vacio");
+                return;
+            }
+
+            if (inputSalario.value == "")
+                inputSalario.value = 0;
+
+            if (inputComision.value == "")
+                inputComision.value = 0;
+
+            //Guardar los datos en el objeto empleado
+            empleado.setApellido(inputApellido.value);
+            empleado.setOficio(inputOficio.value);
+
+            if (inputDirector.value == 0)
+                empleado.setDirector("");
+            else
+                empleado.setDirector(inputDirector.value);
+
+            empleado.setFechaAlta(inputFecha.innerHTML);
+            empleado.setSalario(inputSalario.value);
+            empleado.setComision(inputComision.value);
+            empleado.setDepartamento(inputDepartamento.value);
+
+            if (editando) {
+                //Actualizar un usuario ya existente en la BD
+                updateEmpleadoEnServidor(empleado);
+            } else {
+                //Insertar el nuevo empleado en la BD
+                insertEmpleadoEnServidor(empleado);
+            }
+
+            inputApellido.setAttribute("disabled", "disabled");
+            inputOficio.setAttribute("disabled", "disabled");
+            inputDirector.setAttribute("disabled", "disabled");
+            inputSalario.setAttribute("disabled", "disabled");
+            inputComision.setAttribute("disabled", "disabled");
+            inputDepartamento.setAttribute("disabled", "disabled");
+
+            //Eliminar botones guardar/cancelar
+            var celdaAcciones = filaEmpleado.getElementsByTagName('td')[8];
+
+            while (celdaAcciones.firstChild)
+                celdaAcciones.removeChild(celdaAcciones.firstChild);
+
+            //Añadir botones editar/eliminar
+            anadirBotonesEditarEliminar(celdaAcciones, idEmpleado);
+
+            if (!editando)
+                anadirBotonAnadirEmpleado();
+
+            actualizarSelectsDirector();
+
+            desHabilitarTabla(false);
+        }
+
+        function cancelarNuevoEmpleado(evento) {
+            deleteEmpleadoTabla(evento);
+        }
+
+        function editarEmpleado(evento) {
+
+            //Cogemos la posición del puntero, y el elemento que hay en esa posición
+            var x = evento.clientX, y = evento.clientY;
+            var botonEditar = document.elementFromPoint(x, y);
+            var idEmpleado = botonEditar.value;
+
+            var filaEmpleado = document.getElementById(idEmpleado);
+
+            var inputApellido = filaEmpleado.getElementsByTagName('td')[1].children[0];
+            var inputOficio = filaEmpleado.getElementsByTagName('td')[2].children[0];
+            var inputDirector = filaEmpleado.getElementsByTagName('td')[3].children[0];
+            var inputSalario = filaEmpleado.getElementsByTagName('td')[5].children[0];
+            var inputComision = filaEmpleado.getElementsByTagName('td')[6].children[0];
+            var inputDepartamento = filaEmpleado.getElementsByTagName('td')[7].children[0];
+
+            //Activar los inputs
+            inputApellido.removeAttribute("disabled");
+            inputOficio.removeAttribute("disabled");
+            inputDirector.removeAttribute("disabled");
+            inputSalario.removeAttribute("disabled");
+            inputComision.removeAttribute("disabled");
+            inputDepartamento.removeAttribute("disabled");
+
+            //Eliminar botones editar/eliminar
+            var celdaAcciones = filaEmpleado.getElementsByTagName('td')[8];
+
+            while (celdaAcciones.firstChild)
+                celdaAcciones.removeChild(celdaAcciones.firstChild);
+
+            //Añadir botones guardar/cancelar
+            anadirBotonesGuardarCancelar(celdaAcciones, idEmpleado, true);
+
+            desHabilitarTabla(true, botonEditar.value);
+        }
+
+        function deleteEmpleadoTabla(evento, idEmpleado) {
+
+            //Si no se pasa un ID como parametro, sacarlo a partir del elemento clicado
+            if (idEmpleado == undefined) {
+                //Cogemos la posición del puntero, y el elemento que hay en esa posición
+                var x = evento.clientX, y = evento.clientY;
+                var botonEliminar = document.elementFromPoint(x, y);
+                idEmpleado = botonEliminar.value;
+            }
+
+            var nombreEmpleado = getEmpleado(idEmpleado).apellido;
+
+            var mensajeConfirmacion;
+
+            //El nombre de empleado es undefined cuando se está insertando un nuevo usuario
+            if (nombreEmpleado === undefined)
+                mensajeConfirmacion = '¿Seguro que quieres eliminar el nuevo empleado?';
+            else
+                mensajeConfirmacion = '¿Seguro que quieres eliminar a ' + getEmpleado(idEmpleado).apellido + '?';
+
+            //El elemento es null cuando se elimina tras una inserción incorrecta en la tabla de la BD
+            //Pedir confirmación al usuario
+            if (evento != null && !confirm(mensajeConfirmacion))
+                return;
+
+            //Recorremos todas las filas para buscar la posicion de la fila del usuario que se quiere eliminar
+            for (var numFila = 0; numFila < arrayEmpleados.length + 2; numFila++) {
+                if (tabla.rows[numFila].id == idEmpleado) {
+                    tabla.deleteRow(numFila);
+                }
+            }
+
+            //Eliminamos el empleado de la base de datos
+            deleteEmpleadoEnServidor(idEmpleado);
+
+            //Eliminamos el empleado del array de empleados
+            deleteEmpleado(idEmpleado);
+
+
+            actualizarSelectsDirector();
+
+            //El nombre de empleado es undefined cuando se está insertando un nuevo usuario
+            if (nombreEmpleado === undefined) {
+                anadirBotonAnadirEmpleado();
+                desHabilitarTabla(false);
+            }
+        }
+
+        function updateEmpleadoEnServidor(empleado) {
+
+            if (window.XMLHttpRequest) {
+                var xmlhttp = new XMLHttpRequest();
+
+                xmlhttp.open(METHOD, URL, true);
+                xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+                xmlhttp.onreadystatechange = function () {
+
+                    if (xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200) {
+
+                        var xmlDoc = xmlhttp.responseXML;
+
+                        //Si hay algún error al recibir el XML, avisamos al usuario y salir.
+                        if (xmlDoc === null) {
+                            alert("Error al recibir los datos del servidor");
+                            return;
+                        }
+
+                        //Arrays con los resultados
+                        var error = xmlDoc.getElementsByTagName("ERROR");
+
+                        if (error.length > 0) {
+                            alert("Error al actualizar el empleado en la BD");
+                            deleteEmpleadoTabla(null, empleado.idEmpleado);
+                        }
+
+                    }
+                }
+            }
+
+            var parametros = "opt=upd" +
+                    "&EMP_NO=" + empleado.idEmpleado +
+                    "&APELLIDO=" + empleado.apellido +
+                    "&OFICIO=" + empleado.oficio +
+                    "&DIRECTOR=" + empleado.director +
+                    "&FECHA_ALTA=" + empleado.fechaAlta +
+                    "&SALARIO=" + empleado.salario +
+                    "&COMISION=" + empleado.comision +
+                    "&DEP_NO=" + empleado.departamento;
+
+            xmlhttp.send(parametros);
+        }
+
+        function insertEmpleadoEnServidor(empleado) {
+
+            if (window.XMLHttpRequest) {
+                var xmlhttp = new XMLHttpRequest();
+
+                xmlhttp.open(METHOD, URL, true);
+                xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+                xmlhttp.onreadystatechange = function () {
+
+                    if (xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200) {
+
+                        var xmlDoc = xmlhttp.responseXML;
+
+                        //Si hay algún error al recibir el XML, avisamos al usuario y salir.
+                        if (xmlDoc === null) {
+                            alert("Error al recibir los datos del servidor");
+                            return;
+                        }
+
+                        //Arrays con los resultados
+                        var error = xmlDoc.getElementsByTagName("ERROR");
+                        if (error.length > 0) {
+                            alert("Error al insertar el empleado en la BD");
+                            deleteEmpleadoTabla(null, empleado.idEmpleado);
+                        }
+
+                    }
+                }
+            }
+
+            var parametros = "opt=ins" +
+                    "&EMP_NO=" + empleado.idEmpleado +
+                    "&APELLIDO=" + empleado.apellido +
+                    "&OFICIO=" + empleado.oficio +
+                    "&DIRECTOR=" + empleado.director +
+                    "&FECHA_ALTA=" + empleado.fechaAlta +
+                    "&SALARIO=" + empleado.salario +
+                    "&COMISION=" + empleado.comision +
+                    "&DEP_NO=" + empleado.departamento;
+
+            xmlhttp.send(parametros);
+        }
+
+        function deleteEmpleadoEnServidor(idEmpleado) {
+
+            if (window.XMLHttpRequest) {
+                var xmlhttp = new XMLHttpRequest();
+
+                xmlhttp.open(METHOD, URL, true);
+                xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+                xmlhttp.onreadystatechange = function () {
+
+                    if (xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200) {
+
+                        var xmlDoc = xmlhttp.responseXML;
+
+                        //Si hay algún error al recibir el XML, avisamos al usuario y salir.
+                        if (xmlDoc === null) {
+                            alert("Error al recibir los datos del servidor");
+                            return;
+                        }
+
+                        //Arrays con los resultados
+                        var error = xmlDoc.getElementsByTagName("ERROR");
+                        if (error.length > 0) {
+                            alert("Error al intentar eliminar el empleado de la BD");
+                        }
+
+                    }
+                }
+            }
+
+            xmlhttp.send("opt=del&EMP_NO=" + idEmpleado);
+        }
+
+        function actualizarSelectsDirector() {
+            //Volver a generar los selects de director para actualizar el nombre del empleado que acabamos de editar
+            for (var i = 0; i < arrayEmpleados.length; i++) {
+                var filaActual = document.getElementById(arrayEmpleados[i].idEmpleado);
+                var celdaDirector = filaActual.getElementsByTagName('td')[3];
+
+                //Eliminar el select actual
+                while (celdaDirector.firstChild)
+                    celdaDirector.removeChild(celdaDirector.firstChild);
+
+                //Añadir un nuevo select a la celda
+                celdaDirector.appendChild(generarSelectDirector(i, false));
+            }
+        }
+    </script>
+</head>
+<body>
+<h2>DWEC_P12_05</h2>
+</body>
+</html>

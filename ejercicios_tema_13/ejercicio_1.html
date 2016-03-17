@@ -11,13 +11,12 @@
         };
 
         function loadXMLDoc() {
-
             //Soportado por IE7+, Firefox, Chrome, Opera, Safari
             if (window.XMLHttpRequest) {
                 var xmlhttp = new XMLHttpRequest();
                 var method = 'POST';
-                var url = 'http://192.168.56.101/DWEC_P13_01.php';
-                //var url = 'http://localhost/PHP/DWEC_P13_01.php';
+                //var url = 'http://192.168.56.101/DWEC_P13_01.php';
+                var url = 'http://localhost/PHP/DWEC_P13_01.php';
 
                 xmlhttp.open(method, url, true);
                 xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
